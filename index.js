@@ -12,7 +12,7 @@ bot.on('message', (msg) => {
 
   var hi = "hi";
   if (msg.text.toLowerCase().indexOf(hi) === 0) {
-    bot.sendMessage(msg.from.id, "hi " + msg.from.first_name.toLowerCase());
+    bot.sendMessage(msg.from.id, "hello " + msg.from.first_name.toLowerCase());
   }
 
   var bye = "bye";
