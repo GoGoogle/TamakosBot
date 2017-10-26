@@ -1,7 +1,6 @@
 const TelegramBot = require('node-telegram-bot-api');
 const axios = require('axios')
-const utils = require('./utils')
-const util = require('util')
+const tools = require('./tools')
 const utl = require('util')
 
 const token = '385193660:AAEakfWdmdEVwBsnCm6WogV7ZioLptpnRqI';
@@ -47,7 +46,7 @@ bot.onText(/\/wget (.+)/, (msg, match) => {
 
   const s_chat_id = msg.chat.id
 
-  utils.downloadDocument(bot, s_chat_id, document_uri, re_options, document_name)
+  tools.downloadDocument(bot, s_chat_id, document_uri, re_options, document_name)
 });
 
 
@@ -59,7 +58,7 @@ bot.onText(/\/netease (.+)/, async function (netease, netease_params) {
   // 生成搜索结果的 歌曲列表
   async function produceMusicPanel(music_name, music_curr_page) {
     // 搜索的 songs 结果
-    const search_result = await utils.searchNeteaseMusicSongs(music_name, music_curr_page)
+    const search_result = await tools.searchNeteaseMusicSongs(music_name, music_curr_page)
 
     // 搜索结果的总页数
     const music_total_page_num = search_result.songCount === 0 ? 0 : Math.ceil(search_result.songCount / 5)
@@ -153,6 +152,7 @@ bot.onText(/\/netease (.+)/, async function (netease, netease_params) {
 
   }
 
+  bot.removeAllListeners() // 移除未知的监听
 
   // 发送候选歌曲菜单
   sendPagePanel(netease_params[1], 1)
@@ -167,13 +167,11 @@ bot.onText(/\/netease (.+)/, async function (netease, netease_params) {
     }
     if (q.data === 'cancel_action') {
       await bot.deleteMessage(q.from.id, q.message.message_id)
-      bot.removeAllListeners() // 移除未知的监听
     }
     if (!isNaN(q.data)) {
-      let music_url_detail = await utils.getNeteaseMusicUrlDetail(q.data)
-      let song_detail = await utils.getNeteaseMusicSongDetail(q.data)
-      utils.downloadAudio(bot, netease.chat.id, music_url_detail.url, netease.message_id, song_detail, music_url_detail)
-      await bot.deleteMessage(q.from.id, q.message.message_id)
+      let music_url_detail = await tools.getNeteaseMusicUrlDetail(q.data)
+      let song_detail = await tools.getNeteaseMusicSongDetail(q.data)
+      tools.downloadAudio(bot, q.from.id, music_url_detail.url, q.message.message_id, song_detail, music_url_detail)
     }
   });
 }
