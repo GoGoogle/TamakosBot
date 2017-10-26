@@ -2,6 +2,7 @@ const axios = require('axios')
 const concat = require('concat-stream');
 const request = require('request');
 const utl = require('util')
+const logger = require('./logger')
 
 exports.downloadDocument = function (bot, chatId, document_uri, re_options, document_name) {
     async function getFile(buf, res1) {
@@ -9,9 +10,9 @@ exports.downloadDocument = function (bot, chatId, document_uri, re_options, docu
             let res2 = await bot.editMessageText('正在下载中....', {
                 chat_id: chatId, message_id: res1.message_id
             })
-            let res3 = await bot.sendDocument(chatId, buf, re_options, { filename: document_name })
+            await bot.sendDocument(chatId, buf, re_options, { filename: document_name })
         } catch (err) {
-            console.log(err)
+            logger.error('could not download Document File : %s', err)
             bot.sendMessage(chatId, 'There are some mistakes exist, please do not try again!')
         } finally {
             bot.deleteMessage(chatId, res2.message_id)
@@ -50,21 +51,28 @@ exports.downloadAudio = function (bot, chatId, audio_uri, msgId, song_detail, mu
 
             })
         } catch (err) {
+            logger.error('could not download Audio File : %s', err)
             bot.sendMessage(chatId, 'There are some mistakes exist, please do not try again!')
         } finally {
+            bot.deleteMessage(chatId, msgId)
             bot.deleteMessage(chatId, res2.message_id)
         }
     }
     async function downloading() {
-        let res1 = await bot.sendMessage(chatId, "获取中~", { reply_to_message_id: msgId })
-        const concat_buf = concat((buf) => {
-            getFile(buf, res1)
-        })
-        let options = {
-            url: audio_uri
+        try {
+            let res1 = await bot.sendMessage(chatId, "获取中~", { reply_to_message_id: msgId })
+            const concat_buf = concat((buf) => {
+                getFile(buf, res1)
+            })
+            let options = {
+                url: audio_uri
+            }
+            // !!!!!!!!!!!!! 必须使用国内的服务器下载 !!!!!!!!!!!!!!!!!!!!!!!!!
+            request(options).pipe(concat_buf)
+        } catch (err) {
+            logger.error('failed to downloading : %s', err)
         }
-        // !!!!!!!!!!!!! 必须使用国内的服务器下载 !!!!!!!!!!!!!!!!!!!!!!!!!
-        request(options).pipe(concat_buf)
+
     }
     return downloading()
 }

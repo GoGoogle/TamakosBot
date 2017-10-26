@@ -51,7 +51,7 @@ bot.onText(/\/wget (.+)/, (msg, match) => {
 
 
 
-// 网易云音乐
+
 
 bot.onText(/\/netease (.+)/, async function (netease, netease_params) {
 
