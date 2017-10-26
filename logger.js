@@ -4,7 +4,7 @@ const fs = require('fs');
 module.exports = tracer.console({
     transport: function (data) {
         console.log(data.output);
-        fs.appendFile('./file.log', data.output + '\n', (err) => {
+        fs.appendFile('./info.log', data.output + '\n', (err) => {
             if (err) throw err;
         });
     }

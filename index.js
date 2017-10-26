@@ -2,8 +2,9 @@ const TelegramBot = require('node-telegram-bot-api');
 const axios = require('axios')
 const tools = require('./tools')
 const utl = require('util')
+const logger = require('./logger')
 
-const token = '385193660:AAEakfWdmdEVwBsnCm6WogV7ZioLptpnRqI';
+const token = '334635714:AAFglddZSt7oROLLRLL9JuzMdLvx-uW-09A';
 const bot = new TelegramBot(token, {
   polling: true
 });
@@ -12,33 +13,33 @@ bot.on('message', (msg) => {
 
   var hi = "hi";
   if (msg.text.toLowerCase().indexOf(hi) === 0) {
-    bot.sendMessage(msg.from.id, "Hi " + msg.from.first_name + "~");
+    bot.sendMessage(msg.chat.id, "Hi " + msg.from.first_name + "~");
   }
 
   var bye = "bye";
   if (msg.text.toLowerCase().includes(bye)) {
-    bot.sendMessage(msg.from.id, "Bye, Hope to see you around again~", { reply_to_message_id: msg.message_id });
+    bot.sendMessage(msg.chat.id, "Bye, Hope to see you around again~", { reply_to_message_id: msg.message_id });
   }
 
 });
 
 bot.onText(/\/start/, (msg) => {
 
-  bot.sendMessage(msg.from.id, "emm..");
+  bot.sendMessage(msg.chat.id, "emm..");
 
 });
 
 bot.onText(/\/s (.+)/, (msg, match) => {
-  const fromId = msg.from.id;
+  const chatId = msg.chat.id;
   const transText = match[1];
   const api = "http://translate.hotcn.top/translate/api"
 
   axios.post(api, { text: transText }).then((res) => {
-    bot.sendMessage(fromId, res.data.text, { reply_to_message_id: msg.message_id });
+    bot.sendMessage(chatId, res.data.text, { reply_to_message_id: msg.message_id });
   })
 });
 
-bot.onText(/\/wget (.+)/, (msg, match) => {
+bot.onText(/\/d (.+)/, (msg, match) => {
 
   const document_uri = match[1];
   const document_name = document_uri.substring(document_uri.lastIndexOf('/') + 1, document_uri.length)
@@ -53,7 +54,7 @@ bot.onText(/\/wget (.+)/, (msg, match) => {
 
 
 
-bot.onText(/\/netease (.+)/, async function (netease, netease_params) {
+bot.onText(/\/m (.+)/, async function (netease, netease_params) {
 
   // 生成搜索结果的 歌曲列表
   async function produceMusicPanel(music_name, music_curr_page) {
@@ -132,6 +133,8 @@ bot.onText(/\/netease (.+)/, async function (netease, netease_params) {
   // 获取 关键词，当前页码。修改内容（由关键词和页码确定）、当前页码和总页码。
   async function modifyPagePanel(obj, isNext) {
 
+    logger.info('modifyPagePanel info: ', obj)
+
     const keyword = obj.data.substring(obj.data.indexOf('keywords') + 8)
     let pageCode = parseInt(obj.data.substring(obj.data.indexOf('pageNum') + 7, obj.data.indexOf('keywords')))
 
@@ -140,7 +143,7 @@ bot.onText(/\/netease (.+)/, async function (netease, netease_params) {
     const newPanel = await produceMusicPanel(keyword, pageCode)
 
     const editOptions = {
-      chat_id: obj.from.id,
+      chat_id: obj.message.chat.id,
       message_id: obj.message.message_id,
       reply_markup: {
         inline_keyboard: newPanel.content
@@ -159,6 +162,7 @@ bot.onText(/\/netease (.+)/, async function (netease, netease_params) {
 
   // 监听回调查询语句
   bot.on("callback_query", async function (q) {
+    logger.info('callback_query info: ', q)
     if (q.data.startsWith('next_action')) {
       modifyPagePanel(q, true)
     }
@@ -166,12 +170,12 @@ bot.onText(/\/netease (.+)/, async function (netease, netease_params) {
       modifyPagePanel(q, false)
     }
     if (q.data === 'cancel_action') {
-      await bot.deleteMessage(q.from.id, q.message.message_id)
+      await bot.deleteMessage(q.message.chat.id, q.message.message_id)
     }
     if (!isNaN(q.data)) {
       let music_url_detail = await tools.getNeteaseMusicUrlDetail(q.data)
       let song_detail = await tools.getNeteaseMusicSongDetail(q.data)
-      tools.downloadAudio(bot, q.from.id, music_url_detail.url, q.message.message_id, song_detail, music_url_detail)
+      tools.downloadAudio(bot, q.message.chat.id, music_url_detail.url, q.message.message_id, song_detail, music_url_detail)
     }
   });
 }
