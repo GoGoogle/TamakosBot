@@ -2,6 +2,7 @@ const TelegramBot = require('node-telegram-bot-api');
 const axios = require('axios')
 const utils = require('./utils')
 const util = require('util')
+const utl = require('util')
 
 const token = '385193660:AAEakfWdmdEVwBsnCm6WogV7ZioLptpnRqI';
 const bot = new TelegramBot(token, {
@@ -76,23 +77,23 @@ bot.onText(/\/netease (.+)/, async function (netease, netease_params) {
       if (music_curr_page === 1) {
         music_arr.push([{
           text: '下一页',
-          callback_data: 'next_action'
+          callback_data: 'next_action' + 'pageNum' + music_curr_page + 'keywords' + music_name
         }])
       } else if (music_curr_page < music_total_page_num) {
         music_arr.push([
           {
             text: '上一页',
-            callback_data: 'previous_action'
+            callback_data: 'previous_action' + 'pageNum' + music_curr_page + 'keywords' + music_name
           },
           {
             text: '下一页',
-            callback_data: 'next_action'
+            callback_data: 'next_action' + 'pageNum' + music_curr_page + 'keywords' + music_name
           }
         ])
       } else if (music_curr_page === music_total_page_num) {
         music_arr.push([{
           text: '上一页',
-          callback_data: 'previous_action'
+          callback_data: 'previous_action' + 'pageNum' + music_curr_page + 'keywords' + music_name
         }])
       }
 
@@ -120,8 +121,8 @@ bot.onText(/\/netease (.+)/, async function (netease, netease_params) {
       return
     }
 
-    await bot.sendMessage(netease.chat.id, "☁️🎵关键字 「"
-      + netease_params[1] + "」p: " + panel.currPageNum + "/" + panel.totalPageNum, {
+    await bot.sendMessage(netease.chat.id, utl.format("☁️🎵关键字 「%s」p: %s/%s",
+      netease_params[1], panel.currPageNum, panel.totalPageNum), {
         reply_markup: {
           inline_keyboard: panel.content
         },
@@ -129,40 +130,44 @@ bot.onText(/\/netease (.+)/, async function (netease, netease_params) {
       })
   }
 
-  async function modifyPagePanel(m_chat_id, m_msg_id) {
-    // 获取 关键词，当前页码。修改内容（由关键词和页码确定）、当前页码和总页码。
-    const panel = await produceMusicPanel(keyword, currPage)
+  // 获取 关键词，当前页码。修改内容（由关键词和页码确定）、当前页码和总页码。
+  async function modifyPagePanel(obj, isNext) {
 
-    const content = panel.content
-    const currPageNum = panel.currPageNum
-    const totalPageNum = panel.totalPageNum
+    const keyword = obj.data.substring(obj.data.indexOf('keywords') + 8)
+    let pageCode = parseInt(obj.data.substring(obj.data.indexOf('pageNum') + 7, obj.data.indexOf('keywords')))
 
-    // await bot.editMessageReplyMarkup({
-    //   inline_keyboard: reoly
-    // }, {
-    //     chat_id: m_chat_id, message_id: m_msg_id
-    //   })
+    isNext ? pageCode += 1 : pageCode -= 1
+
+    const newPanel = await produceMusicPanel(keyword, pageCode)
+
+    const editOptions = {
+      chat_id: obj.from.id,
+      message_id: obj.message.message_id,
+      reply_markup: {
+        inline_keyboard: newPanel.content
+      }
+    }
+
+    await bot.editMessageText(utl.format("☁️🎵关键字 「%s」p: %s/%s",
+      keyword, newPanel.currPageNum, newPanel.totalPageNum), editOptions)
+
   }
 
 
   // 发送候选歌曲菜单
-  sendPagePanel(netease_params[1], 0)
+  sendPagePanel(netease_params[1], 1)
 
-  // 异步函数之间相互影响，不隔离
+  // 监听回调查询语句
   bot.on("callback_query", async function (q) {
-    console.log(1111111111111111111111, q, 333333333333333333333)
-    if (q.data === 'next_action') {
-      music_curr_page_num += 1
-      modifyPagePanel(q.from.id, q.message.message_id)
+    if (q.data.startsWith('next_action')) {
+      modifyPagePanel(q, true)
     }
-    if (q.data === 'previous_action') {
-      music_curr_page_num -= 1
-      modifyPagePanel(q.from.id, q.message.message_id)
+    if (q.data.startsWith('previous_action')) {
+      modifyPagePanel(q, false)
     }
     if (q.data === 'cancel_action') {
       await bot.deleteMessage(q.from.id, q.message.message_id)
-      // 移除未知的监听
-      bot.removeAllListeners()
+      bot.removeAllListeners() // 移除未知的监听
     }
     if (!isNaN(q.data)) {
       let music_url_detail = await utils.getNeteaseMusicUrlDetail(q.data)
