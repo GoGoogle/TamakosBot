@@ -12,12 +12,12 @@ bot.on('message', (msg) => {
 
   var hi = "hi";
   if (msg.text.toLowerCase().indexOf(hi) === 0) {
-    bot.sendMessage(msg.from.id, "Hello " + msg.from.first_name);
+    bot.sendMessage(msg.from.id, "Hello " + msg.from.first_name + "~");
   }
 
   var bye = "bye";
   if (msg.text.toLowerCase().includes(bye)) {
-    bot.sendMessage(msg.from.id, "Bye, Hope to see you around again.", { reply_to_message_id: msg.message_id });
+    bot.sendMessage(msg.from.id, "Bye, Hope to see you around again~", { reply_to_message_id: msg.message_id });
   }
 
 });
