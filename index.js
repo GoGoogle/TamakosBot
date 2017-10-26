@@ -17,7 +17,7 @@ bot.on('message', (msg) => {
 
   var bye = "bye";
   if (msg.text.toLowerCase().includes(bye)) {
-    bot.sendMessage(msg.from.id, "Bye, Hope to see you around again", { reply_to_message_id: msg.message_id });
+    bot.sendMessage(msg.from.id, "Bye, Hope to see you around again.", { reply_to_message_id: msg.message_id });
   }
 
 });
