@@ -175,7 +175,7 @@ bot.onText(/\/m (.+)/, async function (netease, netease_params) {
     if (!isNaN(q.data)) {
       let music_url_detail = await tools.getNeteaseMusicUrlDetail(q.data)
       let song_detail = await tools.getNeteaseMusicSongDetail(q.data)
-      tools.downloadAudio(bot, q.message.chat.id, music_url_detail.url, q.message.message_id, song_detail, music_url_detail)
+      tools.downloadAudio(bot, q.message.chat.id, music_url_detail.url, q.message.message_id, netease.message_id, song_detail, music_url_detail)
     }
   });
 }

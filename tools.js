@@ -28,7 +28,7 @@ exports.downloadDocument = function (bot, chatId, document_uri, re_options, docu
     return downloading()
 }
 
-exports.downloadAudio = function (bot, chatId, audio_uri, msgId, song_detail, music_url_detail, audio_duration) {
+exports.downloadAudio = function (bot, chatId, audio_uri, msgId, fromId, song_detail, music_url_detail, audio_duration) {
     const audio_name = utl.format('%s - %s', song_detail.ar[0].name, song_detail.name)
     async function getFile(buf, res1) {
         let res2
@@ -37,7 +37,7 @@ exports.downloadAudio = function (bot, chatId, audio_uri, msgId, song_detail, mu
                 chat_id: chatId, message_id: res1.message_id
             })
             let res3 = await bot.sendAudio(chatId, buf, {
-                reply_to_message_id: msgId,
+                reply_to_message_id: fromId,
                 title: audio_name + '.mp3',
                 disable_notification: false,
                 duration: audio_duration,
