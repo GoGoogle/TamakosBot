@@ -24,7 +24,7 @@ bot.on('message', (msg) => {
 
 bot.onText(/\/start/, (msg) => {
 
-  bot.sendMessage(msg.from.id, "噫~");
+  bot.sendMessage(msg.from.id, "emm..");
 
 });
 
