@@ -21,18 +21,13 @@ def get_music(bot, update, args):
 def show_select_music_list(bot, update, kw, pagecode=1):
     logger.info('show_select_music_list: keyword={}'.format(kw))
     search_musics_dict = api.search_musics_by_keyword_and_pagecode(kw, pagecode=pagecode)
-    if search_musics_dict['code'] != 200:
-        logger.error('api search_musics_by_keyword_and_pagecode error: code is {}'
-                     .format(search_musics_dict['code']))
-        # TODO 发送顶部警告
+    if search_musics_dict['result']['songCount'] == 0:
+        text = "搜索结果为空值"
+        update.message.reply_text(text=text)
     else:
-        if search_musics_dict['result']['songCount'] == 0:
-            text = "搜索结果为空值"
-            update.message.reply_text(text=text)
-        else:
-            music_list_selector = tool.produce_music_list_selector(kw, pagecode, search_musics_dict['result'])
-            panel = tool.transfer_music_list_selector_to_panel(music_list_selector)
-            update.message.reply_text(text=panel['text'], reply_markup=panel['reply_markup'])
+        music_list_selector = tool.produce_music_list_selector(kw, pagecode, search_musics_dict['result'])
+        panel = tool.transfer_music_list_selector_to_panel(music_list_selector)
+        update.message.reply_text(text=panel['text'], reply_markup=panel['reply_markup'])
 
 
 def listen_selector_reply(bot, update):
@@ -58,4 +53,5 @@ def listen_selector_reply(bot, update):
     elif index3 != -1:
         tool.selector_cancel(bot, query)
     else:
-        tool.selector_download_music(bot, query)
+        music_id = query.data[8:]
+        tool.selector_send_music(bot, query, music_id)

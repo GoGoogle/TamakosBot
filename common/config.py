@@ -6,3 +6,5 @@ DB_NAME = "database.db"
 ADMINS = [334635714]
 
 TIMEOUT = 2.5
+
+CHUNK_SIZE = 2048

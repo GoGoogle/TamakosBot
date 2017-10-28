@@ -1,14 +1,32 @@
 import logging
 
+import requests
+import telegram
+from io import BytesIO
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 
-from config.configfile import TIMEOUT
+from common import config
+from common.config import TIMEOUT
+from entity.music.album import Album
 from entity.music.artist import Artist
 from entity.music.music import Music
 from entity.music.music_list_selector import MusicListSelector
 from service.netease import api
 
 logger = logging.getLogger(__name__)
+
+
+def generate_music_obj(detail, url):
+    ars = []
+    if len(detail['ar']) > 0:
+        for x in detail['ar']:
+            ars.append(Artist(arid=x['id'], name=x['name']))
+    al = Album(detail['al']['name'], detail['al']['id'])
+    music_obj = Music(mid=detail['id'], name=detail['name'], url=url['url'],
+                      scheme='{0} {1}kbps'.format(url['type'], url['br'] / 1000),
+                      artists=ars, duration=detail['dt'], album=al
+                      )
+    return music_obj
 
 
 def produce_music_list_selector(kw, pagecode, search_musics_result):
@@ -102,7 +120,30 @@ def selector_cancel(bot, query):
     query.message.delete()
 
 
-def selector_download_music(bot, query):
-    pass
-    # print(bot)
-    # print(query)
+def selector_send_music(bot, query, music_id):
+    logger.info('selector_download_music: music_id={0}'.format(music_id))
+    selector_cancel(bot, query)
+
+    query.message.reply_text("获取中~")
+    music_detail_dict = api.get_music_detail_by_musicid(music_id)
+    music_url_dict = api.get_music_url_by_musicid(music_id)
+
+    music_obj = generate_music_obj(music_detail_dict['songs'][0], music_url_dict['data'][0])
+    download_music_file(bot, query, music_obj)
+
+
+def download_music_file(bot, query, music_obj):
+    r = requests.get(music_obj.url)
+    # with BytesIO() as fd:
+    #     for chunk in r.iter_content(config.CHUNK_SIZE):
+    #         fd.write(chunk)
+    # file = ''
+
+    query.message.reply_text(text='{}\nmp3发送中~'.format(music_obj.url))
+    bot.send_chat_action(query.message.chat.id, action=telegram.ChatAction.UPLOAD_AUDIO)
+
+    caption = "标题: {0}\n艺术家:{1}\n专辑: {2}\n格式: {3}\n☁️ID: {4}".format(
+        music_obj.name, ' #'.join(v.name for v in music_obj.artists),
+        music_obj.album.name, music_obj.scheme, music_obj.mid
+    )
+    query.message.reply_audio(audio=file, caption=caption)

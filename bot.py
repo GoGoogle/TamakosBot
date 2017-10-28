@@ -2,7 +2,7 @@ import logging
 
 from telegram.ext import Updater
 
-from config import configfile, error
+from common import config, error
 from handler import commands, messages, listeners
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 
 
 def main():
-    updater = Updater(token=configfile.BOT_TOKEN)
+    updater = Updater(token=config.BOT_TOKEN)
     dp = updater.dispatcher
 
     router(dp)  # route the handler
