@@ -2,9 +2,8 @@ import logging
 
 from telegram.ext import Updater
 
-from utils import error
-from config import configfile
-from handler import commands, messages
+from config import configfile, error
+from handler import commands, messages, listeners
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                     level=logging.INFO)
@@ -12,7 +11,7 @@ logger = logging.getLogger(__name__)
 
 
 def main():
-    updater = Updater(token=configfile.bot_token)
+    updater = Updater(token=configfile.BOT_TOKEN)
     dp = updater.dispatcher
 
     router(dp)  # route the handler
@@ -24,6 +23,7 @@ def main():
 def router(dp):
     commands.handler_commands(dp)
     messages.handler_messages(dp)
+    listeners.handler_listeners(dp)
     error.handler_errors(dp)
 
 
