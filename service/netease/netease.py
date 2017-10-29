@@ -27,7 +27,7 @@ def show_select_music_list(bot, update, kw, pagecode=1):
     else:
         music_list_selector = tool.produce_music_list_selector(kw, pagecode, search_musics_dict['result'])
         panel = tool.transfer_music_list_selector_to_panel(music_list_selector)
-        update.message.reply_text(text=panel['text'], reply_markup=panel['reply_markup'])
+        update.message.reply_text(text=panel['text'], quote=True, reply_markup=panel['reply_markup'])
 
 
 def listen_selector_reply(bot, update):

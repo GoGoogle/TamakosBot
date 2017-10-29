@@ -127,6 +127,7 @@ def selector_send_music(bot, query, music_id):
     selector_cancel(bot, query)
     require_msg = query.message.reply_text(text="获取中~",
                                            timeout=TIMEOUT,
+                                           quote=True,
                                            reply_to_message_id=query.message.reply_to_message.message_id)
     music_detail_dict = api.get_music_detail_by_musicid(music_id)
     music_url_dict = api.get_music_url_by_musicid(music_id)
@@ -169,9 +170,10 @@ def download_music_file(bot, query, require_msg, music_obj):
                 chat_id=query.message.chat.id,
                 message_id=require_msg.message_id,
                 text=progress_status,
+                quote=True,
                 reply_to_message_id=query.message.reply_to_message.message_id,
                 caption='',
-                disable_notification=True,
+                disable_web_page_preview=True,
                 timeout=TIMEOUT
             )
 
@@ -186,9 +188,10 @@ def download_music_file(bot, query, require_msg, music_obj):
         chat_id=query.message.chat.id,
         message_id=require_msg.message_id,
         text='{}\nmp3发送中~'.format(netease_url),
+        quote=True,
         reply_to_message_id=query.message.reply_to_message.message_id,
         caption='',
-        disable_notification=True,
+        disable_web_page_preview=True,
         timeout=TIMEOUT
     )
 
@@ -197,10 +200,11 @@ def download_music_file(bot, query, require_msg, music_obj):
         music_obj.album.name, music_obj.scheme, music_obj.mid
     )
     try:
-        bot.send_chat_action(query.message.chat.id, action=telegram.ChatAction.UPLOAD_AUDIO, timeout=TIMEOUT)
         logger.info("文件：{}，正在发送中~".format(file.name))
+        bot.send_chat_action(query.message.chat.id, action=telegram.ChatAction.UPLOAD_AUDIO)
         bot.send_audio(chat_id=query.message.chat.id, audio=file, caption=caption,
                        title=file.name,
+                       quote=True,
                        reply_to_message_id=query.message.reply_to_message.message_id,
                        timeout=TIMEOUT)
     except Exception as e:
