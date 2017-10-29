@@ -2,12 +2,16 @@ import logging
 
 from telegram.ext import Updater
 
-from common import config, error
+from common import config
 from handler import commands, messages, listeners
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                     level=logging.INFO)
 logger = logging.getLogger(__name__)
+
+
+def error(bot, update, err):
+    logger.warning('Update "%s" caused error "%s"' % (update, err))
 
 
 def main():
@@ -24,7 +28,7 @@ def router(dp):
     commands.handler_commands(dp)
     messages.handler_messages(dp)
     listeners.handler_listeners(dp)
-    error.handler_errors(dp)
+    dp.add_error_handler(error)
 
 
 if __name__ == '__main__':

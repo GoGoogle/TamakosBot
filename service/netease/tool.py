@@ -1,9 +1,7 @@
 import logging
-
 import requests
+import time
 import telegram
-from io import BytesIO
-from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 
 from common import config
 from common.config import TIMEOUT
@@ -11,7 +9,9 @@ from entity.music.album import Album
 from entity.music.artist import Artist
 from entity.music.music import Music
 from entity.music.music_list_selector import MusicListSelector
+from io import BytesIO
 from service.netease import api
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 
 logger = logging.getLogger(__name__)
 
@@ -32,6 +32,8 @@ def generate_music_obj(detail, url):
 def produce_music_list_selector(kw, pagecode, search_musics_result):
     """
     generate music_list_selector by netease api
+    :param kw: search keyword
+    :param pagecode: current page code
     :param search_musics_result: the return value from '/search' api
     :return: music_list_selector
     """
@@ -123,27 +125,83 @@ def selector_cancel(bot, query):
 def selector_send_music(bot, query, music_id):
     logger.info('selector_download_music: music_id={0}'.format(music_id))
     selector_cancel(bot, query)
-
-    query.message.reply_text("获取中~")
+    require_msg = query.message.reply_text(text="获取中~",
+                                           timeout=TIMEOUT,
+                                           reply_to_message_id=query.message.reply_to_message.message_id)
     music_detail_dict = api.get_music_detail_by_musicid(music_id)
     music_url_dict = api.get_music_url_by_musicid(music_id)
 
     music_obj = generate_music_obj(music_detail_dict['songs'][0], music_url_dict['data'][0])
-    download_music_file(bot, query, music_obj)
+    download_music_file(bot, query, require_msg, music_obj)
 
 
-def download_music_file(bot, query, music_obj):
-    r = requests.get(music_obj.url)
-    # with BytesIO() as fd:
-    #     for chunk in r.iter_content(config.CHUNK_SIZE):
-    #         fd.write(chunk)
-    # file = ''
+def download_music_file(bot, query, require_msg, music_obj):
+    netease_url = 'http://music.163.com/song?id={}'.format(music_obj.mid)
+    file = BytesIO()
+    try:
+        r = requests.get(music_obj.url, stream=True, timeout=TIMEOUT)
+        start = time.time()
+        total_length = int(r.headers.get('content-length'))
+        dl = 0
+        for chunk in r.iter_content(config.CHUNK_SIZE):
+            dl += len(chunk)
+            file.write(chunk)
 
-    query.message.reply_text(text='{}\nmp3发送中~'.format(music_obj.url))
+            network_speed = dl / (time.time() - start)
+            if network_speed > 1024 * 1024:
+                network_speed_status = '{:.2f} MB/s'.format(network_speed / (1024 * 1024))
+            else:
+                network_speed_status = '{:.2f} KB/s'.format(network_speed / 1024)
+
+            if dl > 1024 * 1024:
+                dl_status = '{:.2f} MB'.format(dl / (1024 * 1024))
+            else:
+                dl_status = '{:.0f} KB'.format(dl / 1024)
+
+            # 已下载大小，总大小，已下载的百分比，网速
+            progress = '{0} / {1:.2f} MB ({2:.0f}%) - {3}'.format(dl_status,
+                                                                  total_length / (1024 * 1024),
+                                                                  dl / total_length * 100,
+                                                                  network_speed_status)
+            progress_status = '{0}\n{1}\n{2}'.format(netease_url, 'mp3下载中~', progress)
+
+            bot.edit_message_text(
+                chat_id=query.message.chat.id,
+                message_id=require_msg.message_id,
+                text=progress_status,
+                reply_to_message_id=query.message.reply_to_message.message_id,
+                timeout=TIMEOUT
+            )
+
+    except Exception as e:
+        logger.error('download file error: {}'.format(e))
+
+    file = BytesIO(file.getvalue())
+    file.name = '{0} - {1}'.format(
+        ' / '.join(v.name for v in music_obj.artists), music_obj.name)
+
+    bot.edit_message_text(
+        chat_id=query.message.chat.id,
+        message_id=require_msg.message_id,
+        text='{}\nmp3发送中~'.format(netease_url),
+        reply_to_message_id=query.message.reply_to_message.message_id,
+        caption='',
+        timeout=TIMEOUT
+    )
+
     bot.send_chat_action(query.message.chat.id, action=telegram.ChatAction.UPLOAD_AUDIO)
 
-    caption = "标题: {0}\n艺术家:{1}\n专辑: {2}\n格式: {3}\n☁️ID: {4}".format(
+    caption = "标题: {0}\n艺术家: #{1}\n专辑: {2}\n格式: {3}\n☁️ID: {4}".format(
         music_obj.name, ' #'.join(v.name for v in music_obj.artists),
         music_obj.album.name, music_obj.scheme, music_obj.mid
     )
-    query.message.reply_audio(audio=file, caption=caption)
+    try:
+        bot.send_audio(chat_id=query.message.chat.id, audio=file, caption=caption,
+                       reply_to_message_id=query.message.reply_to_message.message_id,
+                       timeout=TIMEOUT)
+    except Exception as e:
+        logger.error('send file error: {}'.format(e))
+    finally:
+        if not file.closed:
+            file.close()
+        require_msg.delete()
