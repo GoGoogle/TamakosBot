@@ -23,7 +23,7 @@ def generate_music_obj(detail, url):
             ars.append(Artist(arid=x['id'], name=x['name']))
     al = Album(detail['al']['name'], detail['al']['id'])
     music_obj = Music(mid=detail['id'], name=detail['name'], url=url['url'],
-                      scheme='{0} {1}kbps'.format(url['type'], url['br'] / 1000),
+                      scheme='{0} {1:.0f}kbps'.format(url['type'], url['br'] / 1000),
                       artists=ars, duration=detail['dt'], album=al
                       )
     return music_obj
@@ -107,7 +107,7 @@ def selector_page_turning(bot, query, kw, page_code):
                             text="加载中~",
                             show_alert=False,
                             timeout=TIMEOUT)
-    logger.info('selector_page_turning: page_code={0}'.format(page_code))
+    logger.info('selector_page_turning: keyword: {0}; page_code={1}'.format(kw, page_code))
     search_musics_dict = api.search_musics_by_keyword_and_pagecode(kw, pagecode=page_code)
     music_list_selector = produce_music_list_selector(kw, page_code, search_musics_dict['result'])
     panel = transfer_music_list_selector_to_panel(music_list_selector)
@@ -170,6 +170,8 @@ def download_music_file(bot, query, require_msg, music_obj):
                 message_id=require_msg.message_id,
                 text=progress_status,
                 reply_to_message_id=query.message.reply_to_message.message_id,
+                caption='',
+                disable_notification=True,
                 timeout=TIMEOUT
             )
 
@@ -186,17 +188,19 @@ def download_music_file(bot, query, require_msg, music_obj):
         text='{}\nmp3发送中~'.format(netease_url),
         reply_to_message_id=query.message.reply_to_message.message_id,
         caption='',
+        disable_notification=True,
         timeout=TIMEOUT
     )
-
-    bot.send_chat_action(query.message.chat.id, action=telegram.ChatAction.UPLOAD_AUDIO)
 
     caption = "标题: {0}\n艺术家: #{1}\n专辑: {2}\n格式: {3}\n☁️ID: {4}".format(
         music_obj.name, ' #'.join(v.name for v in music_obj.artists),
         music_obj.album.name, music_obj.scheme, music_obj.mid
     )
     try:
+        bot.send_chat_action(query.message.chat.id, action=telegram.ChatAction.UPLOAD_AUDIO, timeout=TIMEOUT)
+        logger.info("文件：{}，正在发送中~".format(file.name))
         bot.send_audio(chat_id=query.message.chat.id, audio=file, caption=caption,
+                       title=file.name,
                        reply_to_message_id=query.message.reply_to_message.message_id,
                        timeout=TIMEOUT)
     except Exception as e:

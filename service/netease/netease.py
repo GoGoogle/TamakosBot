@@ -48,7 +48,7 @@ def listen_selector_reply(bot, update):
         tool.selector_page_turning(bot, query, kw, page_code)
     elif index2 != -1:
         page_code = int(query.data[index2 + 1:]) - 1
-        kw = query.data[8:index1 - 1]
+        kw = query.data[8:index1 - 2]
         tool.selector_page_turning(bot, query, kw, page_code)
     elif index3 != -1:
         tool.selector_cancel(bot, query)
