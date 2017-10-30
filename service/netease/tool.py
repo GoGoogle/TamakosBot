@@ -18,7 +18,7 @@ from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 logger = logging.getLogger(__name__)
 
 proxies = {
-    "http": "http://119.29.165.233:8088",
+    "http": config.HTTP_PROXY,
 }
 
 

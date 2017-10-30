@@ -1,7 +1,9 @@
 import requests
 
+from common import config
+
 proxies = {
-    "http": "http://119.29.165.233:3000",
+    "http": config.API_PROXY,
 }
 
 
