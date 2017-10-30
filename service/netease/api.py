@@ -1,7 +1,7 @@
 import requests
 
 proxies = {
-    "http": "http://127.0.0.1:3000",
+    "http": "http://119.29.165.233:3000",
 }
 
 
@@ -44,4 +44,4 @@ def get_mv_detail_by_mvid(mvid):
 
 
 def get_mv_true_url_by_mv_url(mv_url):
-    return 'http://localhost:3000/mv/url?url={}'.format(mv_url)
+    return '{0}/mv/url?url={1}'.format(proxies['http'], mv_url)

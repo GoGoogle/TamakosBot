@@ -17,6 +17,10 @@ from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 
 logger = logging.getLogger(__name__)
 
+proxies = {
+    "http": "http://119.29.165.233:3000",
+}
+
 
 def generate_mv(mvid):
     mv_detail = api.get_mv_detail_by_mvid(mvid)['data']
@@ -220,7 +224,7 @@ def download_music_file(bot, query, last_msg, music_obj):
 
 def download_continue(bot, query, true_download_url, file, last_msg, file_type='document', false_download_url=''):
     try:
-        r = requests.get(true_download_url, stream=True, timeout=TIMEOUT)
+        r = requests.get(true_download_url, stream=True, timeout=TIMEOUT, proxies=proxies)
         start = time.time()
         total_length = int(r.headers.get('content-length'))
         dl = 0
