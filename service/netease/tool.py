@@ -181,13 +181,13 @@ def download_music_file(bot, query, require_msg, music_obj):
         logger.error('download file error: {}'.format(e))
 
     file = BytesIO(file.getvalue())
-    file.name = '{0} - {1}'.format(
+    file.name = '{0} - {1}.mp3'.format(
         ' / '.join(v.name for v in music_obj.artists), music_obj.name)
 
     bot.edit_message_text(
         chat_id=query.message.chat.id,
         message_id=require_msg.message_id,
-        text='{}\nmp3发送中~'.format(netease_url),
+        text='{}\nmp3 发送中~'.format(netease_url),
         quote=True,
         reply_to_message_id=query.message.reply_to_message.message_id,
         caption='',
