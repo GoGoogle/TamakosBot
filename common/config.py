@@ -3,7 +3,7 @@ BOT_TOKEN = "425909661:AAHC_a9-htfYsjaZuKfP6jjcl8n2sjizctg"
 
 API_PROXY = 'http://119.29.165.233:3000'
 
-HTTP_PROXY = 'http://119.29.165.233:8088'
+TOOL_PROXY = 'http://119.29.165.233:8088'
 
 DB_NAME = "database.db"
 
