@@ -12,6 +12,7 @@ class Music(object):
                  artists=None,
                  duration=0,
                  album=None,
+                 mv=None,
                  quality=''
                  ):
         self.logger = logging.getLogger(__name__)
@@ -22,11 +23,12 @@ class Music(object):
         self.artists = artists
         self.duration = duration
         self.album = album
+        self.mv = mv
         self.quality = quality
 
     def __str__(self) -> str:
         return 'mid: {0}, name: {1}, url: {2},' \
                ' scheme: {3}, artists: {4}, duration: {5},' \
-               ' album: {6}, quality: {7}'.format(self.mid, self.name, self.url,
-                                                  self.scheme, self.artists, self.duration,
-                                                  self.album, self.quality)
+               ' album: {6}, mv: {7}, quality: {8}'.format(self.mid, self.name, self.url,
+                                                           self.scheme, self.artists, self.duration,
+                                                           self.album, self.mv, self.quality)

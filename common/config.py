@@ -1,5 +1,5 @@
-# base
-BOT_TOKEN = "334635714:AAFglddZSt7oROLLRLL9JuzMdLvx-uW-09A"
+# BOT_TOKEN = "334635714:AAFglddZSt7oROLLRLL9JuzMdLvx-uW-09A"
+BOT_TOKEN = "425909661:AAHC_a9-htfYsjaZuKfP6jjcl8n2sjizctg"
 
 DB_NAME = "database.db"
 

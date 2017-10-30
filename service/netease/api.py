@@ -32,3 +32,16 @@ def get_music_detail_by_musicid(music_id):
     response = requests.get('http://localhost/song/detail', params=payload, proxies=proxies)
 
     return response.json()
+
+
+def get_mv_detail_by_mvid(mvid):
+    payload = {
+        'mvid': mvid
+    }
+    response = requests.get('http://localhost/mv', params=payload, proxies=proxies)
+
+    return response.json()
+
+
+def get_mv_true_url_by_mv_url(mv_url):
+    return 'http://localhost:3000/mv/url?url={}'.format(mv_url)

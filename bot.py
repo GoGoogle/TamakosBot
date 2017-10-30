@@ -20,7 +20,7 @@ def main():
 
     router(dp)  # route the handler
 
-    updater.start_polling()  # 开始轮询
+    updater.start_polling(timeout=20)  # 开始轮询
     updater.idle()
 
 

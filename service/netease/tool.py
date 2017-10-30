@@ -1,4 +1,5 @@
 import logging
+
 import requests
 import time
 import telegram
@@ -9,11 +10,19 @@ from entity.music.album import Album
 from entity.music.artist import Artist
 from entity.music.music import Music
 from entity.music.music_list_selector import MusicListSelector
+from entity.music.mv import Mv
 from io import BytesIO
 from service.netease import api
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 
 logger = logging.getLogger(__name__)
+
+
+def generate_mv(mvid):
+    mv_detail = api.get_mv_detail_by_mvid(mvid)['data']
+    max_key = str(max(map(lambda x: int(x), mv_detail['brs'].keys())))
+    return Mv(mv_detail['id'], mv_detail['name'], mv_detail['brs'][max_key],
+              mv_detail['artistName'], mv_detail['duration'], quality=max_key)
 
 
 def generate_music_obj(detail, url):
@@ -22,10 +31,14 @@ def generate_music_obj(detail, url):
         for x in detail['ar']:
             ars.append(Artist(arid=x['id'], name=x['name']))
     al = Album(detail['al']['name'], detail['al']['id'])
+
     music_obj = Music(mid=detail['id'], name=detail['name'], url=url['url'],
                       scheme='{0} {1:.0f}kbps'.format(url['type'], url['br'] / 1000),
                       artists=ars, duration=detail['dt'], album=al
                       )
+    if detail['mv'] != 0:
+        mv = generate_mv(detail['mv'])
+        music_obj.mv = mv
     return music_obj
 
 
@@ -129,18 +142,85 @@ def selector_send_music(bot, query, music_id):
                                            timeout=TIMEOUT,
                                            quote=True,
                                            reply_to_message_id=query.message.reply_to_message.message_id)
-    music_detail_dict = api.get_music_detail_by_musicid(music_id)
-    music_url_dict = api.get_music_url_by_musicid(music_id)
+    song_detail_dict = api.get_music_detail_by_musicid(music_id)
+    song_url_dict = api.get_music_url_by_musicid(music_id)
+    music_obj = generate_music_obj(song_detail_dict['songs'][0], song_url_dict['data'][0])
 
-    music_obj = generate_music_obj(music_detail_dict['songs'][0], music_url_dict['data'][0])
     download_music_file(bot, query, require_msg, music_obj)
 
 
-def download_music_file(bot, query, require_msg, music_obj):
-    netease_url = 'http://music.163.com/song?id={}'.format(music_obj.mid)
-    file = BytesIO()
+def download_music_file(bot, query, last_msg, music_obj):
+    music_file = BytesIO()
+    mv_file = BytesIO()
     try:
-        r = requests.get(music_obj.url, stream=True, timeout=TIMEOUT)
+        # download music
+        netease_url = 'http://music.163.com/song?id={}'.format(music_obj.mid)
+        memory1 = BytesIO()
+
+        music_caption = "标题: {0}\n艺术家: #{1}\n专辑: {2}\n格式: {3}\n☁️ID: {4}".format(
+            music_obj.name, ' #'.join(v.name for v in music_obj.artists),
+            music_obj.album.name, music_obj.scheme, music_obj.mid
+        )
+        file_fullname = '{0} - {1}.mp3'.format(
+            ' / '.join(v.name for v in music_obj.artists), music_obj.name)
+
+        if query.message.audio and query.message.audio.title == file_fullname[:-4]:
+            send_file(bot, query, last_msg, query.message.audio, file_fullname, 'mp3', telegram.ChatAction.UPLOAD_AUDIO,
+                      music_caption, netease_url)
+        else:
+
+            download_continue(bot, query, music_obj.url, memory1,
+                              last_msg, 'mp3', false_download_url=netease_url)
+
+            music_file = BytesIO(memory1.getvalue())
+            music_file.name = file_fullname
+
+            send_file(bot, query, last_msg, music_file, file_fullname, 'mp3', telegram.ChatAction.UPLOAD_AUDIO,
+                      music_caption, netease_url)
+
+        # download mv
+        logger.info('selector_download_music: mvid={0}'.format(music_obj.mv.mid))
+        if music_obj.mv:
+            logger.info('download mv={} start...'.format(music_obj.mv.mid))
+
+            memory2 = BytesIO()
+
+            mv_caption = "标题: {0}\n艺术家: #{1}\n品质: {2}\n☁️ID: {3}".format(
+                music_obj.mv.name, music_obj.mv.artist_name,
+                music_obj.mv.quality, music_obj.mv.mid
+            )
+
+            mv_file_fullname = '{0} - {1}.mp4'.format(
+                music_obj.mv.artist_name, music_obj.mv.name)
+
+            if query.message.video and query.message.video.title == mv_file_fullname[:-4]:
+                send_file(bot, query, last_msg, query.message.video, mv_file_fullname, 'mp4',
+                          telegram.ChatAction.UPLOAD_VIDEO,
+                          mv_caption, music_obj.mv.url)
+            else:
+                # true url
+                mv_true_url = api.get_mv_true_url_by_mv_url(music_obj.mv.url)
+                download_continue(bot, query, mv_true_url, memory2,
+                                  last_msg, 'mp4', false_download_url=music_obj.mv.url)
+
+                mv_file = BytesIO(memory2.getvalue())
+                mv_file.name = mv_file_fullname
+                send_file(bot, query, last_msg, mv_file, mv_file_fullname, 'mp4', telegram.ChatAction.UPLOAD_VIDEO,
+                          mv_caption, music_obj.mv.url)
+
+    except Exception as e:
+        logger.error('send file error: {}'.format(e))
+    finally:
+        if not music_file.closed:
+            music_file.close()
+        if not mv_file.closed:
+            mv_file.close()
+        last_msg.delete()
+
+
+def download_continue(bot, query, true_download_url, file, last_msg, file_type='document', false_download_url=''):
+    try:
+        r = requests.get(true_download_url, stream=True, timeout=TIMEOUT)
         start = time.time()
         total_length = int(r.headers.get('content-length'))
         dl = 0
@@ -164,11 +244,11 @@ def download_music_file(bot, query, require_msg, music_obj):
                                                                   total_length / (1024 * 1024),
                                                                   dl / total_length * 100,
                                                                   network_speed_status)
-            progress_status = '{0}\n{1}\n{2}'.format(netease_url, 'mp3下载中~', progress)
+            progress_status = '{0}\n{1}下载中~\n{2}'.format(false_download_url, file_type, progress)
 
             bot.edit_message_text(
                 chat_id=query.message.chat.id,
-                message_id=require_msg.message_id,
+                message_id=last_msg.message_id,
                 text=progress_status,
                 quote=True,
                 reply_to_message_id=query.message.reply_to_message.message_id,
@@ -180,14 +260,12 @@ def download_music_file(bot, query, require_msg, music_obj):
     except Exception as e:
         logger.error('download file error: {}'.format(e))
 
-    file = BytesIO(file.getvalue())
-    file.name = '{0} - {1}.mp3'.format(
-        ' / '.join(v.name for v in music_obj.artists), music_obj.name)
 
+def send_file(bot, query, last_msg, file, file_name, file_suffix, telegram_action, file_caption, false_download_url=''):
     bot.edit_message_text(
         chat_id=query.message.chat.id,
-        message_id=require_msg.message_id,
-        text='{}\nmp3 发送中~'.format(netease_url),
+        message_id=last_msg.message_id,
+        text='{0}\n{1} 发送中~'.format(false_download_url, file_suffix),
         quote=True,
         reply_to_message_id=query.message.reply_to_message.message_id,
         caption='',
@@ -195,21 +273,20 @@ def download_music_file(bot, query, require_msg, music_obj):
         timeout=TIMEOUT
     )
 
-    caption = "标题: {0}\n艺术家: #{1}\n专辑: {2}\n格式: {3}\n☁️ID: {4}".format(
-        music_obj.name, ' #'.join(v.name for v in music_obj.artists),
-        music_obj.album.name, music_obj.scheme, music_obj.mid
-    )
-    try:
-        logger.info("文件：{}，正在发送中~".format(file.name))
-        bot.send_chat_action(query.message.chat.id, action=telegram.ChatAction.UPLOAD_AUDIO)
-        bot.send_audio(chat_id=query.message.chat.id, audio=file, caption=caption,
-                       title=file.name,
+    logger.info("文件：{}，正在发送中~".format(file_name))
+    bot.send_chat_action(query.message.chat.id, action=telegram_action)
+
+    suffix_length = len(file_suffix) + 1
+    if file_suffix in ['mp3', 'audio']:
+        bot.send_audio(chat_id=query.message.chat.id, audio=file, caption=file_caption,
+                       title=file_name[:-suffix_length],
                        quote=True,
                        reply_to_message_id=query.message.reply_to_message.message_id,
                        timeout=TIMEOUT)
-    except Exception as e:
-        logger.error('send file error: {}'.format(e))
-    finally:
-        if not file.closed:
-            file.close()
-        require_msg.delete()
+
+    if file_suffix in ['mp4', 'video']:
+        bot.send_video(chat_id=query.message.chat.id, video=file, caption=file_caption,
+                       title=file_name[:-suffix_length],
+                       quote=True,
+                       reply_to_message_id=query.message.reply_to_message.message_id,
+                       timeout=TIMEOUT)
