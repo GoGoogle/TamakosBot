@@ -17,6 +17,10 @@ from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 
 logger = logging.getLogger(__name__)
 
+proxies = {
+    "http": "http://119.29.165.233:8088",
+}
+
 
 def generate_mv(mvid):
     mv_detail = api.get_mv_detail_by_mvid(mvid)['data']
@@ -227,7 +231,7 @@ def download_continue(bot, query, true_download_url, file, last_msg, file_type='
     try:
         # 代理使用国内服务器转发接口
         logger.info('***********************true_download_url={0}'.format(true_download_url))
-        r = requests.get(true_download_url, stream=True, timeout=TIMEOUT)
+        r = requests.get(true_download_url, stream=True, timeout=TIMEOUT, proxies=proxies)
         start = time.time()
         total_length = int(r.headers.get('content-length'))
         dl = 0
