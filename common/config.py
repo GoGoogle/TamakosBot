@@ -12,7 +12,9 @@ CHUNK_SIZE = 1024 * 256
 
 API_PROXY = 'http://119.29.165.233:3000'
 
-TOOL_PROXY = {
-    'protocol': 'http',
-    'host': 'http://119.29.165.233:8088'
-}
+# TOOL_PROXY = {
+#     'protocol': 'http',
+#     'host': 'http://127.0.0.1:8088'
+# }
+
+TOOL_PROXY = None
