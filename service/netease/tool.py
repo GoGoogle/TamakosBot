@@ -231,8 +231,9 @@ def download_music_file(bot, query, last_msg, music_obj):
 def download_continue(bot, query, true_download_url, file, last_msg, file_type='document', false_download_url=''):
     try:
         # 代理使用国内服务器转发接口
-        logger.info('***********************true_download_url={0}'.format(true_download_url))
-        if 'socks' in proxies.keys() or 'http' in proxies.keys():
+        logger.info('***********************true_download_url={0}, proxy:{1}'.format(
+            true_download_url, proxies['protocol']))
+        if proxies['protocol']:
             r = requests.get(true_download_url, stream=True, timeout=TIMEOUT, proxies=proxies)
         else:
             r = requests.get(true_download_url, stream=True, timeout=TIMEOUT)
