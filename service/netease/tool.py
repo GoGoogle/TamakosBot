@@ -169,7 +169,7 @@ def download_music_file(bot, query, last_msg, music_obj):
             ' / '.join(v.name for v in music_obj.artists), music_obj.name)
 
         if query.message.audio and query.message.audio.title == file_fullname[:-4]:
-            logger.info('****************query.message.audio.title={0}, file_id ={1}', query.message.audio.title,
+            logger.info('query.message.audio.title={0}, file_id ={1}', query.message.audio.title,
                         query.message.audio.file_id)
             send_file(bot, query, last_msg, query.message.audio, file_fullname, 'mp3',
                       telegram.ChatAction.UPLOAD_AUDIO,
@@ -201,7 +201,7 @@ def download_music_file(bot, query, last_msg, music_obj):
                 music_obj.mv.artist_name, music_obj.mv.name)
 
             if query.message.video and query.message.video.title == mv_file_fullname[:-4]:
-                logger.info('****************query.message.video.title={0}, file_id ={1}', query.message.video.title,
+                logger.info('query.message.video.title={0}, file_id ={1}', query.message.video.title,
                             query.message.video.file_id)
                 send_file(bot, query, last_msg, query.message.video, mv_file_fullname, 'mp4',
                           telegram.ChatAction.UPLOAD_VIDEO,
@@ -230,10 +230,9 @@ def download_music_file(bot, query, last_msg, music_obj):
 
 def download_continue(bot, query, true_download_url, file, last_msg, file_type='document', false_download_url=''):
     try:
-        # 代理使用国内服务器转发接口
-        logger.info('******** start download proxy={1} ********'.format(
-            true_download_url, config.TOOL_PROXY['protocol']))
         if config.TOOL_PROXY['protocol']:
+            # 代理使用国内服务器转发接口
+            logger.info('**start proxy :: {0}.....'.format(config.TOOL_PROXY['protocol']))
             r = requests.get(true_download_url, stream=True, timeout=TIMEOUT, proxies=proxies)
         else:
             r = requests.get(true_download_url, stream=True, timeout=TIMEOUT)
