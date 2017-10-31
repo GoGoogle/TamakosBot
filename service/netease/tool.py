@@ -151,7 +151,6 @@ def selector_send_music(bot, query, music_id):
 
 def download_music_file(bot, query, last_msg, music_obj):
     music_file = BytesIO()
-    mv_file = BytesIO()
     try:
         # download music
         netease_url = 'http://music.163.com/song?id={}'.format(music_obj.mid)
@@ -181,45 +180,32 @@ def download_music_file(bot, query, last_msg, music_obj):
             send_file(bot, query, last_msg, music_file, file_fullname, 'mp3', telegram.ChatAction.UPLOAD_AUDIO,
                       music_caption, netease_url)
 
-        # download mv
-        # logger.info('selector_download_music: mvid={0}'.format(music_obj.mv.mid))
-        # if music_obj.mv:
-        #     logger.info('download mv={} start...'.format(music_obj.mv.mid))
+        if music_obj.mv:
+            logger.info('selector_download_music: mvid={0}'.format(music_obj.mv.mid))
 
-        #     memory2 = BytesIO()
+            last_msg.delete()
 
-        #     mv_caption = "标题: {0}\n艺术家: #{1}\n品质: {2}\n☁️ID: {3}".format(
-        #         music_obj.mv.name, music_obj.mv.artist_name,
-        #         music_obj.mv.quality, music_obj.mv.mid
-        #     )
+            logger.info('download mv={} start...'.format(music_obj.mv.mid))
 
-        #     mv_file_fullname = '{0} - {1}.mp4'.format(
-        #         music_obj.mv.artist_name, music_obj.mv.name)
+            mv_caption = "标题: {0}\n艺术家: #{1}\n品质: {2}\n☁️ID: {3}".format(
+                music_obj.mv.name, music_obj.mv.artist_name,
+                music_obj.mv.quality, music_obj.mv.mid
+            )
 
-        #     if query.message.video and query.message.video.title == mv_file_fullname[:-4]:
-        #         logger.info('query.message.video.title={0}, file_id ={1}', query.message.video.title,
-        #                     query.message.video.file_id)
-        #         send_file(bot, query, last_msg, query.message.video, mv_file_fullname, 'mp4',
-        #                   telegram.ChatAction.UPLOAD_VIDEO,
-        #                   mv_caption, music_obj.mv.url)
-        #     else:
-        #         # true url
-        #         mv_true_url = api.get_mv_true_url_by_mv_url(music_obj.mv.url)
-        #         download_continue(bot, query, mv_true_url, memory2,
-        #                           last_msg, 'mp4', false_download_url=music_obj.mv.url)
+            mv_file_fullname = '{0} - {1}.mp4'.format(
+                music_obj.mv.artist_name, music_obj.mv.name)
 
-        #         mv_file = BytesIO(memory2.getvalue())
-        #         mv_file.name = mv_file_fullname
-        #         send_file(bot, query, last_msg, mv_file, mv_file_fullname, 'mp4', telegram.ChatAction.UPLOAD_VIDEO,
-        #                   mv_caption, music_obj.mv.url)
+            # true url
+            mv_true_url = api.get_mv_true_url_by_mv_url(music_obj.mv.url)
+            message_text = '[{0}]({1}) MV 已发送~\n{2}'.format(mv_file_fullname, mv_true_url, mv_caption)
 
+            query.message.reply_text(text=message_text, parse_mode=telegram.ParseMode.MARKDOWN)
+                
     except Exception as e:
         logger.error('send file error: {}'.format(e))
     finally:
         if not music_file.closed:
             music_file.close()
-        if not mv_file.closed:
-            mv_file.close()
         if last_msg:
             last_msg.delete()
 
@@ -235,6 +221,7 @@ def download_continue(bot, query, true_download_url, file, last_msg, file_type='
             r = requests.get(true_download_url, stream=True, timeout=TIMEOUT, proxies=proxies)
         else:
             r = requests.get(true_download_url, stream=True, timeout=TIMEOUT)
+
         start = time.time()
         total_length = int(r.headers.get('content-length'))
         dl = 0
@@ -260,7 +247,6 @@ def download_continue(bot, query, true_download_url, file, last_msg, file_type='
                                                                   network_speed_status)
             progress_status = '{0}\n{1}下载中~\n{2}'.format(false_download_url, file_type, progress)
 
-            # TODO 判断的第二次, 第二次的时候要改为 sendMessage
             bot.edit_message_text(
                 chat_id=query.message.chat.id,
                 message_id=last_msg.message_id,
@@ -298,25 +284,3 @@ def send_file(bot, query, last_msg, file, file_name, file_suffix, telegram_actio
                        quote=True,
                        reply_to_message_id=query.message.reply_to_message.message_id,
                        timeout=TIMEOUT)
-
-    if file_suffix in ['mp4', 'video']:
-        last_msg.delete()
-        this_msg = bot.send_message(
-            chat_id=query.message.chat.id,
-            text='{0}\n{1} 发送中~'.format(false_download_url, file_suffix),
-            quote=True,
-            reply_to_message_id=query.message.reply_to_message.message_id,
-            caption='',
-            disable_web_page_preview=True,
-            timeout=TIMEOUT
-        )
-
-        logger.info("文件：{}，正在发送中~".format(file_name))
-        bot.send_chat_action(query.message.chat.id, action=telegram_action)
-
-        bot.send_video(chat_id=query.message.chat.id, video=file, caption=file_caption,
-                       title=file_name[:-suffix_length],
-                       quote=True,
-                       reply_to_message_id=query.message.reply_to_message.message_id,
-                       timeout=TIMEOUT)
-        this_msg.delete()
