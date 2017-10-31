@@ -115,7 +115,7 @@ def transfer_music_list_selector_to_panel(music_list_selector):
     return {'text': list_text, 'reply_markup': InlineKeyboardMarkup(button_list)}
 
 
-def download_continue(bot, query, true_download_url, file, last_msg, file_title, file_type='document',
+def download_continue(bot, query, true_download_url, file, last_msg, file_title,
                       false_download_url=''):
     try:
         if config.TOOL_PROXY:
@@ -151,15 +151,12 @@ def download_continue(bot, query, true_download_url, file, last_msg, file_title,
                                                                   total_length / (1024 * 1024),
                                                                   dl / total_length * 100,
                                                                   network_speed_status)
-            progress_status = '[{0}]({1})下载中~\n{2}'.format(file_title, false_download_url, progress)
+            progress_status = '[{0}]({1})  下载中~\n{2}'.format(file_title, false_download_url, progress)
 
             bot.edit_message_text(
                 chat_id=query.message.chat.id,
                 message_id=last_msg.message_id,
                 text=progress_status,
-                quote=True,
-                reply_to_message_id=query.message.reply_to_message.message_id,
-                caption='',
                 disable_web_page_preview=True,
                 parse_mode=telegram.ParseMode.MARKDOWN,
                 timeout=TIMEOUT
@@ -176,9 +173,6 @@ def send_file(bot, query, last_msg, file, file_name, file_suffix, telegram_actio
             chat_id=query.message.chat.id,
             message_id=last_msg.message_id,
             text='[{0}]({1}) 发送中~'.format(file_name, false_download_url),
-            quote=True,
-            reply_to_message_id=query.message.reply_to_message.message_id,
-            caption='',
             parse_mode=telegram.ParseMode.MARKDOWN,
             disable_web_page_preview=True,
             timeout=TIMEOUT
@@ -215,10 +209,8 @@ def selector_cancel(bot, query):
 def selector_send_music(bot, query, music_id):
     logger.info('selector_download_music: music_id={0}'.format(music_id))
     selector_cancel(bot, query)
-    this_msg = query.message.reply_text(text="获取中~",
-                                        timeout=TIMEOUT,
-                                        quote=True,
-                                        reply_to_message_id=query.message.reply_to_message.message_id)
+    this_msg = bot.send_message(chat_id=query.message.chat.id, text="获取中~",
+                                timeout=TIMEOUT)
     song_detail_dict = api.get_music_detail_by_musicid(music_id)
     song_url_dict = api.get_music_url_by_musicid(music_id)
     music_obj = generate_music_obj(song_detail_dict['songs'][0], song_url_dict['data'][0])
@@ -249,7 +241,7 @@ def download_music_file(bot, query, last_msg, music_obj):
         else:
 
             download_continue(bot, query, music_obj.url, memory1,
-                              last_msg, file_fullname, 'mp3', false_download_url=netease_url)
+                              last_msg, file_fullname, false_download_url=netease_url)
 
             music_file = BytesIO(memory1.getvalue())
             music_file.name = file_fullname
@@ -259,12 +251,10 @@ def download_music_file(bot, query, last_msg, music_obj):
 
         if music_obj.mv:
             logger.info('selector_download_music: mvid={0}'.format(music_obj.mv.mid))
-            if last_msg:
-                last_msg.delete()
 
             logger.info('download mv={} start...'.format(music_obj.mv.mid))
 
-            mv_caption = "标题: {0}\n艺术家: #{1}\n品质: {2}\n☁️ID: {3}".format(
+            mv_caption = "标题: {0}\n艺术家: #{1}\n品质: {2}p\n☁️ID: {3}".format(
                 music_obj.mv.name, music_obj.mv.artist_name,
                 music_obj.mv.quality, music_obj.mv.mid
             )
@@ -276,12 +266,11 @@ def download_music_file(bot, query, last_msg, music_obj):
             mv_true_url = api.get_mv_true_url_by_mv_url(music_obj.mv.url)
             message_text = '[{0}]({1}) MV 已发送~\n{2}'.format(mv_file_fullname, mv_true_url, mv_caption)
 
-            query.message.reply_text(text=message_text, parse_mode=telegram.ParseMode.MARKDOWN)
+            bot.send_message(chat_id=query.message.chat.id, text=message_text, parse_mode=telegram.ParseMode.MARKDOWN)
 
     except Exception as e:
         logger.error('send file error: {}'.format(e))
     finally:
         if not music_file.closed:
             music_file.close()
-        if last_msg:
-            last_msg.delete()
+        last_msg.delete()
