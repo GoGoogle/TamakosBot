@@ -115,6 +115,83 @@ def transfer_music_list_selector_to_panel(music_list_selector):
     return {'text': list_text, 'reply_markup': InlineKeyboardMarkup(button_list)}
 
 
+def download_continue(bot, query, true_download_url, file, last_msg, file_title, file_type='document',
+                      false_download_url=''):
+    try:
+        if config.TOOL_PROXY:
+            # 代理使用国内服务器转发接口
+            logger.info('**start proxy :: {0}.....'.format(config.TOOL_PROXY['protocol']))
+            proxies = {
+                config.TOOL_PROXY['protocol']: config.TOOL_PROXY['host'],
+            }
+            r = requests.get(true_download_url, stream=True, timeout=TIMEOUT, proxies=proxies)
+        else:
+            r = requests.get(true_download_url, stream=True, timeout=TIMEOUT)
+
+        start = time.time()
+        total_length = int(r.headers.get('content-length'))
+        dl = 0
+        for chunk in r.iter_content(config.CHUNK_SIZE):
+            dl += len(chunk)
+            file.write(chunk)
+
+            network_speed = dl / (time.time() - start)
+            if network_speed > 1024 * 1024:
+                network_speed_status = '{:.2f} MB/s'.format(network_speed / (1024 * 1024))
+            else:
+                network_speed_status = '{:.2f} KB/s'.format(network_speed / 1024)
+
+            if dl > 1024 * 1024:
+                dl_status = '{:.2f} MB'.format(dl / (1024 * 1024))
+            else:
+                dl_status = '{:.0f} KB'.format(dl / 1024)
+
+            # 已下载大小，总大小，已下载的百分比，网速
+            progress = '{0} / {1:.2f} MB ({2:.0f}%) - {3}'.format(dl_status,
+                                                                  total_length / (1024 * 1024),
+                                                                  dl / total_length * 100,
+                                                                  network_speed_status)
+            progress_status = '[{0}]({1})下载中~\n{2}'.format(file_title, false_download_url, progress)
+
+            bot.edit_message_text(
+                chat_id=query.message.chat.id,
+                message_id=last_msg.message_id,
+                text=progress_status,
+                quote=True,
+                reply_to_message_id=query.message.reply_to_message.message_id,
+                caption='',
+                disable_web_page_preview=True,
+                parse_mode=telegram.ParseMode.MARKDOWN,
+                timeout=TIMEOUT
+            )
+
+    except Exception as e:
+        logger.error('download file error: {}'.format(e))
+
+
+def send_file(bot, query, last_msg, file, file_name, file_suffix, telegram_action, file_caption, false_download_url=''):
+    suffix_length = len(file_suffix) + 1
+    if file_suffix in ['mp3', 'audio']:
+        bot.edit_message_text(
+            chat_id=query.message.chat.id,
+            message_id=last_msg.message_id,
+            text='[{0}]({1}) 发送中~'.format(file_name, false_download_url),
+            quote=True,
+            reply_to_message_id=query.message.reply_to_message.message_id,
+            caption='',
+            parse_mode=telegram.ParseMode.MARKDOWN,
+            disable_web_page_preview=True,
+            timeout=TIMEOUT
+        )
+
+        logger.info("文件：{}，正在发送中~".format(file_name))
+        bot.send_chat_action(query.message.chat.id, action=telegram_action)
+
+        bot.send_audio(chat_id=query.message.chat.id, audio=file, caption=file_caption,
+                       title=file_name[:-suffix_length],
+                       timeout=TIMEOUT)
+
+
 def selector_page_turning(bot, query, kw, page_code):
     bot.answerCallbackQuery(query.id,
                             text="加载中~",
@@ -172,7 +249,7 @@ def download_music_file(bot, query, last_msg, music_obj):
         else:
 
             download_continue(bot, query, music_obj.url, memory1,
-                              last_msg, 'mp3', false_download_url=netease_url)
+                              last_msg, file_fullname, 'mp3', false_download_url=netease_url)
 
             music_file = BytesIO(memory1.getvalue())
             music_file.name = file_fullname
@@ -182,8 +259,8 @@ def download_music_file(bot, query, last_msg, music_obj):
 
         if music_obj.mv:
             logger.info('selector_download_music: mvid={0}'.format(music_obj.mv.mid))
-
-            last_msg.delete()
+            if last_msg:
+                last_msg.delete()
 
             logger.info('download mv={} start...'.format(music_obj.mv.mid))
 
@@ -208,77 +285,3 @@ def download_music_file(bot, query, last_msg, music_obj):
             music_file.close()
         if last_msg:
             last_msg.delete()
-
-
-def download_continue(bot, query, true_download_url, file, last_msg, file_type='document', false_download_url=''):
-    try:
-        if config.TOOL_PROXY:
-            # 代理使用国内服务器转发接口
-            logger.info('**start proxy :: {0}.....'.format(config.TOOL_PROXY['protocol']))
-            proxies = {
-                config.TOOL_PROXY['protocol']: config.TOOL_PROXY['host'],
-            }
-            r = requests.get(true_download_url, stream=True, timeout=TIMEOUT, proxies=proxies)
-        else:
-            r = requests.get(true_download_url, stream=True, timeout=TIMEOUT)
-
-        start = time.time()
-        total_length = int(r.headers.get('content-length'))
-        dl = 0
-        for chunk in r.iter_content(config.CHUNK_SIZE):
-            dl += len(chunk)
-            file.write(chunk)
-
-            network_speed = dl / (time.time() - start)
-            if network_speed > 1024 * 1024:
-                network_speed_status = '{:.2f} MB/s'.format(network_speed / (1024 * 1024))
-            else:
-                network_speed_status = '{:.2f} KB/s'.format(network_speed / 1024)
-
-            if dl > 1024 * 1024:
-                dl_status = '{:.2f} MB'.format(dl / (1024 * 1024))
-            else:
-                dl_status = '{:.0f} KB'.format(dl / 1024)
-
-            # 已下载大小，总大小，已下载的百分比，网速
-            progress = '{0} / {1:.2f} MB ({2:.0f}%) - {3}'.format(dl_status,
-                                                                  total_length / (1024 * 1024),
-                                                                  dl / total_length * 100,
-                                                                  network_speed_status)
-            progress_status = '{0}\n{1}下载中~\n{2}'.format(false_download_url, file_type, progress)
-
-            bot.edit_message_text(
-                chat_id=query.message.chat.id,
-                message_id=last_msg.message_id,
-                text=progress_status,
-                quote=True,
-                reply_to_message_id=query.message.reply_to_message.message_id,
-                caption='',
-                disable_web_page_preview=True,
-                timeout=TIMEOUT
-            )
-
-    except Exception as e:
-        logger.error('download file error: {}'.format(e))
-
-
-def send_file(bot, query, last_msg, file, file_name, file_suffix, telegram_action, file_caption, false_download_url=''):
-    suffix_length = len(file_suffix) + 1
-    if file_suffix in ['mp3', 'audio']:
-        bot.edit_message_text(
-            chat_id=query.message.chat.id,
-            message_id=last_msg.message_id,
-            text='{0}\n{1} 发送中~'.format(false_download_url, file_suffix),
-            quote=True,
-            reply_to_message_id=query.message.reply_to_message.message_id,
-            caption='',
-            disable_web_page_preview=True,
-            timeout=TIMEOUT
-        )
-
-        logger.info("文件：{}，正在发送中~".format(file_name))
-        bot.send_chat_action(query.message.chat.id, action=telegram_action)
-
-        bot.send_audio(chat_id=query.message.chat.id, audio=file, caption=file_caption,
-                       title=file_name[:-suffix_length],
-                       timeout=TIMEOUT)
