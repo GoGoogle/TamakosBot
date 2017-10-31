@@ -18,7 +18,7 @@ from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 logger = logging.getLogger(__name__)
 
 proxies = {
-    "http": config.TOOL_PROXY,
+    config.TOOL_PROXY['protocol']: config.TOOL_PROXY['host'],
 }
 
 
@@ -142,15 +142,15 @@ def selector_cancel(bot, query):
 def selector_send_music(bot, query, music_id):
     logger.info('selector_download_music: music_id={0}'.format(music_id))
     selector_cancel(bot, query)
-    require_msg = query.message.reply_text(text="获取中~",
-                                           timeout=TIMEOUT,
-                                           quote=True,
-                                           reply_to_message_id=query.message.reply_to_message.message_id)
+    this_msg = query.message.reply_text(text="获取中~",
+                                        timeout=TIMEOUT,
+                                        quote=True,
+                                        reply_to_message_id=query.message.reply_to_message.message_id)
     song_detail_dict = api.get_music_detail_by_musicid(music_id)
     song_url_dict = api.get_music_url_by_musicid(music_id)
     music_obj = generate_music_obj(song_detail_dict['songs'][0], song_url_dict['data'][0])
 
-    download_music_file(bot, query, require_msg, music_obj)
+    download_music_file(bot, query, this_msg, music_obj)
 
 
 def download_music_file(bot, query, last_msg, music_obj):
@@ -224,7 +224,8 @@ def download_music_file(bot, query, last_msg, music_obj):
             music_file.close()
         if not mv_file.closed:
             mv_file.close()
-        last_msg.delete()
+        if last_msg:
+            last_msg.delete()
 
 
 def download_continue(bot, query, true_download_url, file, last_msg, file_type='document', false_download_url=''):
@@ -276,22 +277,22 @@ def download_continue(bot, query, true_download_url, file, last_msg, file_type='
 
 
 def send_file(bot, query, last_msg, file, file_name, file_suffix, telegram_action, file_caption, false_download_url=''):
-    bot.edit_message_text(
-        chat_id=query.message.chat.id,
-        message_id=last_msg.message_id,
-        text='{0}\n{1} 发送中~'.format(false_download_url, file_suffix),
-        quote=True,
-        reply_to_message_id=query.message.reply_to_message.message_id,
-        caption='',
-        disable_web_page_preview=True,
-        timeout=TIMEOUT
-    )
-
-    logger.info("文件：{}，正在发送中~".format(file_name))
-    bot.send_chat_action(query.message.chat.id, action=telegram_action)
-
     suffix_length = len(file_suffix) + 1
     if file_suffix in ['mp3', 'audio']:
+        bot.edit_message_text(
+            chat_id=query.message.chat.id,
+            message_id=last_msg.message_id,
+            text='{0}\n{1} 发送中~'.format(false_download_url, file_suffix),
+            quote=True,
+            reply_to_message_id=query.message.reply_to_message.message_id,
+            caption='',
+            disable_web_page_preview=True,
+            timeout=TIMEOUT
+        )
+
+        logger.info("文件：{}，正在发送中~".format(file_name))
+        bot.send_chat_action(query.message.chat.id, action=telegram_action)
+
         bot.send_audio(chat_id=query.message.chat.id, audio=file, caption=file_caption,
                        title=file_name[:-suffix_length],
                        quote=True,
@@ -299,8 +300,23 @@ def send_file(bot, query, last_msg, file, file_name, file_suffix, telegram_actio
                        timeout=TIMEOUT)
 
     if file_suffix in ['mp4', 'video']:
+        last_msg.delete()
+        this_msg = bot.send_message(
+            chat_id=query.message.chat.id,
+            text='{0}\n{1} 发送中~'.format(false_download_url, file_suffix),
+            quote=True,
+            reply_to_message_id=query.message.reply_to_message.message_id,
+            caption='',
+            disable_web_page_preview=True,
+            timeout=TIMEOUT
+        )
+
+        logger.info("文件：{}，正在发送中~".format(file_name))
+        bot.send_chat_action(query.message.chat.id, action=telegram_action)
+
         bot.send_video(chat_id=query.message.chat.id, video=file, caption=file_caption,
                        title=file_name[:-suffix_length],
                        quote=True,
                        reply_to_message_id=query.message.reply_to_message.message_id,
                        timeout=TIMEOUT)
+        this_msg.delete()

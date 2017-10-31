@@ -12,4 +12,7 @@ CHUNK_SIZE = 1024 * 256
 
 API_PROXY = 'http://119.29.165.233:3000'
 
-TOOL_PROXY = 'http://119.29.165.233:8088'
+TOOL_PROXY = {
+    'protocol': 'socks',
+    'host': 'http://119.29.165.233:1088'
+}
