@@ -1,0 +1,26 @@
+version: 1
+disable_existing_loggers: False
+formatters:
+    simple:
+        format: '%(asctime)s - %(filename)s - %(lineno)d - [%(levelname)s] %(message)s'
+handlers:
+    console:
+        class: logging.StreamHandler
+        level: WARNING
+        formatter: simple
+        stream: ext://sys.stdout
+    logfile:
+        class: logging.handlers.RotatingFileHandler
+        level: DEBUG
+        formatter: simple
+        filename: geizbot.log
+        maxBytes: 10485760
+        backupCount: 3
+loggers:
+    logger:
+        level: INFO
+        handlers: [logfile]
+        propagate: yes
+root:
+    level: WARNING
+    handlers: [console]

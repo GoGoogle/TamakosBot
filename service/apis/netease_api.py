@@ -1,9 +1,9 @@
 import requests
 
-from common import config
+from common import application
 
 proxies = {
-    "http": config.API_PROXY,
+    "http": application.API_PROXY,
 }
 
 

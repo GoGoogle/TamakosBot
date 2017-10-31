@@ -1,12 +1,10 @@
 import logging
 import time
-from io import BytesIO
-
 import requests
 import telegram
-
-from common import config
-from common.config import TIMEOUT
+from common import application
+from common.application import TIMEOUT
+from io import BytesIO
 from service.apis import netease_api
 from service.operate import netease_generate
 
@@ -16,11 +14,11 @@ logger = logging.getLogger(__name__)
 def download_continuous(bot, query, true_download_url, file, file_title, edited_msg,
                         false_download_url=''):
     try:
-        if config.TOOL_PROXY:
+        if application.TOOL_PROXY:
             # 代理使用国内服务器转发接口
-            logger.info('**start proxy :: {0}.....'.format(config.TOOL_PROXY['protocol']))
+            logger.info('**start proxy :: {0}.....'.format(application.TOOL_PROXY['protocol']))
             proxies = {
-                config.TOOL_PROXY['protocol']: config.TOOL_PROXY['host'],
+                application.TOOL_PROXY['protocol']: application.TOOL_PROXY['host'],
             }
             r = requests.get(true_download_url, stream=True, timeout=TIMEOUT, proxies=proxies)
         else:
@@ -29,7 +27,7 @@ def download_continuous(bot, query, true_download_url, file, file_title, edited_
         start = time.time()
         total_length = int(r.headers.get('content-length'))
         dl = 0
-        for chunk in r.iter_content(config.CHUNK_SIZE):
+        for chunk in r.iter_content(application.CHUNK_SIZE):
             dl += len(chunk)
             file.write(chunk)
 
@@ -61,7 +59,7 @@ def download_continuous(bot, query, true_download_url, file, file_title, edited_
             )
 
     except Exception as e:
-        logger.error('download_continuous error: {}'.format(e))
+        logger.error('download_continuous failed', exc_info=True)
 
 
 def send_music_file(bot, query, file, file_name, file_caption, edited_msg, false_download_url=''):
@@ -150,7 +148,7 @@ def selector_send_music(bot, query, music_id):
             bot.send_message(chat_id=query.message.chat.id, text=message_text, parse_mode=telegram.ParseMode.MARKDOWN)
 
     except Exception as e:
-        logger.error('send file error: {}'.format(e))
+        logger.error('send file failed', exc_info=True)
     finally:
         if not music_file.closed:
             music_file.close()

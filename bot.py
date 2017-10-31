@@ -1,21 +1,19 @@
 import logging
-
+import logging.config
+import yaml
 from telegram.ext import Updater
-
-from common import config
+from common import application
 from handler import commands, messages, listeners
 
-logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-                    level=logging.INFO)
-logger = logging.getLogger(__name__)
 
-
-def error(bot, update, err):
-    logger.warning('Update "%s" caused error "%s"' % (update, err))
+def setup_logging(path="./common/logconfig.yaml"):
+    with open(path, "r") as f:
+        config = yaml.load(f)
+        logging.config.dictConfig(config)
 
 
 def main():
-    updater = Updater(token=config.BOT_TOKEN)
+    updater = Updater(token=application.BOT_TOKEN)
     dp = updater.dispatcher
 
     router(dp)  # route the handler
@@ -31,6 +29,12 @@ def router(dp):
     dp.add_error_handler(error)
 
 
+def error(bot, update, err):
+    logger.warning('Update "%s" caused error "%s"' % (update, err))
+
+
 if __name__ == '__main__':
+    setup_logging(path="./logconfig.yaml")
+    logger = logging.getLogger("__name__")
     logger.info('bot start..')
     main()
