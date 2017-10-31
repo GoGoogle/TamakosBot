@@ -26,5 +26,5 @@ def unknown_command(bot, update):
 def handler_commands(dispatcher):
     dispatcher.add_handler(CommandHandler('start', start_command))
     dispatcher.add_handler(CommandHandler('help', help_command))
-    dispatcher.add_handler(CommandHandler('netease', netease_command, pass_args=True))
+    dispatcher.add_handler(CommandHandler('music', netease_command, pass_args=True))
     dispatcher.add_handler(MessageHandler(Filters.command, unknown_command))
