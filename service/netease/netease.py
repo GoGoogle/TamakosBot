@@ -22,7 +22,7 @@ def show_select_music_list(bot, update, kw, pagecode=1):
     logger.info('show_select_music_list: keyword={}'.format(kw))
     search_musics_dict = api.search_musics_by_keyword_and_pagecode(kw, pagecode=pagecode)
     if search_musics_dict['result']['songCount'] == 0:
-        text = "搜索结果为空值"
+        text = "没有搜索到~"
         update.message.reply_text(text=text)
     else:
         music_list_selector = tool.produce_music_list_selector(kw, pagecode, search_musics_dict['result'])
