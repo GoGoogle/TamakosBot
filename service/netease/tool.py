@@ -200,7 +200,7 @@ def download_music_file(bot, query, last_msg, music_obj):
             message_text = '[{0}]({1}) MV 已发送~\n{2}'.format(mv_file_fullname, mv_true_url, mv_caption)
 
             query.message.reply_text(text=message_text, parse_mode=telegram.ParseMode.MARKDOWN)
-                
+
     except Exception as e:
         logger.error('send file error: {}'.format(e))
     finally:
