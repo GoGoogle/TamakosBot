@@ -17,10 +17,6 @@ from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 
 logger = logging.getLogger(__name__)
 
-proxies = {
-    config.TOOL_PROXY['protocol']: config.TOOL_PROXY['host'],
-}
-
 
 def generate_mv(mvid):
     mv_detail = api.get_mv_detail_by_mvid(mvid)['data']
@@ -233,6 +229,9 @@ def download_continue(bot, query, true_download_url, file, last_msg, file_type='
         if config.TOOL_PROXY['protocol']:
             # 代理使用国内服务器转发接口
             logger.info('**start proxy :: {0}.....'.format(config.TOOL_PROXY['protocol']))
+            proxies = {
+                config.TOOL_PROXY['protocol']: config.TOOL_PROXY['host'],
+            }
             r = requests.get(true_download_url, stream=True, timeout=TIMEOUT, proxies=proxies)
         else:
             r = requests.get(true_download_url, stream=True, timeout=TIMEOUT)
