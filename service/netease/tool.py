@@ -226,7 +226,7 @@ def download_music_file(bot, query, last_msg, music_obj):
 
 def download_continue(bot, query, true_download_url, file, last_msg, file_type='document', false_download_url=''):
     try:
-        if config.TOOL_PROXY['protocol']:
+        if config.TOOL_PROXY:
             # 代理使用国内服务器转发接口
             logger.info('**start proxy :: {0}.....'.format(config.TOOL_PROXY['protocol']))
             proxies = {
