@@ -156,9 +156,9 @@ def download_music_file(bot, query, last_msg, music_obj):
         netease_url = 'http://music.163.com/song?id={}'.format(music_obj.mid)
         memory1 = BytesIO()
 
-        music_caption = "标题: {0}\n艺术家: #{1}\n专辑: {2}\n格式: {3}\n☁️ID: {4}".format(
-            music_obj.name, ' #'.join(v.name for v in music_obj.artists),
-            music_obj.album.name, music_obj.scheme, music_obj.mid
+        music_caption = "曲目: {0}\n演唱: {1}\n专辑: {2}\n☁️ID: {3}".format(
+            music_obj.name, ' '.join(v.name for v in music_obj.artists),
+            music_obj.album.name, music_obj.mid
         )
         file_fullname = '{0} - {1}.mp3'.format(
             ' / '.join(v.name for v in music_obj.artists), music_obj.name)
@@ -281,6 +281,4 @@ def send_file(bot, query, last_msg, file, file_name, file_suffix, telegram_actio
 
         bot.send_audio(chat_id=query.message.chat.id, audio=file, caption=file_caption,
                        title=file_name[:-suffix_length],
-                       quote=True,
-                       reply_to_message_id=query.message.reply_to_message.message_id,
                        timeout=TIMEOUT)
