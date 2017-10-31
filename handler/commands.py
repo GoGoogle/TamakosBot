@@ -1,8 +1,8 @@
 import logging
 
-from telegram.ext import CommandHandler, MessageHandler, Filters, ConversationHandler, CallbackQueryHandler
+from telegram.ext import CommandHandler, MessageHandler, Filters
 
-from service.netease import netease
+from service.dispatcher import netease
 
 logger = logging.getLogger(__name__)
 
@@ -16,7 +16,7 @@ def help_command(bot, update):
 
 
 def netease_command(bot, update, args):
-    netease.get_music(bot, update, args)
+    netease.search_music(bot, update, args)
 
 
 def unknown_command(bot, update):

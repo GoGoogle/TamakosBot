@@ -2,7 +2,7 @@ import logging
 
 from telegram.ext import CallbackQueryHandler
 
-from service.netease import netease
+from service.dispatcher import netease
 
 logger = logging.getLogger(__name__)
 

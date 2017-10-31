@@ -1,33 +1,28 @@
 import logging
 
-from service.netease import api, tool
+from service.apis import netease_api
+from service.operate import netease_selector, netease_generate
 
 logger = logging.getLogger(__name__)
 
 
-def get_music(bot, update, args):
+def search_music(bot, update, args):
     try:
         key_word = args[0]
         logger.info('get_music: {}'.format(key_word))
-
-        # 1.展示`关键字`歌曲选择列表
-        show_select_music_list(bot, update, key_word)
+        search_musics_dict = netease_api.search_musics_by_keyword_and_pagecode(key_word, pagecode=1)
+        if search_musics_dict['result']['songCount'] == 0:
+            text = "没有搜索到~"
+            update.message.reply_text(text=text)
+        else:
+            music_list_selector = netease_generate.produce_music_list_selector(key_word, 1,
+                                                                               search_musics_dict['result'])
+            panel = netease_generate.transfer_music_list_selector_to_panel(music_list_selector)
+            update.message.reply_text(text=panel['text'], quote=True, reply_markup=panel['reply_markup'])
 
     except IndexError:
         text = "请提供要搜索的音乐的名字"
         update.message.reply_text(text=text)
-
-
-def show_select_music_list(bot, update, kw, pagecode=1):
-    logger.info('show_select_music_list: keyword={}'.format(kw))
-    search_musics_dict = api.search_musics_by_keyword_and_pagecode(kw, pagecode=pagecode)
-    if search_musics_dict['result']['songCount'] == 0:
-        text = "没有搜索到~"
-        update.message.reply_text(text=text)
-    else:
-        music_list_selector = tool.produce_music_list_selector(kw, pagecode, search_musics_dict['result'])
-        panel = tool.transfer_music_list_selector_to_panel(music_list_selector)
-        update.message.reply_text(text=panel['text'], quote=True, reply_markup=panel['reply_markup'])
 
 
 def listen_selector_reply(bot, update):
@@ -45,13 +40,13 @@ def listen_selector_reply(bot, update):
     if index1 != -1:
         page_code = int(query.data[index1 + 1:]) + 1
         kw = query.data[8:index1 - 1]
-        tool.selector_page_turning(bot, query, kw, page_code)
+        netease_selector.selector_page_turning(bot, query, kw, page_code)
     elif index2 != -1:
         page_code = int(query.data[index2 + 1:]) - 1
         kw = query.data[8:index1 - 2]
-        tool.selector_page_turning(bot, query, kw, page_code)
+        netease_selector.selector_page_turning(bot, query, kw, page_code)
     elif index3 != -1:
-        tool.selector_cancel(bot, query)
+        netease_selector.selector_cancel(bot, query)
     else:
         music_id = query.data[8:]
-        tool.selector_send_music(bot, query, music_id)
+        netease_selector.selector_send_music(bot, query, music_id)
