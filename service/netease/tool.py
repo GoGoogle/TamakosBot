@@ -232,8 +232,8 @@ def download_continue(bot, query, true_download_url, file, last_msg, file_type='
     try:
         # 代理使用国内服务器转发接口
         logger.info('***********************true_download_url={0}, proxy:{1}'.format(
-            true_download_url, proxies['protocol']))
-        if proxies['protocol']:
+            true_download_url, config.TOOL_PROXY['protocol']))
+        if config.TOOL_PROXY['protocol']:
             r = requests.get(true_download_url, stream=True, timeout=TIMEOUT, proxies=proxies)
         else:
             r = requests.get(true_download_url, stream=True, timeout=TIMEOUT)
