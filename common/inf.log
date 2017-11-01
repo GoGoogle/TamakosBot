@@ -1,0 +1,4 @@
+2017-11-01 09:36:30,861 - netease.py - 12 - [INFO] get_music: 别
+2017-11-01 09:36:30,992 - netease_generate.py - 42 - [INFO] generate_music_list_selector: keyword=别, pagecode=1
+2017-11-01 09:36:33,727 - netease.py - 35 - [INFO] listen_selector_reply: data=netease:515803379
+2017-11-01 09:36:33,728 - netease_selector.py - 104 - [INFO] selector_download_music: music_id=515803379
