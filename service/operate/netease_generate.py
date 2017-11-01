@@ -19,7 +19,7 @@ def generate_music_obj(detail, url):
     if len(detail['ar']) > 0:
         for x in detail['ar']:
             ars.append(Artist(arid=x['id'], name=x['name']))
-    al = Album(detail['al']['name'], detail['al']['id'])
+    al = Album(detail['al']['name'], int(detail['al']['id']))
 
     music_obj = Music(mid=detail['id'], name=detail['name'], url=url['url'],
                       scheme='{0} {1:.0f}kbps'.format(url['type'], url['br'] / 1000),

@@ -9,13 +9,17 @@ TIMEOUT = 1000
 
 CHUNK_SIZE = 1024 * 256
 
-# HTTP
-
-API_PROXY = 'http://119.29.165.233:3000'
+API_PROXY = {
+    'xfe1235': {
+        'http': 'http://119.29.165.233:3000'
+    },
+    'liu9293': {
+        'https': 'https://music-api-jwzcyzizya.now.sh/'
+    }
+}
 
 # TOOL_PROXY = {
 #     'protocol': 'http',
 #     'host': 'http://127.0.0.1:8088'
 # }
-
 TOOL_PROXY = None

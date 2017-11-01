@@ -380,3 +380,208 @@ KeyError: 'result'
 2017-11-01 20:26:01,151 - netease_selector.py - 75 - [INFO] 文件：鈴木常吉 - 思ひで.mp3，>> 正在发送中
 2017-11-01 20:26:31,173 - netease_selector.py - 132 - [INFO] selector download MV: mvid=376073
 2017-11-01 20:27:56,999 - updater.py - 453 - [WARNING] Exiting immediately!
+2017-11-02 00:38:59,241 - bot.py - 31 - [INFO] bot start..
+2017-11-02 00:39:09,929 - netease.py - 15 - [INFO] get_music: 网易云
+2017-11-02 00:39:10,290 - netease_generate.py - 42 - [INFO] generate_music_list_selector: keyword=网易云, pagecode=1
+2017-11-02 00:39:28,518 - netease.py - 75 - [INFO] response_playlist: playlist_id=331624342
+2017-11-02 00:39:34,390 - netease.py - 38 - [INFO] listen_selector_reply: data=netease:331624342:D1
+2017-11-02 00:39:38,070 - netease.py - 38 - [INFO] listen_selector_reply: data=netease:*
+2017-11-02 00:39:42,004 - updater.py - 453 - [WARNING] Exiting immediately!
+2017-11-02 01:02:17,962 - bot.py - 31 - [INFO] bot start..
+2017-11-02 01:02:27,816 - netease.py - 15 - [INFO] get_music: 开心
+2017-11-02 01:02:28,136 - netease_generate.py - 42 - [INFO] generate_music_list_selector: keyword=开心, pagecode=1
+2017-11-02 01:02:33,901 - netease.py - 38 - [INFO] listen_selector_reply: data=netease:30413619
+2017-11-02 01:02:33,901 - netease_selector.py - 100 - [INFO] selector_download_music: music_id=30413619
+2017-11-02 01:03:01,736 - netease.py - 15 - [INFO] get_music: 晴天
+2017-11-02 01:03:02,050 - netease_generate.py - 42 - [INFO] generate_music_list_selector: keyword=晴天, pagecode=1
+2017-11-02 01:03:07,973 - netease.py - 38 - [INFO] listen_selector_reply: data=netease:186016
+2017-11-02 01:03:07,973 - netease_selector.py - 100 - [INFO] selector_download_music: music_id=186016
+2017-11-02 01:03:12,103 - netease_selector.py - 75 - [INFO] 文件：徐真真 - 开心就拍手.mp3，>> 正在发送中
+2017-11-02 01:03:30,906 - netease_selector.py - 75 - [INFO] 文件：周杰伦 - 晴天.mp3，>> 正在发送中
+2017-11-02 01:03:57,564 - netease_selector.py - 132 - [INFO] selector download MV: mvid=504177
+2017-11-02 01:07:06,667 - updater.py - 453 - [WARNING] Exiting immediately!
+2017-11-02 01:07:08,177 - bot.py - 31 - [INFO] bot start..
+2017-11-02 01:07:19,436 - netease.py - 15 - [INFO] get_music: 晴天
+2017-11-02 01:07:19,686 - netease_generate.py - 42 - [INFO] generate_music_list_selector: keyword=晴天, pagecode=1
+2017-11-02 01:07:22,856 - netease.py - 38 - [INFO] listen_selector_reply: data=netease:186016
+2017-11-02 01:07:22,857 - netease_selector.py - 102 - [INFO] selector_download_music: music_id=186016
+2017-11-02 01:07:47,180 - netease_selector.py - 77 - [INFO] 文件：周杰伦 - 晴天.mp3，>> 正在发送中
+2017-11-02 01:08:26,748 - updater.py - 288 - [ERROR] Error while getting Updates: Timed out
+2017-11-02 01:08:26,749 - bot.py - 25 - [WARNING] Update "None" caused error "Timed out"
+2017-11-02 01:08:36,047 - connectionpool.py - 690 - [WARNING] Retrying (Retry(total=2, connect=None, read=None, redirect=None)) after connection broken by 'ProxyError('Cannot connect to proxy.', timeout('_ssl.c:732: The handshake operation timed out',))': /bot425909661:AAHC_a9-htfYsjaZuKfP6jjcl8n2sjizctg/getUpdates
+2017-11-02 01:09:02,079 - netease_selector.py - 134 - [INFO] selector download MV: mvid=504177
+2017-11-02 01:15:16,243 - updater.py - 288 - [ERROR] Error while getting Updates: Timed out
+2017-11-02 01:15:16,243 - bot.py - 25 - [WARNING] Update "None" caused error "Timed out"
+2017-11-02 01:16:47,591 - updater.py - 288 - [ERROR] Error while getting Updates: Timed out
+2017-11-02 01:16:47,592 - bot.py - 25 - [WARNING] Update "None" caused error "Timed out"
+2017-11-02 01:26:43,107 - updater.py - 453 - [WARNING] Exiting immediately!
+2017-11-02 01:26:44,626 - bot.py - 31 - [INFO] bot start..
+2017-11-02 01:26:53,854 - netease.py - 15 - [INFO] get_music: 晴天
+2017-11-02 01:26:54,074 - netease_generate.py - 42 - [INFO] generate_music_list_selector: keyword=晴天, pagecode=1
+2017-11-02 01:26:57,893 - netease.py - 38 - [INFO] listen_selector_reply: data=netease:186016
+2017-11-02 01:26:57,894 - netease_selector.py - 102 - [INFO] selector_download_music: music_id=186016
+2017-11-02 01:27:01,481 - promise.py - 45 - [ERROR] An uncaught error was raised while running the promise
+Traceback (most recent call last):
+  File "/usr/lib/python3.6/site-packages/urllib3/connection.py", line 141, in _new_conn
+    (self.host, self.port), self.timeout, **extra_kw)
+  File "/usr/lib/python3.6/site-packages/urllib3/util/connection.py", line 83, in create_connection
+    raise err
+  File "/usr/lib/python3.6/site-packages/urllib3/util/connection.py", line 73, in create_connection
+    sock.connect(sa)
+ConnectionRefusedError: [Errno 111] Connection refused
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/lib/python3.6/site-packages/urllib3/connectionpool.py", line 601, in urlopen
+    chunked=chunked)
+  File "/usr/lib/python3.6/site-packages/urllib3/connectionpool.py", line 357, in _make_request
+    conn.request(method, url, **httplib_request_kw)
+  File "/usr/lib/python3.6/http/client.py", line 1239, in request
+    self._send_request(method, url, body, headers, encode_chunked)
+  File "/usr/lib/python3.6/http/client.py", line 1285, in _send_request
+    self.endheaders(body, encode_chunked=encode_chunked)
+  File "/usr/lib/python3.6/http/client.py", line 1234, in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+  File "/usr/lib/python3.6/http/client.py", line 1026, in _send_output
+    self.send(msg)
+  File "/usr/lib/python3.6/http/client.py", line 964, in send
+    self.connect()
+  File "/usr/lib/python3.6/site-packages/urllib3/connection.py", line 166, in connect
+    conn = self._new_conn()
+  File "/usr/lib/python3.6/site-packages/urllib3/connection.py", line 150, in _new_conn
+    self, "Failed to establish a new connection: %s" % e)
+urllib3.exceptions.NewConnectionError: <urllib3.connection.HTTPConnection object at 0x7f2f81401080>: Failed to establish a new connection: [Errno 111] Connection refused
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/lib/python3.6/site-packages/requests/adapters.py", line 440, in send
+    timeout=timeout
+  File "/usr/lib/python3.6/site-packages/urllib3/connectionpool.py", line 639, in urlopen
+    _stacktrace=sys.exc_info()[2])
+  File "/usr/lib/python3.6/site-packages/urllib3/util/retry.py", line 388, in increment
+    raise MaxRetryError(_pool, url, error or ResponseError(cause))
+urllib3.exceptions.MaxRetryError: HTTPConnectionPool(host='localhost', port=80): Max retries exceeded with url: /api/get/song/netease?id=186016&br=320000 (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f2f81401080>: Failed to establish a new connection: [Errno 111] Connection refused',))
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/lib/python3.6/site-packages/telegram/utils/promise.py", line 42, in run
+    self._result = self.pooled_function(*self.args, **self.kwargs)
+  File "/home/lg/Documents/Project/PycharmProjects/GeziBot/handler/listeners.py", line 12, in music_selector_callback
+    netease.listen_selector_reply(bot, update)
+  File "/home/lg/Documents/Project/PycharmProjects/GeziBot/service/dispatcher/netease.py", line 70, in listen_selector_reply
+    netease_selector.selector_send_music(bot, query, music_id, True)
+  File "/home/lg/Documents/Project/PycharmProjects/GeziBot/service/operate/netease_selector.py", line 117, in selector_send_music
+    netease_api.get_music_url_by_musicid(music_id, br)['data'][0])
+  File "/home/lg/Documents/Project/PycharmProjects/GeziBot/service/apis/netease_api.py", line 31, in get_music_url_by_musicid
+    proxies=application.API_PROXY['liu9293'])
+  File "/usr/lib/python3.6/site-packages/requests/api.py", line 72, in get
+    return request('get', url, params=params, **kwargs)
+  File "/usr/lib/python3.6/site-packages/requests/api.py", line 58, in request
+    return session.request(method=method, url=url, **kwargs)
+  File "/usr/lib/python3.6/site-packages/requests/sessions.py", line 508, in request
+    resp = self.send(prep, **send_kwargs)
+  File "/usr/lib/python3.6/site-packages/requests/sessions.py", line 618, in send
+    r = adapter.send(request, **kwargs)
+  File "/usr/lib/python3.6/site-packages/requests/adapters.py", line 508, in send
+    raise ConnectionError(e, request=request)
+requests.exceptions.ConnectionError: HTTPConnectionPool(host='localhost', port=80): Max retries exceeded with url: /api/get/song/netease?id=186016&br=320000 (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f2f81401080>: Failed to establish a new connection: [Errno 111] Connection refused',))
+2017-11-02 01:29:00,447 - updater.py - 453 - [WARNING] Exiting immediately!
+2017-11-02 01:29:02,147 - bot.py - 31 - [INFO] bot start..
+2017-11-02 01:29:32,091 - netease.py - 15 - [INFO] get_music: 晴天
+2017-11-02 01:29:33,072 - netease_generate.py - 42 - [INFO] generate_music_list_selector: keyword=晴天, pagecode=1
+2017-11-02 01:29:38,457 - netease.py - 38 - [INFO] listen_selector_reply: data=netease:186016
+2017-11-02 01:29:38,458 - netease_selector.py - 102 - [INFO] selector_download_music: music_id=186016
+2017-11-02 01:29:43,811 - promise.py - 45 - [ERROR] An uncaught error was raised while running the promise
+Traceback (most recent call last):
+  File "/usr/lib/python3.6/site-packages/telegram/utils/promise.py", line 42, in run
+    self._result = self.pooled_function(*self.args, **self.kwargs)
+  File "/home/lg/Documents/Project/PycharmProjects/GeziBot/handler/listeners.py", line 12, in music_selector_callback
+    netease.listen_selector_reply(bot, update)
+  File "/home/lg/Documents/Project/PycharmProjects/GeziBot/service/dispatcher/netease.py", line 70, in listen_selector_reply
+    netease_selector.selector_send_music(bot, query, music_id, True)
+  File "/home/lg/Documents/Project/PycharmProjects/GeziBot/service/operate/netease_selector.py", line 117, in selector_send_music
+    netease_api.get_music_url_by_musicid(music_id, br)['data'][0])
+KeyError: 'data'
+2017-11-02 01:29:54,093 - updater.py - 453 - [WARNING] Exiting immediately!
+2017-11-02 01:30:41,435 - bot.py - 31 - [INFO] bot start..
+2017-11-02 01:30:54,022 - netease.py - 15 - [INFO] get_music: 晴天
+2017-11-02 01:30:54,186 - netease_generate.py - 42 - [INFO] generate_music_list_selector: keyword=晴天, pagecode=1
+2017-11-02 01:30:57,199 - netease.py - 38 - [INFO] listen_selector_reply: data=netease:186016
+2017-11-02 01:30:57,199 - netease_selector.py - 102 - [INFO] selector_download_music: music_id=186016
+2017-11-02 01:31:00,291 - promise.py - 45 - [ERROR] An uncaught error was raised while running the promise
+Traceback (most recent call last):
+  File "/usr/lib/python3.6/site-packages/urllib3/connection.py", line 141, in _new_conn
+    (self.host, self.port), self.timeout, **extra_kw)
+  File "/usr/lib/python3.6/site-packages/urllib3/util/connection.py", line 83, in create_connection
+    raise err
+  File "/usr/lib/python3.6/site-packages/urllib3/util/connection.py", line 73, in create_connection
+    sock.connect(sa)
+ConnectionRefusedError: [Errno 111] Connection refused
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/lib/python3.6/site-packages/urllib3/connectionpool.py", line 601, in urlopen
+    chunked=chunked)
+  File "/usr/lib/python3.6/site-packages/urllib3/connectionpool.py", line 357, in _make_request
+    conn.request(method, url, **httplib_request_kw)
+  File "/usr/lib/python3.6/http/client.py", line 1239, in request
+    self._send_request(method, url, body, headers, encode_chunked)
+  File "/usr/lib/python3.6/http/client.py", line 1285, in _send_request
+    self.endheaders(body, encode_chunked=encode_chunked)
+  File "/usr/lib/python3.6/http/client.py", line 1234, in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+  File "/usr/lib/python3.6/http/client.py", line 1026, in _send_output
+    self.send(msg)
+  File "/usr/lib/python3.6/http/client.py", line 964, in send
+    self.connect()
+  File "/usr/lib/python3.6/site-packages/urllib3/connection.py", line 166, in connect
+    conn = self._new_conn()
+  File "/usr/lib/python3.6/site-packages/urllib3/connection.py", line 150, in _new_conn
+    self, "Failed to establish a new connection: %s" % e)
+urllib3.exceptions.NewConnectionError: <urllib3.connection.HTTPConnection object at 0x7fd8c867a0b8>: Failed to establish a new connection: [Errno 111] Connection refused
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/lib/python3.6/site-packages/requests/adapters.py", line 440, in send
+    timeout=timeout
+  File "/usr/lib/python3.6/site-packages/urllib3/connectionpool.py", line 639, in urlopen
+    _stacktrace=sys.exc_info()[2])
+  File "/usr/lib/python3.6/site-packages/urllib3/util/retry.py", line 388, in increment
+    raise MaxRetryError(_pool, url, error or ResponseError(cause))
+urllib3.exceptions.MaxRetryError: HTTPConnectionPool(host='localhost', port=80): Max retries exceeded with url: /api/get/song/netease?id=186016&br=320000 (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fd8c867a0b8>: Failed to establish a new connection: [Errno 111] Connection refused',))
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/lib/python3.6/site-packages/telegram/utils/promise.py", line 42, in run
+    self._result = self.pooled_function(*self.args, **self.kwargs)
+  File "/home/lg/Documents/Project/PycharmProjects/GeziBot/handler/listeners.py", line 12, in music_selector_callback
+    netease.listen_selector_reply(bot, update)
+  File "/home/lg/Documents/Project/PycharmProjects/GeziBot/service/dispatcher/netease.py", line 70, in listen_selector_reply
+    netease_selector.selector_send_music(bot, query, music_id, True)
+  File "/home/lg/Documents/Project/PycharmProjects/GeziBot/service/operate/netease_selector.py", line 117, in selector_send_music
+    netease_api.get_music_url_by_musicid(music_id, br)['data'][0])
+  File "/home/lg/Documents/Project/PycharmProjects/GeziBot/service/apis/netease_api.py", line 31, in get_music_url_by_musicid
+    proxies=application.API_PROXY['liu9293'])
+  File "/usr/lib/python3.6/site-packages/requests/api.py", line 72, in get
+    return request('get', url, params=params, **kwargs)
+  File "/usr/lib/python3.6/site-packages/requests/api.py", line 58, in request
+    return session.request(method=method, url=url, **kwargs)
+  File "/usr/lib/python3.6/site-packages/requests/sessions.py", line 508, in request
+    resp = self.send(prep, **send_kwargs)
+  File "/usr/lib/python3.6/site-packages/requests/sessions.py", line 618, in send
+    r = adapter.send(request, **kwargs)
+  File "/usr/lib/python3.6/site-packages/requests/adapters.py", line 508, in send
+    raise ConnectionError(e, request=request)
+requests.exceptions.ConnectionError: HTTPConnectionPool(host='localhost', port=80): Max retries exceeded with url: /api/get/song/netease?id=186016&br=320000 (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fd8c867a0b8>: Failed to establish a new connection: [Errno 111] Connection refused',))
+2017-11-02 01:31:33,530 - updater.py - 453 - [WARNING] Exiting immediately!
+2017-11-02 01:33:09,663 - bot.py - 31 - [INFO] bot start..
+2017-11-02 01:33:18,383 - netease.py - 15 - [INFO] get_music: 晴天
+2017-11-02 01:33:18,635 - netease_generate.py - 42 - [INFO] generate_music_list_selector: keyword=晴天, pagecode=1
+2017-11-02 01:33:21,729 - netease.py - 38 - [INFO] listen_selector_reply: data=netease:186016
+2017-11-02 01:33:21,729 - netease_selector.py - 102 - [INFO] selector_download_music: music_id=186016

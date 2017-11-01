@@ -1,10 +1,12 @@
 import logging
 import time
+from io import BytesIO
+
 import requests
 import telegram
+
 from common import application
 from common.application import TIMEOUT
-from io import BytesIO
 from service.apis import netease_api
 from service.operate import netease_generate
 
@@ -103,15 +105,22 @@ def selector_send_music(bot, query, music_id, delete):
 
     edited_msg = bot.send_message(chat_id=query.message.chat.id, text="..获取中",
                                   timeout=TIMEOUT)
-
-    music_obj = netease_generate.generate_music_obj(netease_api.get_music_detail_by_musicid(music_id)['songs'][0],
-                                                    netease_api.get_music_url_by_musicid(music_id)['data'][0])
+    detail = netease_api.get_music_detail_by_musicid(music_id)['songs'][0]
+    br = ''
+    if 'h' in detail:
+        br = detail['h']['br']
+    elif 'm' in detail:
+        br = detail['m']['br']
+    elif 'l' in detail:
+        br = detail['l']['br']
+    music_obj = netease_generate.generate_music_obj(detail,
+                                                    netease_api.get_music_url_by_musicid(music_id, br)['data'][0])
 
     music_file = BytesIO()
     try:
-        music_caption = "曲目: {0}\n演唱: {1}\n专辑: {2}\n☁️ID: {3}".format(
+        music_caption = "曲目: {0}\n演唱: {1}\n专辑: {2}]\n格式：{3}\n☁️ID: {4}".format(
             music_obj.name, ' '.join(v.name for v in music_obj.artists),
-            music_obj.album.name, music_obj.mid
+            music_obj.album.name, music_obj.scheme, music_obj.mid
         )
         music_filename = '{0} - {1}.mp3'.format(
             ' / '.join(v.name for v in music_obj.artists), music_obj.name)

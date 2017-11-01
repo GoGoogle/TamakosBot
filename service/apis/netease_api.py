@@ -3,7 +3,7 @@ import requests
 from common import application
 
 proxies = {
-    "http": application.API_PROXY,
+    'http': 'http://119.29.165.233:3000'
 }
 
 
