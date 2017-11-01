@@ -585,3 +585,26 @@ requests.exceptions.ConnectionError: HTTPConnectionPool(host='localhost', port=8
 2017-11-02 01:33:18,635 - netease_generate.py - 42 - [INFO] generate_music_list_selector: keyword=晴天, pagecode=1
 2017-11-02 01:33:21,729 - netease.py - 38 - [INFO] listen_selector_reply: data=netease:186016
 2017-11-02 01:33:21,729 - netease_selector.py - 102 - [INFO] selector_download_music: music_id=186016
+2017-11-02 01:42:12,327 - bot.py - 31 - [INFO] bot start..
+2017-11-02 01:42:22,178 - netease.py - 15 - [INFO] get_music: 好看
+2017-11-02 01:42:22,463 - netease_generate.py - 42 - [INFO] generate_music_list_selector: keyword=好看, pagecode=1
+2017-11-02 01:42:27,168 - netease.py - 38 - [INFO] listen_selector_reply: data=netease:485964216
+2017-11-02 01:42:27,168 - netease_selector.py - 102 - [INFO] selector_download_music: music_id=485964216
+2017-11-02 01:42:29,987 - promise.py - 45 - [ERROR] An uncaught error was raised while running the promise
+Traceback (most recent call last):
+  File "/usr/lib/python3.6/site-packages/telegram/utils/promise.py", line 42, in run
+    self._result = self.pooled_function(*self.args, **self.kwargs)
+  File "/home/lg/Documents/Project/PycharmProjects/GeziBot/handler/listeners.py", line 12, in music_selector_callback
+    netease.listen_selector_reply(bot, update)
+  File "/home/lg/Documents/Project/PycharmProjects/GeziBot/service/dispatcher/netease.py", line 70, in listen_selector_reply
+    netease_selector.selector_send_music(bot, query, music_id, True)
+  File "/home/lg/Documents/Project/PycharmProjects/GeziBot/service/operate/netease_selector.py", line 117, in selector_send_music
+    netease_api.get_music_url_by_musicid(music_id, br)['data'][0])
+TypeError: get_music_url_by_musicid() takes 1 positional argument but 2 were given
+2017-11-02 01:42:53,208 - updater.py - 453 - [WARNING] Exiting immediately!
+2017-11-02 01:43:40,628 - bot.py - 31 - [INFO] bot start..
+2017-11-02 01:43:47,057 - netease.py - 15 - [INFO] get_music: 好看
+2017-11-02 01:43:47,435 - netease_generate.py - 42 - [INFO] generate_music_list_selector: keyword=好看, pagecode=1
+2017-11-02 01:43:50,691 - netease.py - 38 - [INFO] listen_selector_reply: data=netease:485964216
+2017-11-02 01:43:50,691 - netease_selector.py - 102 - [INFO] selector_download_music: music_id=485964216
+2017-11-02 01:44:06,426 - updater.py - 453 - [WARNING] Exiting immediately!

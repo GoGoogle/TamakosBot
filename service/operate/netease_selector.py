@@ -114,7 +114,7 @@ def selector_send_music(bot, query, music_id, delete):
     elif 'l' in detail:
         br = detail['l']['br']
     music_obj = netease_generate.generate_music_obj(detail,
-                                                    netease_api.get_music_url_by_musicid(music_id, br)['data'][0])
+                                                    netease_api.get_music_url_by_musicid(music_id)['data'][0])
 
     music_file = BytesIO()
     try:
