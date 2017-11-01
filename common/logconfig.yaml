@@ -22,5 +22,5 @@ loggers:
     handlers: [logfile]
     propagate: 0
 root:
-  level: ERROR
+  level: INFO
   handlers: [console, logfile]

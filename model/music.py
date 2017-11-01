@@ -82,3 +82,19 @@ class Album(object):
         self.alid = alid
         self.name = name
         self.artist = artist
+
+
+class PlayListSelector(object):
+    def __init__(self,
+                 pid,
+                 name,
+                 creator_name,
+                 track_count,
+                 musics
+                 ):
+        self.logger = logging.getLogger(__name__)
+        self.pid = pid
+        self.name = name
+        self.creator_name = creator_name
+        self.track_count = track_count
+        self.musics = musics

@@ -2,3 +2,151 @@
 2017-11-01 09:36:30,992 - netease_generate.py - 42 - [INFO] generate_music_list_selector: keyword=别, pagecode=1
 2017-11-01 09:36:33,727 - netease.py - 35 - [INFO] listen_selector_reply: data=netease:515803379
 2017-11-01 09:36:33,728 - netease_selector.py - 104 - [INFO] selector_download_music: music_id=515803379
+2017-11-01 13:17:07,988 - netease.py - 12 - [INFO] get_music: Hello
+2017-11-01 13:17:08,577 - netease_generate.py - 42 - [INFO] generate_music_list_selector: keyword=Hello, pagecode=1
+2017-11-01 13:18:10,799 - bot.py - 31 - [INFO] bot start..
+2017-11-01 13:18:29,708 - updater.py - 453 - [WARNING] Exiting immediately!
+2017-11-01 13:19:00,425 - bot.py - 31 - [INFO] bot start..
+2017-11-01 13:19:12,769 - messages.py - 13 - [INFO] hi: Hi, Lemos
+2017-11-01 13:20:04,415 - updater.py - 453 - [WARNING] Exiting immediately!
+2017-11-01 13:20:06,276 - bot.py - 31 - [INFO] bot start..
+2017-11-01 13:35:58,915 - updater.py - 288 - [ERROR] Error while getting Updates: Timed out
+2017-11-01 13:35:58,916 - bot.py - 25 - [WARNING] Update "None" caused error "Timed out"
+2017-11-01 13:48:13,331 - updater.py - 288 - [ERROR] Error while getting Updates: Timed out
+2017-11-01 13:48:13,331 - bot.py - 25 - [WARNING] Update "None" caused error "Timed out"
+2017-11-01 14:06:59,868 - updater.py - 288 - [ERROR] Error while getting Updates: Timed out
+2017-11-01 14:06:59,869 - bot.py - 25 - [WARNING] Update "None" caused error "Timed out"
+2017-11-01 14:08:47,233 - updater.py - 288 - [ERROR] Error while getting Updates: Timed out
+2017-11-01 14:08:47,234 - bot.py - 25 - [WARNING] Update "None" caused error "Timed out"
+2017-11-01 14:15:48,537 - updater.py - 288 - [ERROR] Error while getting Updates: Timed out
+2017-11-01 14:15:48,537 - bot.py - 25 - [WARNING] Update "None" caused error "Timed out"
+2017-11-01 14:36:57,459 - updater.py - 288 - [ERROR] Error while getting Updates: Timed out
+2017-11-01 14:36:57,460 - bot.py - 25 - [WARNING] Update "None" caused error "Timed out"
+2017-11-01 14:58:29,639 - updater.py - 288 - [ERROR] Error while getting Updates: Timed out
+2017-11-01 14:58:29,640 - bot.py - 25 - [WARNING] Update "None" caused error "Timed out"
+2017-11-01 15:01:19,796 - updater.py - 288 - [ERROR] Error while getting Updates: Timed out
+2017-11-01 15:01:19,796 - bot.py - 25 - [WARNING] Update "None" caused error "Timed out"
+2017-11-01 15:05:32,838 - updater.py - 288 - [ERROR] Error while getting Updates: Timed out
+2017-11-01 15:05:32,840 - bot.py - 25 - [WARNING] Update "None" caused error "Timed out"
+2017-11-01 15:07:20,187 - updater.py - 288 - [ERROR] Error while getting Updates: Timed out
+2017-11-01 15:07:20,187 - bot.py - 25 - [WARNING] Update "None" caused error "Timed out"
+2017-11-01 15:21:49,791 - updater.py - 453 - [WARNING] Exiting immediately!
+2017-11-01 15:24:50,912 - bot.py - 31 - [INFO] bot start..
+2017-11-01 15:25:20,885 - netease.py - 68 - [WARNING] 获取歌单错误
+Traceback (most recent call last):
+  File "/home/lg/Documents/Project/PycharmProjects/GeziBot/service/dispatcher/netease.py", line 58, in response_playlist
+    bot.answerCallbackQuery(update.id,
+AttributeError: 'Update' object has no attribute 'id'
+2017-11-01 15:27:01,205 - messages.py - 13 - [INFO] hi: Hi, Lemos
+2017-11-01 15:27:14,805 - netease.py - 68 - [WARNING] 获取歌单错误
+Traceback (most recent call last):
+  File "/home/lg/Documents/Project/PycharmProjects/GeziBot/service/dispatcher/netease.py", line 58, in response_playlist
+    bot.answerCallbackQuery(update.id,
+AttributeError: 'Update' object has no attribute 'id'
+2017-11-01 15:28:35,059 - updater.py - 453 - [WARNING] Exiting immediately!
+2017-11-01 15:28:36,639 - bot.py - 31 - [INFO] bot start..
+2017-11-01 15:28:44,648 - messages.py - 13 - [INFO] hi: Hi, Lemos
+2017-11-01 15:28:53,566 - netease.py - 58 - [INFO] response_playlist: playlist_id=134518450
+2017-11-01 15:28:53,566 - netease.py - 69 - [WARNING] 获取歌单错误
+Traceback (most recent call last):
+  File "/home/lg/Documents/Project/PycharmProjects/GeziBot/service/dispatcher/netease.py", line 59, in response_playlist
+    bot.answerCallbackQuery(update.id,
+AttributeError: 'Update' object has no attribute 'id'
+2017-11-01 15:30:13,432 - netease.py - 58 - [INFO] response_playlist: playlist_id=134518450
+2017-11-01 15:30:13,433 - netease.py - 69 - [WARNING] 获取歌单错误
+Traceback (most recent call last):
+  File "/home/lg/Documents/Project/PycharmProjects/GeziBot/service/dispatcher/netease.py", line 59, in response_playlist
+    bot.answerCallbackQuery(update.id,
+AttributeError: 'Update' object has no attribute 'id'
+2017-11-01 15:31:28,972 - updater.py - 453 - [WARNING] Exiting immediately!
+2017-11-01 15:31:30,357 - bot.py - 31 - [INFO] bot start..
+2017-11-01 15:31:36,562 - messages.py - 24 - [INFO] catch the netease playlist
+2017-11-01 15:31:36,563 - netease.py - 58 - [INFO] response_playlist: playlist_id=134518450
+2017-11-01 15:31:36,563 - netease.py - 69 - [WARNING] 获取歌单错误
+Traceback (most recent call last):
+  File "/home/lg/Documents/Project/PycharmProjects/GeziBot/service/dispatcher/netease.py", line 59, in response_playlist
+    bot.answerCallbackQuery(update.id,
+AttributeError: 'Update' object has no attribute 'id'
+2017-11-01 15:32:44,961 - updater.py - 453 - [WARNING] Exiting immediately!
+2017-11-01 15:32:46,464 - bot.py - 31 - [INFO] bot start..
+2017-11-01 15:33:25,730 - updater.py - 453 - [WARNING] Exiting immediately!
+2017-11-01 15:33:27,105 - bot.py - 31 - [INFO] bot start..
+2017-11-01 15:33:34,487 - messages.py - 24 - [INFO] catch the netease playlist
+2017-11-01 15:33:34,488 - netease.py - 58 - [INFO] response_playlist: playlist_id=134518450
+2017-11-01 15:33:34,488 - dispatcher.py - 292 - [ERROR] An uncaught error was raised while processing the update
+Traceback (most recent call last):
+  File "/usr/lib/python3.6/site-packages/telegram/ext/dispatcher.py", line 270, in process_update
+    handler.handle_update(update, self)
+  File "/usr/lib/python3.6/site-packages/telegram/ext/regexhandler.py", line 173, in handle_update
+    return self.callback(dispatcher.bot, update, **optional_args)
+  File "/home/lg/Documents/Project/PycharmProjects/GeziBot/handler/messages.py", line 26, in response_netease_playlist
+    netease.response_playlist(bot, update, playlist_id)
+  File "/home/lg/Documents/Project/PycharmProjects/GeziBot/service/dispatcher/netease.py", line 59, in response_playlist
+    bot.answerCallbackQuery(update.id,
+AttributeError: 'Update' object has no attribute 'id'
+2017-11-01 15:34:06,702 - updater.py - 453 - [WARNING] Exiting immediately!
+2017-11-01 15:38:55,557 - bot.py - 31 - [INFO] bot start..
+2017-11-01 15:39:13,519 - netease.py - 58 - [INFO] response_playlist: playlist_id=134518450
+2017-11-01 15:39:19,892 - dispatcher.py - 292 - [ERROR] An uncaught error was raised while processing the update
+Traceback (most recent call last):
+  File "/usr/lib/python3.6/site-packages/telegram/ext/dispatcher.py", line 270, in process_update
+    handler.handle_update(update, self)
+  File "/usr/lib/python3.6/site-packages/telegram/ext/regexhandler.py", line 173, in handle_update
+    return self.callback(dispatcher.bot, update, **optional_args)
+  File "/home/lg/Documents/Project/PycharmProjects/GeziBot/handler/messages.py", line 25, in response_netease_playlist
+    netease.response_playlist(bot, update, playlist_id)
+  File "/home/lg/Documents/Project/PycharmProjects/GeziBot/service/dispatcher/netease.py", line 64, in response_playlist
+    playlist_selector = netease_generate.produce_playlist_selector(playlist_dict['playlist'])
+  File "/home/lg/Documents/Project/PycharmProjects/GeziBot/service/operate/netease_generate.py", line 117, in produce_playlist_selector
+    playlist['trackCount'])
+TypeError: __init__() missing 1 required positional argument: 'musics'
+2017-11-01 15:39:50,830 - updater.py - 453 - [WARNING] Exiting immediately!
+2017-11-01 15:39:52,287 - bot.py - 31 - [INFO] bot start..
+2017-11-01 15:40:00,249 - netease.py - 58 - [INFO] response_playlist: playlist_id=134518450
+2017-11-01 15:43:46,318 - netease.py - 36 - [INFO] listen_selector_reply: data=netease:28288218
+2017-11-01 15:43:46,319 - netease_selector.py - 104 - [INFO] selector_download_music: music_id=28288218
+2017-11-01 15:43:54,678 - updater.py - 453 - [WARNING] Exiting immediately!
+2017-11-01 15:44:19,710 - bot.py - 31 - [INFO] bot start..
+2017-11-01 15:44:36,239 - messages.py - 13 - [INFO] hi: Hi, Lemos
+2017-11-01 15:44:57,543 - netease.py - 58 - [INFO] response_playlist: playlist_id=134518450
+2017-11-01 15:45:22,165 - netease.py - 36 - [INFO] listen_selector_reply: data=netease:*
+2017-11-01 15:46:07,017 - updater.py - 453 - [WARNING] Exiting immediately!
+2017-11-01 15:46:08,536 - bot.py - 31 - [INFO] bot start..
+2017-11-01 15:46:17,723 - netease.py - 58 - [INFO] response_playlist: playlist_id=134518450
+2017-11-01 15:46:48,492 - updater.py - 453 - [WARNING] Exiting immediately!
+2017-11-01 15:46:49,791 - bot.py - 31 - [INFO] bot start..
+2017-11-01 15:46:54,330 - netease.py - 36 - [INFO] listen_selector_reply: data=netease:*
+2017-11-01 15:47:02,156 - netease.py - 58 - [INFO] response_playlist: playlist_id=134518450
+2017-11-01 15:47:14,066 - dispatcher.py - 280 - [WARNING] A TelegramError was raised while processing the Update
+2017-11-01 15:47:14,067 - bot.py - 25 - [WARNING] Update "{'update_id': 807506784, 'message': {'message_id': 295, 'date': 1509522421, 'chat': {'id': 423453012, 'type': 'private', 'username': 'lemosd', 'first_name': 'Lemos', 'last_name': 'Jobs'}, 'text': '分享xfe1234创建的歌单「我喜欢的音乐」: http://music.163.com/playlist/134518450/109916495/ (来自@网易云音乐)', 'entities': [{'type': 'url', 'offset': 24, 'length': 50}], 'caption_entities': [], 'photo': [], 'new_chat_members': [], 'new_chat_photo': [], 'delete_chat_photo': False, 'group_chat_created': False, 'supergroup_chat_created': False, 'channel_chat_created': False, 'from': {'id': 423453012, 'first_name': 'Lemos', 'is_bot': False, 'last_name': 'Jobs', 'username': 'lemosd', 'language_code': 'en-US'}, 'new_chat_member': None}, '_effective_message': {'message_id': 295, 'date': 1509522421, 'chat': {'id': 423453012, 'type': 'private', 'username': 'lemosd', 'first_name': 'Lemos', 'last_name': 'Jobs'}, 'text': '分享xfe1234创建的歌单「我喜欢的音乐」: http://music.163.com/playlist/134518450/109916495/ (来自@网易云音乐)', 'entities': [{'type': 'url', 'offset': 24, 'length': 50}], 'caption_entities': [], 'photo': [], 'new_chat_members': [], 'new_chat_photo': [], 'delete_chat_photo': False, 'group_chat_created': False, 'supergroup_chat_created': False, 'channel_chat_created': False, 'from': {'id': 423453012, 'first_name': 'Lemos', 'is_bot': False, 'last_name': 'Jobs', 'username': 'lemosd', 'language_code': 'en-US'}, 'new_chat_member': None}}" caused error "Timed out"
+2017-11-01 15:47:23,116 - updater.py - 453 - [WARNING] Exiting immediately!
+2017-11-01 15:47:25,645 - bot.py - 31 - [INFO] bot start..
+2017-11-01 15:47:33,226 - netease.py - 58 - [INFO] response_playlist: playlist_id=134518450
+2017-11-01 15:47:40,896 - dispatcher.py - 280 - [WARNING] A TelegramError was raised while processing the Update
+2017-11-01 15:47:40,896 - bot.py - 25 - [WARNING] Update "{'update_id': 807506785, 'message': {'message_id': 297, 'date': 1509522451, 'chat': {'id': 423453012, 'type': 'private', 'username': 'lemosd', 'first_name': 'Lemos', 'last_name': 'Jobs'}, 'text': '分享xfe1234创建的歌单「我喜欢的音乐」: http://music.163.com/playlist/134518450/109916495/ (来自@网易云音乐)', 'entities': [{'type': 'url', 'offset': 24, 'length': 50}], 'caption_entities': [], 'photo': [], 'new_chat_members': [], 'new_chat_photo': [], 'delete_chat_photo': False, 'group_chat_created': False, 'supergroup_chat_created': False, 'channel_chat_created': False, 'from': {'id': 423453012, 'first_name': 'Lemos', 'is_bot': False, 'last_name': 'Jobs', 'username': 'lemosd', 'language_code': 'en-US'}, 'new_chat_member': None}, '_effective_message': {'message_id': 297, 'date': 1509522451, 'chat': {'id': 423453012, 'type': 'private', 'username': 'lemosd', 'first_name': 'Lemos', 'last_name': 'Jobs'}, 'text': '分享xfe1234创建的歌单「我喜欢的音乐」: http://music.163.com/playlist/134518450/109916495/ (来自@网易云音乐)', 'entities': [{'type': 'url', 'offset': 24, 'length': 50}], 'caption_entities': [], 'photo': [], 'new_chat_members': [], 'new_chat_photo': [], 'delete_chat_photo': False, 'group_chat_created': False, 'supergroup_chat_created': False, 'channel_chat_created': False, 'from': {'id': 423453012, 'first_name': 'Lemos', 'is_bot': False, 'last_name': 'Jobs', 'username': 'lemosd', 'language_code': 'en-US'}, 'new_chat_member': None}}" caused error "Invalid server response"
+2017-11-01 15:48:14,290 - updater.py - 453 - [WARNING] Exiting immediately!
+2017-11-01 15:48:32,721 - bot.py - 31 - [INFO] bot start..
+2017-11-01 15:48:38,205 - netease.py - 58 - [INFO] response_playlist: playlist_id=134518450
+2017-11-01 15:52:21,097 - updater.py - 453 - [WARNING] Exiting immediately!
+2017-11-01 15:52:22,510 - bot.py - 31 - [INFO] bot start..
+2017-11-01 15:52:27,968 - netease.py - 58 - [INFO] response_playlist: playlist_id=134518450
+2017-11-01 15:53:31,941 - updater.py - 453 - [WARNING] Exiting immediately!
+2017-11-01 15:53:33,290 - bot.py - 31 - [INFO] bot start..
+2017-11-01 15:53:37,032 - netease.py - 38 - [INFO] listen_selector_reply: data=netease:*
+2017-11-01 15:54:26,162 - netease.py - 60 - [INFO] response_playlist: playlist_id=134518450
+2017-11-01 15:54:48,180 - updater.py - 288 - [ERROR] Error while getting Updates: Timed out
+2017-11-01 15:54:48,181 - bot.py - 25 - [WARNING] Update "None" caused error "Timed out"
+2017-11-01 15:55:33,905 - updater.py - 453 - [WARNING] Exiting immediately!
+2017-11-01 15:55:35,250 - bot.py - 31 - [INFO] bot start..
+2017-11-01 15:55:49,243 - netease.py - 60 - [INFO] response_playlist: playlist_id=134518450
+2017-11-01 15:56:12,982 - netease.py - 38 - [INFO] listen_selector_reply: data=netease:29777867
+2017-11-01 15:56:12,982 - netease_selector.py - 104 - [INFO] selector_download_music: music_id=29777867
+2017-11-01 15:56:36,106 - netease_selector.py - 75 - [INFO] 文件：金海心 - 明明就.mp3，正在发送中~
+2017-11-01 15:57:01,191 - netease.py - 38 - [INFO] listen_selector_reply: data=netease:33579324
+2017-11-01 15:57:01,192 - netease_selector.py - 104 - [INFO] selector_download_music: music_id=33579324
+2017-11-01 15:57:10,634 - updater.py - 453 - [WARNING] Exiting immediately!
+2017-11-01 15:57:14,108 - bot.py - 31 - [INFO] bot start..
+2017-11-01 15:57:19,925 - netease.py - 60 - [INFO] response_playlist: playlist_id=134518450
+2017-11-01 15:57:34,311 - netease.py - 38 - [INFO] listen_selector_reply: data=netease:5255631
+2017-11-01 15:57:34,311 - netease_selector.py - 104 - [INFO] selector_download_music: music_id=5255631
+2017-11-01 15:57:42,025 - updater.py - 453 - [WARNING] Exiting immediately!

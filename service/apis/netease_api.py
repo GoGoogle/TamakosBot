@@ -47,3 +47,12 @@ def get_mv_detail_by_mvid(mvid):
 
 def get_mv_true_url_by_mv_url(mv_url):
     return '{0}/mv/url?url={1}'.format(proxies['http'], mv_url)
+
+
+def get_playlist_by_playlist_id(playlist_id):
+    payload = {
+        'id': playlist_id
+    }
+    response = requests.get('http://localhost/playlist/detail', params=payload, proxies=proxies)
+
+    return response.json()

@@ -1,5 +1,8 @@
 import logging
 
+import telegram
+
+from common.application import TIMEOUT
 from service.apis import netease_api
 from service.operate import netease_selector, netease_generate
 
@@ -50,3 +53,21 @@ def listen_selector_reply(bot, update):
     else:
         music_id = query.data[8:]
         netease_selector.selector_send_music(bot, query, music_id)
+
+
+def response_playlist(bot, update, playlist_id):
+    try:
+        logger.info('response_playlist: playlist_id={}'.format(playlist_id))
+        edited_msg = bot.send_message(chat_id=update.message.chat.id,
+                                      text="歌单搜索中..",
+                                      timeout=TIMEOUT)
+
+        playlist_dict = netease_api.get_playlist_by_playlist_id(playlist_id)
+        playlist_selector = netease_generate.produce_playlist_selector(playlist_dict['playlist'])
+        panel = netease_generate.transfer_playlist_selector_to_panel(playlist_selector)
+        bot.edit_message_text(chat_id=update.message.chat.id,
+                              message_id=edited_msg.message_id,
+                              text=panel['text'], quote=True, reply_markup=panel['reply_markup'],
+                              parse_mode=telegram.ParseMode.MARKDOWN)
+    except IndexError:
+        logger.warning('获取歌单失败', exc_info=True)

@@ -134,7 +134,7 @@ def selector_send_music(bot, query, music_id):
         if music_obj.mv:
             logger.info('selector download MV: mvid={0}'.format(music_obj.mv.mid))
 
-            mv_caption = "标题: {0}\n艺术家: #{1}\n品质: {2}p\n☁️ID: {3}".format(
+            mv_caption = "标题: {0}\n演唱: {1}\n品质: {2}p\n☁️ID: {3}".format(
                 music_obj.mv.name, music_obj.mv.artist_name,
                 music_obj.mv.quality, music_obj.mv.mid
             )

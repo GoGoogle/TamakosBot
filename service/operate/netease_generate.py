@@ -1,7 +1,7 @@
 import logging
 
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
-from model.music import Mv, Artist, Album, Music, MusicListSelector
+from model.music import Mv, Artist, Album, Music, MusicListSelector, PlayListSelector
 from service.apis import netease_api
 
 logger = logging.getLogger(__name__)
@@ -97,6 +97,43 @@ def transfer_music_list_selector_to_panel(music_list_selector):
     button_list.append([
         InlineKeyboardButton(
             text='取消',
+            callback_data='netease:*'
+        )
+    ])
+
+    return {'text': list_text, 'reply_markup': InlineKeyboardMarkup(button_list)}
+
+
+def produce_playlist_selector(playlist):
+    musics = []
+    for song in playlist['tracks']:
+        ars = []
+        if len(song['ar']) > 0:
+            for x in song['ar']:
+                ars.append(Artist(arid=x['id'], name=x['name']))
+        music = Music(song['id'], song['name'], artists=ars, duration=song['dt'])
+        musics.append(music)
+    return PlayListSelector(playlist['id'], playlist['name'], playlist['creator']['nickname'],
+                            playlist['trackCount'], musics)
+
+
+def transfer_playlist_selector_to_panel(playlist_selector):
+    playlist_url = 'http://music.163.com/playlist/{}'.format(playlist_selector.pid)
+    list_text = "☁️🎵歌单 「[{0}](1)」\n创建者： {2}\n歌曲数目：{3} 首歌".format(
+        playlist_selector.name, playlist_url, playlist_selector.creator_name, playlist_selector.track_count)
+    button_list = []
+    music_list = playlist_selector.musics[:20]
+    for x in music_list:
+        button_list.append([
+            InlineKeyboardButton(
+                text='[{0:.2f}] {1} ({2})'.format(
+                    x.duration / 60000, x.name, ' / '.join(v.name for v in x.artists)),
+                callback_data='netease:' + str(x.mid)
+            )
+        ])
+    button_list.append([
+        InlineKeyboardButton(
+            text='撤销显示',
             callback_data='netease:*'
         )
     ])
