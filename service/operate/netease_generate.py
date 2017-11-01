@@ -113,24 +113,56 @@ def produce_playlist_selector(playlist):
                 ars.append(Artist(arid=x['id'], name=x['name']))
         music = Music(song['id'], song['name'], artists=ars, duration=song['dt'])
         musics.append(music)
+
+    total_page_num = (playlist['trackCount'] + 4) // 5
+
     return PlayListSelector(playlist['id'], playlist['name'], playlist['creator']['nickname'],
-                            playlist['trackCount'], musics)
+                            playlist['trackCount'], total_page_num, musics)
 
 
-def transfer_playlist_selector_to_panel(playlist_selector):
+def transfer_playlist_selector_to_panel(playlist_selector, cur_pagecode=1):
     playlist_url = 'http://music.163.com/playlist/{}'.format(playlist_selector.pid)
-    list_text = "☁️🎵歌单 「[{0}]({1})」\n创建者： {2}\n歌曲数目：{3} 首歌".format(
+    list_text = "☁️🎵歌单 「[{0}]({1})」\n创建者 {2}\n歌曲数目 {3} 首歌".format(
         playlist_selector.name, playlist_url, playlist_selector.creator_name, playlist_selector.track_count)
     button_list = []
-    music_list = playlist_selector.musics[:15]
+    start = cur_pagecode * 5 - 5
+    music_list = playlist_selector.musics[start:start + 5]
+
     for x in music_list:
         button_list.append([
             InlineKeyboardButton(
                 text='[{0:.2f}] {1} ({2})'.format(
                     x.duration / 60000, x.name, ' / '.join(v.name for v in x.artists)),
-                callback_data='netease:' + str(x.mid)
+                callback_data='netease:P' + str(x.mid)
             )
         ])
+
+    if cur_pagecode == 1:
+        button_list.append([
+            InlineKeyboardButton(
+                text='下一页',
+                callback_data='netease:{0}:D{1}'.format(playlist_selector.pid, cur_pagecode)
+            )
+        ])
+    elif cur_pagecode == playlist_selector.total_page_num:
+        button_list.append([
+            InlineKeyboardButton(
+                text='上一页',
+                callback_data='netease:{0}:U{1}'.format(playlist_selector.pid, cur_pagecode)
+            )
+        ])
+    else:
+        button_list.append([
+            InlineKeyboardButton(
+                text='上一页',
+                callback_data='netease:{0}:U{1}'.format(playlist_selector.pid, cur_pagecode)
+            ),
+            InlineKeyboardButton(
+                text='下一页',
+                callback_data='netease:{0}:D{1}'.format(playlist_selector.pid, cur_pagecode)
+            )
+        ])
+
     button_list.append([
         InlineKeyboardButton(
             text='撤销显示',

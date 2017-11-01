@@ -90,6 +90,7 @@ class PlayListSelector(object):
                  name,
                  creator_name,
                  track_count,
+                 total_page_num,
                  musics
                  ):
         self.logger = logging.getLogger(__name__)
@@ -97,4 +98,5 @@ class PlayListSelector(object):
         self.name = name
         self.creator_name = creator_name
         self.track_count = track_count
+        self.total_page_num = total_page_num
         self.musics = musics

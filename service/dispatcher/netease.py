@@ -37,22 +37,37 @@ def listen_selector_reply(bot, update):
     """
     logger.info('listen_selector_reply: data={}'.format(update.callback_query.data))
     query = update.callback_query
-    index1 = query.data.find('+')
-    index2 = query.data.find('-')
-    index3 = query.data.find('*')
+    index1 = query.data.find('*')
+    index2 = query.data.find('+')
+    index3 = query.data.find('-')
+    index4 = query.data.find('D')
+    index5 = query.data.find('U')
+    index6 = query.data.find('P')
     if index1 != -1:
-        page_code = int(query.data[index1 + 1:]) + 1
-        kw = query.data[8:index1 - 1]
-        netease_selector.selector_page_turning(bot, query, kw, page_code)
+        netease_selector.selector_cancel(bot, query)
     elif index2 != -1:
-        page_code = int(query.data[index2 + 1:]) - 1
-        kw = query.data[8:index1 - 2]
+        page_code = int(query.data[index2 + 1:]) + 1
+        kw = query.data[8:index2 - 1]
         netease_selector.selector_page_turning(bot, query, kw, page_code)
     elif index3 != -1:
-        netease_selector.selector_cancel(bot, query)
+        page_code = int(query.data[index3 + 1:]) - 1
+        kw = query.data[8:index3 - 1]
+        netease_selector.selector_page_turning(bot, query, kw, page_code)
+    elif index4 != -1:
+        page_code = int(query.data[index4 + 1:]) + 1
+        playlist_id = query.data[8:index4 - 1]
+        netease_selector.selector_playlist_turning(bot, query, playlist_id, page_code)
+    elif index5 != -1:
+        page_code = int(query.data[index5 + 1:]) - 1
+        playlist_id = query.data[8:index5 - 1]
+        # print(page_code, playlist_id, '***************')
+        netease_selector.selector_playlist_turning(bot, query, playlist_id, page_code)
+    elif index6 != -1:
+        music_id = query.data[index6 + 1:]
+        netease_selector.selector_send_music(bot, query, music_id, False)
     else:
         music_id = query.data[8:]
-        netease_selector.selector_send_music(bot, query, music_id)
+        netease_selector.selector_send_music(bot, query, music_id, True)
 
 
 def response_playlist(bot, update, playlist_id):
@@ -61,13 +76,7 @@ def response_playlist(bot, update, playlist_id):
         edited_msg = bot.send_message(chat_id=update.message.chat.id,
                                       text="歌单搜索中..",
                                       timeout=TIMEOUT)
-
-        playlist_dict = netease_api.get_playlist_by_playlist_id(playlist_id)
-        playlist_selector = netease_generate.produce_playlist_selector(playlist_dict['playlist'])
-        panel = netease_generate.transfer_playlist_selector_to_panel(playlist_selector)
-        bot.edit_message_text(chat_id=update.message.chat.id,
-                              message_id=edited_msg.message_id,
-                              text=panel['text'], quote=True, reply_markup=panel['reply_markup'],
-                              parse_mode=telegram.ParseMode.MARKDOWN)
+        update.message.message_id = edited_msg.message_id
+        netease_selector.selector_playlist_turning(bot, update, playlist_id, cur_pagecode=1)
     except IndexError:
         logger.warning('获取歌单失败', exc_info=True)

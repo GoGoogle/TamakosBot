@@ -81,10 +81,6 @@ def send_music_file(bot, query, file, file_name, file_caption, edited_msg, false
 
 
 def selector_page_turning(bot, query, kw, page_code):
-    bot.answerCallbackQuery(query.id,
-                            text="加载中~",
-                            show_alert=False,
-                            timeout=TIMEOUT)
     logger.info('selector_page_turning: keyword: {0}; page_code={1}'.format(kw, page_code))
     search_musics_dict = netease_api.search_musics_by_keyword_and_pagecode(kw, pagecode=page_code)
     music_list_selector = netease_generate.produce_music_list_selector(kw, page_code, search_musics_dict['result'])
@@ -94,15 +90,16 @@ def selector_page_turning(bot, query, kw, page_code):
 
 def selector_cancel(bot, query):
     bot.answerCallbackQuery(query.id,
-                            text="加载中~",
+                            text="..",
                             show_alert=False,
                             timeout=TIMEOUT)
     query.message.delete()
 
 
-def selector_send_music(bot, query, music_id):
+def selector_send_music(bot, query, music_id, delete):
     logger.info('selector_download_music: music_id={0}'.format(music_id))
-    selector_cancel(bot, query)
+    if delete:
+        selector_cancel(bot, query)
 
     edited_msg = bot.send_message(chat_id=query.message.chat.id, text="获取中~",
                                   timeout=TIMEOUT)
@@ -153,3 +150,14 @@ def selector_send_music(bot, query, music_id):
         if not music_file.closed:
             music_file.close()
         edited_msg.delete()
+
+
+def selector_playlist_turning(bot, update, playlist_id, cur_pagecode=1):
+    playlist_dict = netease_api.get_playlist_by_playlist_id(playlist_id)
+    playlist_selector = netease_generate.produce_playlist_selector(playlist_dict['playlist'])
+    panel = netease_generate.transfer_playlist_selector_to_panel(playlist_selector, cur_pagecode)
+    bot.edit_message_text(chat_id=update.message.chat.id,
+                          message_id=update.message.message_id,
+                          text=panel['text'], quote=True, reply_markup=panel['reply_markup'],
+                          disable_web_page_preview=True,
+                          parse_mode=telegram.ParseMode.MARKDOWN)
