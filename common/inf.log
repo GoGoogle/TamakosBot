@@ -155,3 +155,8 @@ TypeError: __init__() missing 1 required positional argument: 'musics'
 2017-11-01 15:58:59,958 - netease.py - 60 - [INFO] response_playlist: playlist_id=134518450
 2017-11-01 15:59:05,845 - netease.py - 38 - [INFO] listen_selector_reply: data=netease:*
 2017-11-01 16:01:08,838 - updater.py - 453 - [WARNING] Exiting immediately!
+2017-11-01 16:31:13,200 - bot.py - 31 - [INFO] bot start..
+2017-11-01 16:31:58,903 - updater.py - 453 - [WARNING] Exiting immediately!
+2017-11-01 16:32:00,965 - bot.py - 31 - [INFO] bot start..
+2017-11-01 16:32:08,864 - netease.py - 60 - [INFO] response_playlist: playlist_id=972866018
+2017-11-01 16:32:14,105 - updater.py - 453 - [WARNING] Exiting immediately!

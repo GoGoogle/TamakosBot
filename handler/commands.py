@@ -8,11 +8,11 @@ logger = logging.getLogger(__name__)
 
 
 def start_command(bot, update):
-    bot.send_message(chat_id=update.message.chat_id, text='在！')
+    bot.send_message(chat_id=update.message.chat_id, text='吼啊')
 
 
 def help_command(bot, update):
-    bot.send_message(chat_id=update.message.chat_id, text='暂无帮助信息？')
+    bot.send_message(chat_id=update.message.chat_id, text='无可奉告？')
 
 
 def netease_command(bot, update, args):
