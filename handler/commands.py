@@ -8,7 +8,7 @@ logger = logging.getLogger(__name__)
 
 
 def start_command(bot, update):
-    bot.send_message(chat_id=update.message.chat_id, text='吼啊')
+    bot.send_message(chat_id=update.message.chat_id, text='你好')
 
 
 def help_command(bot, update):
