@@ -122,7 +122,7 @@ def transfer_playlist_selector_to_panel(playlist_selector):
     list_text = "☁️🎵歌单 「[{0}](1)」\n创建者： {2}\n歌曲数目：{3} 首歌".format(
         playlist_selector.name, playlist_url, playlist_selector.creator_name, playlist_selector.track_count)
     button_list = []
-    music_list = playlist_selector.musics[:20]
+    music_list = playlist_selector.musics[:15]
     for x in music_list:
         button_list.append([
             InlineKeyboardButton(
