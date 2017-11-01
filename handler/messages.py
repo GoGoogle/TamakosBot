@@ -33,7 +33,7 @@ def tks_message(bot, update):
         '我有必要告诉你们一点人参的经验',
         '中国有一句话叫“闷声大发财”，我就什么话都不说，这是最坠吼的'
     ]
-    text = ha_list[random.randint(1, len(ha_list))]
+    text = ha_list[random.randint(0, len(ha_list) - 1)]
     logger.info('bye: {}'.format(text))
     bot.send_message(chat_id=update.message.chat_id, text=text)
 
