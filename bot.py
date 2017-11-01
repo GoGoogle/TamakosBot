@@ -1,15 +1,7 @@
 import logging
-import logging.config
-import yaml
 from telegram.ext import Updater
-from common import application
+from common import application, log
 from handler import commands, messages, listeners
-
-
-def setup_logging(path="./common/logconfig.yaml"):
-    with open(path, "r") as f:
-        config = yaml.load(f)
-        logging.config.dictConfig(config)
 
 
 def main():
@@ -34,7 +26,7 @@ def error(bot, update, err):
 
 
 if __name__ == '__main__':
-    setup_logging(path="./logconfig.yaml")
+    log.setup_logging()
     logger = logging.getLogger("__name__")
     logger.info('bot start..')
     main()
