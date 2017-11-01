@@ -160,3 +160,9 @@ TypeError: __init__() missing 1 required positional argument: 'musics'
 2017-11-01 16:32:00,965 - bot.py - 31 - [INFO] bot start..
 2017-11-01 16:32:08,864 - netease.py - 60 - [INFO] response_playlist: playlist_id=972866018
 2017-11-01 16:32:14,105 - updater.py - 453 - [WARNING] Exiting immediately!
+2017-11-01 16:52:31,795 - bot.py - 31 - [INFO] bot start..
+2017-11-01 16:52:43,099 - messages.py - 37 - [INFO] bye: 如果将来宣传报道有偏差，你们要负责
+2017-11-01 16:52:57,655 - messages.py - 37 - [INFO] bye: 如果将来宣传报道有偏差，你们要负责
+2017-11-01 16:53:09,241 - messages.py - 37 - [INFO] bye: 我今天算是得罪了你们一下！
+2017-11-01 16:53:14,099 - messages.py - 37 - [INFO] bye: 如果说还有一点什么成绩就是军队一律不得经商！
+2017-11-01 16:54:05,254 - updater.py - 453 - [WARNING] Exiting immediately!
