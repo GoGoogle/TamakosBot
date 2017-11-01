@@ -47,7 +47,7 @@ def download_continuous(bot, query, true_download_url, file, file_title, edited_
                                                                   total_length / (1024 * 1024),
                                                                   dl / total_length * 100,
                                                                   network_speed_status)
-            progress_status = '[{0}]({1})  下载中~\n{2}'.format(file_title, false_download_url, progress)
+            progress_status = '[{0}]({1})  ..下载中\n{2}'.format(file_title, false_download_url, progress)
 
             bot.edit_message_text(
                 chat_id=query.message.chat.id,
@@ -66,13 +66,13 @@ def send_music_file(bot, query, file, file_name, file_caption, edited_msg, false
     bot.edit_message_text(
         chat_id=query.message.chat.id,
         message_id=edited_msg.message_id,
-        text='[{0}]({1}) 发送中~'.format(file_name, false_download_url),
+        text='[{0}]({1}) >> 发送中'.format(file_name, false_download_url),
         parse_mode=telegram.ParseMode.MARKDOWN,
         disable_web_page_preview=True,
         timeout=TIMEOUT
     )
 
-    logger.info("文件：{}，正在发送中~".format(file_name))
+    logger.info("文件：{}，>> 正在发送中".format(file_name))
     bot.send_chat_action(query.message.chat.id, action=telegram.ChatAction.UPLOAD_AUDIO)
 
     bot.send_audio(chat_id=query.message.chat.id, audio=file, caption=file_caption,
@@ -90,7 +90,7 @@ def selector_page_turning(bot, query, kw, page_code):
 
 def selector_cancel(bot, query):
     bot.answerCallbackQuery(query.id,
-                            text="..",
+                            text=".",
                             show_alert=False,
                             timeout=TIMEOUT)
     query.message.delete()
@@ -101,7 +101,7 @@ def selector_send_music(bot, query, music_id, delete):
     if delete:
         selector_cancel(bot, query)
 
-    edited_msg = bot.send_message(chat_id=query.message.chat.id, text="获取中~",
+    edited_msg = bot.send_message(chat_id=query.message.chat.id, text="..获取中",
                                   timeout=TIMEOUT)
 
     music_obj = netease_generate.generate_music_obj(netease_api.get_music_detail_by_musicid(music_id)['songs'][0],

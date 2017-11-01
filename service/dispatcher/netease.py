@@ -74,7 +74,7 @@ def response_playlist(bot, update, playlist_id):
     try:
         logger.info('response_playlist: playlist_id={}'.format(playlist_id))
         edited_msg = bot.send_message(chat_id=update.message.chat.id,
-                                      text="歌单搜索中..",
+                                      text="..歌单导入中",
                                       timeout=TIMEOUT)
         update.message.message_id = edited_msg.message_id
         netease_selector.selector_playlist_turning(bot, update, playlist_id, cur_pagecode=1)
