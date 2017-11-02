@@ -1,6 +1,6 @@
 import requests
 
-from common import application
+from config import application
 
 proxies = {
     'http': 'http://119.29.165.233:3000'

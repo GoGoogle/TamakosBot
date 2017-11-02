@@ -1,6 +1,11 @@
 import logging
+import logging.config
+
+import yaml
 from telegram.ext import Updater
-from common import application, log
+
+from config import application
+from database.db_audio import DBAudio
 from handler import commands, messages, listeners
 
 
@@ -21,12 +26,19 @@ def router(dp):
     dp.add_error_handler(error)
 
 
+def setup_logging(path="config/logconfig.yaml"):
+    with open(path, "r") as f:
+        config = yaml.load(f)
+        logging.config.dictConfig(config)
+
+
 def error(bot, update, err):
     logger.warning('Update "%s" caused error "%s"' % (update, err))
 
 
 if __name__ == '__main__':
-    log.setup_logging()
+    setup_logging()
+    DBAudio().setup_db()
     logger = logging.getLogger("__name__")
     logger.info('bot start..')
     main()

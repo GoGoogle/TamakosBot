@@ -1,5 +1,5 @@
 from functools import wraps
-from common import application
+from config import application
 
 
 def only_admin(func):

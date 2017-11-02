@@ -1,16 +1,16 @@
 import logging
 import time
 from io import BytesIO
-
 import requests
 import telegram
-
-from common import application
-from common.application import TIMEOUT
+from config import application
+from config.application import TIMEOUT
+from database.db_audio import DBAudio
 from service.apis import netease_api
 from service.operate import netease_generate
 
 logger = logging.getLogger(__name__)
+audio = DBAudio()
 
 
 def download_continuous(bot, query, true_download_url, file, file_title, edited_msg,
@@ -60,11 +60,12 @@ def download_continuous(bot, query, true_download_url, file, file_title, edited_
                 timeout=TIMEOUT
             )
 
-    except Exception as e:
+    except:
         logger.error('download_continuous failed', exc_info=True)
 
 
-def send_music_file(bot, query, file, file_name, file_caption, edited_msg, false_download_url=''):
+def send_music_file(bot, query, file, netease_id, file_name, file_duration, file_scheme, file_caption, edited_msg,
+                    false_download_url=''):
     bot.edit_message_text(
         chat_id=query.message.chat.id,
         message_id=edited_msg.message_id,
@@ -77,9 +78,13 @@ def send_music_file(bot, query, file, file_name, file_caption, edited_msg, false
     logger.info("文件：{}，>> 正在发送中".format(file_name))
     bot.send_chat_action(query.message.chat.id, action=telegram.ChatAction.UPLOAD_AUDIO)
 
-    bot.send_audio(chat_id=query.message.chat.id, audio=file, caption=file_caption,
-                   title=file_name[:file_name.rfind('.')],
-                   timeout=TIMEOUT)
+    file_msg = bot.send_audio(chat_id=query.message.chat.id, audio=file, caption=file_caption,
+                              duration=file_duration,
+                              title=file_name[:file_name.rfind('.')],
+                              timeout=TIMEOUT)
+
+    # 存储 database store file_id, title, duration, file_scheme and timestamp which is in 3 minutes
+    audio.store_file(file_msg.audio.file_id, netease_id, file_msg.audio.title, file_duration, file_scheme, time.time())
 
 
 def selector_page_turning(bot, query, kw, page_code):
@@ -92,7 +97,7 @@ def selector_page_turning(bot, query, kw, page_code):
 
 def selector_cancel(bot, query):
     bot.answerCallbackQuery(query.id,
-                            text=".",
+                            text="loading..",
                             show_alert=False,
                             timeout=TIMEOUT)
     query.message.delete()
@@ -106,19 +111,12 @@ def selector_send_music(bot, query, music_id, delete):
     edited_msg = bot.send_message(chat_id=query.message.chat.id, text="..获取中",
                                   timeout=TIMEOUT)
     detail = netease_api.get_music_detail_by_musicid(music_id)['songs'][0]
-    br = ''
-    if 'h' in detail:
-        br = detail['h']['br']
-    elif 'm' in detail:
-        br = detail['m']['br']
-    elif 'l' in detail:
-        br = detail['l']['br']
     music_obj = netease_generate.generate_music_obj(detail,
                                                     netease_api.get_music_url_by_musicid(music_id)['data'][0])
 
     music_file = BytesIO()
     try:
-        music_caption = "曲目: {0}\n演唱: {1}\n专辑: {2}]\n格式：{3}\n☁️ID: {4}".format(
+        music_caption = "曲目: {0}\n演唱: {1}\n专辑: {2}\n格式：{3}\n☁️ID: {4}".format(
             music_obj.name, ' '.join(v.name for v in music_obj.artists),
             music_obj.album.name, music_obj.scheme, music_obj.mid
         )
@@ -126,8 +124,15 @@ def selector_send_music(bot, query, music_id, delete):
             ' / '.join(v.name for v in music_obj.artists), music_obj.name)
         netease_url = 'http://music.163.com/song?id={}'.format(music_obj.mid)
 
-        if query.message.audio and query.message.audio.title == music_filename[:music_filename.rfind('.')]:
-            send_music_file(bot, query, query.message.audio, music_filename, music_caption, edited_msg, netease_url)
+        # compare the files with the database ,and find the file_Id
+        file_id = audio.compare_file(music_id, music_filename[:music_filename.rfind('.')], music_obj.duration,
+                                     music_obj.scheme,
+                                     time.time())
+        if file_id:
+            send_music_file(bot, query, file_id, music_obj.mid, music_filename, music_obj.duration, music_obj.scheme,
+                            music_caption,
+                            edited_msg,
+                            netease_url)
         else:
             download_continuous(bot, query, music_obj.url, music_file, music_filename, edited_msg,
                                 false_download_url=netease_url)
@@ -135,7 +140,10 @@ def selector_send_music(bot, query, music_id, delete):
             music_file = BytesIO(music_file.getvalue())
             music_file.name = music_filename
 
-            send_music_file(bot, query, music_file, music_filename, music_caption, edited_msg, netease_url)
+            send_music_file(bot, query, music_file, music_obj.mid, music_filename, music_obj.duration, music_obj.scheme,
+                            music_caption,
+                            edited_msg,
+                            netease_url)
 
         if music_obj.mv:
             logger.info('selector download MV: mvid={0}'.format(music_obj.mv.mid))
@@ -153,7 +161,7 @@ def selector_send_music(bot, query, music_id, delete):
 
             bot.send_message(chat_id=query.message.chat.id, text=message_text, parse_mode=telegram.ParseMode.MARKDOWN)
 
-    except Exception as e:
+    except:
         logger.error('send file failed', exc_info=True)
     finally:
         if not music_file.closed:

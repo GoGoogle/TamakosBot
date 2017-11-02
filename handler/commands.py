@@ -1,6 +1,6 @@
 import logging
 
-from telegram.ext import CommandHandler, MessageHandler, Filters
+from telegram.ext import CommandHandler, MessageHandler, Filters, run_async
 
 from service.dispatcher import netease
 
@@ -15,6 +15,7 @@ def help_command(bot, update):
     bot.send_message(chat_id=update.message.chat_id, text='无可奉告？')
 
 
+@run_async
 def netease_command(bot, update, args):
     netease.search_music(bot, update, args)
 
