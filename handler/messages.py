@@ -44,4 +44,4 @@ def handler_messages(dispatcher):
     dispatcher.add_handler(RegexHandler(r'.*bye$', bye_message))
     dispatcher.add_handler(RegexHandler(r'.*naive.*', tks_message))
     dispatcher.add_handler(
-        RegexHandler(r'.*http://music.163.com/?.?/playlist((/)|(\?id=))(\d*).*', response_netease_playlist))
+        RegexHandler(r'.*https?://music.163.com/?.?/playlist((/)|(\?id=))(\d*).*', response_netease_playlist))
