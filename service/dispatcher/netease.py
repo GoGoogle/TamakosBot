@@ -1,7 +1,5 @@
 import logging
 
-import telegram
-
 from config.application import TIMEOUT
 from service.apis import netease_api
 from service.operate import netease_selector, netease_generate
