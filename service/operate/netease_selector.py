@@ -222,7 +222,7 @@ def selector_send_music(bot, query, music_id, delete):
         if music_obj.mv:
             logger.info('selector download MV: mvid={0}'.format(music_obj.mv.mid))
 
-            time_fmt = str(int(music_obj.mv.duration // 60)) + ':' + str(int(music_obj.mv.duration % 60))
+            time_fmt = '{0}分{1}秒'.format(int(music_obj.mv.duration // 60), int(music_obj.mv.duration % 60))
             mv_caption = "标题: {0}\n演唱: {1}\n时长：{2}\n品质: {3}p\n☁️ID: {4}".format(
                 music_obj.mv.name, music_obj.mv.artist_name, time_fmt,
                 music_obj.mv.quality, music_obj.mv.mid

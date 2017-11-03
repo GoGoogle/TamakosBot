@@ -24,7 +24,7 @@ def generate_music_obj(detail, url):
 
     music_obj = Music(mid=detail['id'], name=detail['name'], url=url['url'],
                       scheme='{0} {1:.0f}kbps'.format(url['type'], url['br'] / 1000),
-                      artists=ars, duration=detail['dt'] / 1000, album=al
+                      artists=ars, duration=detail['dt'] / 1000000, album=al
                       )
     if detail['mv'] != 0:
         mv = generate_mv(detail['mv'])
@@ -48,7 +48,7 @@ def produce_music_list_selector(kw, pagecode, search_musics_result):
             for x in song['artists']:
                 ars.append(Artist(arid=x['id'], name=x['name']))
 
-        music = Music(song['id'], song['name'], artists=ars, duration=song['duration'] / 60000)
+        music = Music(song['id'], song['name'], artists=ars, duration=song['duration'])
         musics.append(music)
     total_page_num = (search_musics_result['songCount'] + 4) // 5
     return MusicListSelector(kw, pagecode, total_page_num, musics)
@@ -63,10 +63,10 @@ def transfer_music_list_selector_to_panel(music_list_selector):
     button_list = []
     music_list = music_list_selector.musics
     for x in music_list:
-        time_fmt = str(int(x.duration // 60)) + ':' + str(int(x.duration % 60))
+        time_fmt = '{0}:{1}'.format(int(x.duration // 60), int(x.duration % 60))
         button_list.append([
             InlineKeyboardButton(
-                text='[{0:.2f}] {1} ({2})'.format(
+                text='[{0}] {1} ({2})'.format(
                     time_fmt, x.name, ' / '.join(v.name for v in x.artists)),
                 callback_data='netease:' + str(x.mid)
             )
@@ -113,7 +113,7 @@ def produce_playlist_selector(playlist):
         if len(song['ar']) > 0:
             for x in song['ar']:
                 ars.append(Artist(arid=x['id'], name=x['name']))
-        music = Music(song['id'], song['name'], artists=ars, duration=song['dt'] / 60000)
+        music = Music(song['id'], song['name'], artists=ars, duration=song['dt'])
         musics.append(music)
 
     total_page_num = (playlist['trackCount'] + 4) // 5
@@ -131,10 +131,11 @@ def transfer_playlist_selector_to_panel(playlist_selector, cur_pagecode=1):
     music_list = playlist_selector.musics[start:start + 5]
 
     for x in music_list:
+        time_fmt = str(int(x.duration // 60)) + ':' + str(int(x.duration % 60))
         button_list.append([
             InlineKeyboardButton(
-                text='[{0:.2f}] {1} ({2})'.format(
-                    x.duration, x.name, ' / '.join(v.name for v in x.artists)),
+                text='[{0}] {1} ({2})'.format(
+                    time_fmt, x.name, ' / '.join(v.name for v in x.artists)),
                 callback_data='netease:P' + str(x.mid)
             )
         ])
