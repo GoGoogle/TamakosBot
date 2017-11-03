@@ -18,10 +18,7 @@ def download_continuous(bot, query, true_download_url, file, file_title, edited_
     try:
         if application.TOOL_PROXY:
             # 代理使用国内服务器转发接口
-            logger.info('**start proxy :: {0}.....'.format(application.TOOL_PROXY['protocol']))
-            proxies = {
-                application.TOOL_PROXY['protocol']: application.TOOL_PROXY['host'],
-            }
+            proxies = application.TOOL_PROXY
             r = requests.get(true_download_url, stream=True, timeout=TIMEOUT, proxies=proxies)
         else:
             r = requests.get(true_download_url, stream=True, timeout=TIMEOUT)
@@ -97,7 +94,7 @@ def selector_page_turning(bot, query, kw, page_code):
 
 def selector_cancel(bot, query):
     bot.answerCallbackQuery(query.id,
-                            text="loading..",
+                            text="⑧",
                             show_alert=False,
                             timeout=TIMEOUT)
     query.message.delete()

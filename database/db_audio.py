@@ -21,7 +21,7 @@ class DBAudio(object):
                         'platform_id VARCHAR(15), title VARCHAR(20),duration INT(10), ' \
                         'scheme VARCHAR(15), create_time TIMESTAMP )'
             cursor.execute(create_tb)
-            cursor.execute('DELETE FROM audio')
+            # cursor.execute('DELETE FROM audio')
         except:
             self.logger.error('setup database', exc_info=True)
         finally:
