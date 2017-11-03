@@ -24,7 +24,7 @@ def generate_music_obj(detail, url):
 
     music_obj = Music(mid=detail['id'], name=detail['name'], url=url['url'],
                       scheme='{0} {1:.0f}kbps'.format(url['type'], url['br'] / 1000),
-                      artists=ars, duration=detail['dt'] / 1000000, album=al
+                      artists=ars, duration=detail['dt'] / 1000, album=al
                       )
     if detail['mv'] != 0:
         mv = generate_mv(detail['mv'])
@@ -63,7 +63,8 @@ def transfer_music_list_selector_to_panel(music_list_selector):
     button_list = []
     music_list = music_list_selector.musics
     for x in music_list:
-        time_fmt = '{0}:{1}'.format(int(x.duration // 60), int(x.duration % 60))
+        # 跟 music_obj 无关
+        time_fmt = '{0}:{1}'.format(int(x.duration // 60000), int(x.duration % 60000))
         button_list.append([
             InlineKeyboardButton(
                 text='[{0}] {1} ({2})'.format(
