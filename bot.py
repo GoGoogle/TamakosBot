@@ -5,7 +5,7 @@ import yaml
 from telegram.ext import Updater
 
 from config import application
-from database.db_audio import DBAudio
+from database import db_audio, db_mv
 from handler import commands, messages, listeners
 
 
@@ -38,7 +38,8 @@ def error(bot, update, err):
 
 if __name__ == '__main__':
     setup_logging()
-    DBAudio().setup_db()
+    db_audio.DBAudio().setup_db()
+    db_mv.DBMv().setup_db()
     logger = logging.getLogger("__name__")
     logger.info('bot start..')
     main()

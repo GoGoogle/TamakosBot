@@ -1,6 +1,7 @@
 import logging
 
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
+
 from model.music import Mv, Artist, Album, Music, MusicListSelector, PlayListSelector
 from service.apis import netease_api
 
@@ -11,7 +12,7 @@ def generate_mv(mvid):
     mv_detail = netease_api.get_mv_detail_by_mvid(mvid)['data']
     max_key = str(max(map(lambda x: int(x), mv_detail['brs'].keys())))
     return Mv(mv_detail['id'], mv_detail['name'], mv_detail['brs'][max_key],
-              mv_detail['artistName'], mv_detail['duration'], quality=max_key)
+              mv_detail['artistName'], mv_detail['duration'] / (60000 * 60000), quality=max_key)
 
 
 def generate_music_obj(detail, url):
@@ -23,7 +24,7 @@ def generate_music_obj(detail, url):
 
     music_obj = Music(mid=detail['id'], name=detail['name'], url=url['url'],
                       scheme='{0} {1:.0f}kbps'.format(url['type'], url['br'] / 1000),
-                      artists=ars, duration=detail['dt'], album=al
+                      artists=ars, duration=detail['dt'] / 1000, album=al
                       )
     if detail['mv'] != 0:
         mv = generate_mv(detail['mv'])
@@ -47,7 +48,7 @@ def produce_music_list_selector(kw, pagecode, search_musics_result):
             for x in song['artists']:
                 ars.append(Artist(arid=x['id'], name=x['name']))
 
-        music = Music(song['id'], song['name'], artists=ars, duration=song['duration'])
+        music = Music(song['id'], song['name'], artists=ars, duration=song['duration'] / 60000)
         musics.append(music)
     total_page_num = (search_musics_result['songCount'] + 4) // 5
     return MusicListSelector(kw, pagecode, total_page_num, musics)
@@ -65,7 +66,7 @@ def transfer_music_list_selector_to_panel(music_list_selector):
         button_list.append([
             InlineKeyboardButton(
                 text='[{0:.2f}] {1} ({2})'.format(
-                    x.duration / 60000, x.name, ' / '.join(v.name for v in x.artists)),
+                    x.duration, x.name, ' / '.join(v.name for v in x.artists)),
                 callback_data='netease:' + str(x.mid)
             )
         ])
@@ -111,7 +112,7 @@ def produce_playlist_selector(playlist):
         if len(song['ar']) > 0:
             for x in song['ar']:
                 ars.append(Artist(arid=x['id'], name=x['name']))
-        music = Music(song['id'], song['name'], artists=ars, duration=song['dt'])
+        music = Music(song['id'], song['name'], artists=ars, duration=song['dt'] / 60000)
         musics.append(music)
 
     total_page_num = (playlist['trackCount'] + 4) // 5
@@ -132,7 +133,7 @@ def transfer_playlist_selector_to_panel(playlist_selector, cur_pagecode=1):
         button_list.append([
             InlineKeyboardButton(
                 text='[{0:.2f}] {1} ({2})'.format(
-                    x.duration / 60000, x.name, ' / '.join(v.name for v in x.artists)),
+                    x.duration, x.name, ' / '.join(v.name for v in x.artists)),
                 callback_data='netease:P' + str(x.mid)
             )
         ])

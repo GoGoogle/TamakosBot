@@ -4,7 +4,7 @@ import sqlite3
 from config import application
 
 
-class DBAudio(object):
+class DBMv(object):
     """
     使用 database store file_id, title, duration, file_scheme and timestamp which is in 3 minutes
     """
@@ -17,13 +17,13 @@ class DBAudio(object):
         self.conn = sqlite3.connect(application.SQLITE_DB)
         cursor = self.conn.cursor()
         try:
-            create_tb = 'CREATE TABLE IF NOT EXISTS audio (file_id VARCHAR(15) PRIMARY KEY ,' \
-                        'platform_id VARCHAR(15), title VARCHAR(20),duration INT(10), ' \
-                        'scheme VARCHAR(15), create_time TIMESTAMP )'
+            create_tb = 'CREATE TABLE IF NOT EXISTS mv (file_id VARCHAR(15) PRIMARY KEY ,' \
+                        'platform_id VARCHAR(15), title VARCHAR(20), duration INT(20), ' \
+                        'quality VARCHAR(10), create_time TIMESTAMP )'
             cursor.execute(create_tb)
-            # cursor.execute('DELETE FROM audio')
+            # cursor.execute('DELETE FROM mv')
         except:
-            self.logger.error('setup audio table', exc_info=True)
+            self.logger.error('setup mv table', exc_info=True)
         finally:
             cursor.close()
             self.conn.commit()
@@ -32,7 +32,7 @@ class DBAudio(object):
     def check_file(self, conn, f_id):
         cursor = conn.cursor()
         try:
-            check_fl = "SELECT * FROM audio WHERE file_id=?"
+            check_fl = "SELECT * FROM mv WHERE file_id=?"
 
             cursor.execute(check_fl, (f_id,))
 
@@ -42,35 +42,35 @@ class DBAudio(object):
             else:
                 return False
         except:
-            self.logger.error('store audio failed', exc_info=True)
+            self.logger.error('store mv failed', exc_info=True)
         finally:
             cursor.close()
 
-    def store_file(self, file_id, platform_id, title, duration, scheme, timestamp):
+    def store_file(self, file_id, platform_id, title, duration, quality, timestamp):
         self.conn = sqlite3.connect(application.SQLITE_DB)
         cursor = self.conn.cursor()
         flag = self.check_file(self.conn, file_id)
         try:
             if not flag:
-                store_fl = 'INSERT INTO audio VALUES (?, ?, ?, ?, ?, ?)'
+                store_fl = 'INSERT INTO mv VALUES (?, ?, ?, ?, ?, ?)'
 
-                cursor.execute(store_fl, (file_id, platform_id, title, duration, scheme,
+                cursor.execute(store_fl, (file_id, platform_id, title, duration, quality,
                                           timestamp))
         except:
-            self.logger.error('store audio failed', exc_info=True)
+            self.logger.error('store mv failed', exc_info=True)
             self.conn.rollback()
         finally:
             cursor.close()
             self.conn.commit()
 
-    def compare_file(self, platform_id, title, duration, scheme, fetch_time):
+    def compare_file(self, platform_id, title, duration, quality, fetch_time):
         self.conn = sqlite3.connect(application.SQLITE_DB)
         cursor = self.conn.cursor()
         try:
-            search_fl = 'SELECT * FROM audio WHERE' \
-                        ' platform_id = ? AND title=? AND duration=? AND scheme=? AND create_time>?'
+            search_fl = 'SELECT * FROM mv WHERE' \
+                        ' platform_id = ? AND title=? AND duration=? AND quality=? AND create_time>?'
 
-            cursor.execute(search_fl, (platform_id, title, duration, scheme, fetch_time - 5284000000))
+            cursor.execute(search_fl, (platform_id, title, duration, quality, fetch_time - 5284000000))
 
             file_tuple = cursor.fetchall()
 

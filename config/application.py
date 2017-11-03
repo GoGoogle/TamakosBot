@@ -3,7 +3,7 @@ BOT_TOKEN = "425909661:AAHC_a9-htfYsjaZuKfP6jjcl8n2sjizctg"
 
 ADMINS = [334635714]
 
-TIMEOUT = 1000
+TIMEOUT = 500
 
 CHUNK_SIZE = 1024 * 256
 
@@ -12,3 +12,5 @@ TOOL_PROXY = {
 }
 
 SQLITE_DB = 'sql.db'
+
+TMP_FILE = 'tmp'
