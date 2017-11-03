@@ -18,6 +18,7 @@ logger = logging.getLogger(__name__)
 
 def download_continuous(bot, query, true_download_url, file, file_title, edited_msg,
                         false_download_url=''):
+    logger.info('{} ..下载中'.format(file_title))
     try:
         if application.TOOL_PROXY:
             # 代理使用国内服务器转发接口
@@ -106,6 +107,10 @@ def send_movie_file(bot, query, mv_true_url, mv_id, mv_name, mv_duration, mv_qua
     file_path = '{0}/{1}'.format(application.TMP_FILE, mv_name)
 
     # 查询数据库 compare the files with the database ,and find the file_Id
+    logger.info(
+        'compare follow to database: {0}|{1}|{2}|{3}|{4}'.format(mv_id, mv_name[:mv_name.rfind('.')], mv_duration,
+                                                                 mv_quality,
+                                                                 time.time()))
     file_id = db_mv.DBMv().compare_file(mv_id, mv_name[:mv_name.rfind('.')], mv_duration,
                                         mv_quality,
                                         time.time())

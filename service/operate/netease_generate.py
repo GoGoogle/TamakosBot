@@ -12,7 +12,7 @@ def generate_mv(mvid):
     mv_detail = netease_api.get_mv_detail_by_mvid(mvid)['data']
     max_key = str(max(map(lambda x: int(x), mv_detail['brs'].keys())))
     return Mv(mv_detail['id'], mv_detail['name'], mv_detail['brs'][max_key],
-              mv_detail['artistName'], mv_detail['duration'] / (60000 * 60000), quality=max_key)
+              mv_detail['artistName'], mv_detail['duration'] / 60000, quality=max_key)
 
 
 def generate_music_obj(detail, url):
