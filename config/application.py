@@ -14,4 +14,4 @@ TOOL_PROXY = {
 
 SQLITE_DB = 'sql.db'
 
-TMP_FILE = 'tmp'
+TMP_Folder = 'tmp'

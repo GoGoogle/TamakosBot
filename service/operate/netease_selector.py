@@ -104,7 +104,7 @@ def send_movie_file(bot, query, mv_true_url, mv_id, mv_name, mv_duration, mv_qua
     logger.info("文件：{}， ..准备下载中".format(mv_name))
     bot.send_chat_action(query.message.chat.id, action=telegram.ChatAction.UPLOAD_VIDEO)
 
-    file_path = '{0}/{1}'.format(application.TMP_FILE, mv_name)
+    file_path = '{0}/{1}'.format(application.TMP_Folder, mv_name)
 
     # 查询数据库 compare the files with the database ,and find the file_Id
     logger.info(
@@ -222,8 +222,9 @@ def selector_send_music(bot, query, music_id, delete):
         if music_obj.mv:
             logger.info('selector download MV: mvid={0}'.format(music_obj.mv.mid))
 
+            time_fmt = str(int(music_obj.mv.duration // 60)) + ':' + str(int(music_obj.mv.duration % 60))
             mv_caption = "标题: {0}\n演唱: {1}\n时长：{2}\n品质: {3}p\n☁️ID: {4}".format(
-                music_obj.mv.name, music_obj.mv.artist_name, music_obj.mv.duration,
+                music_obj.mv.name, music_obj.mv.artist_name, time_fmt,
                 music_obj.mv.quality, music_obj.mv.mid
             )
 

@@ -12,7 +12,7 @@ def generate_mv(mvid):
     mv_detail = netease_api.get_mv_detail_by_mvid(mvid)['data']
     max_key = str(max(map(lambda x: int(x), mv_detail['brs'].keys())))
     return Mv(mv_detail['id'], mv_detail['name'], mv_detail['brs'][max_key],
-              mv_detail['artistName'], mv_detail['duration'] / 60000, quality=max_key)
+              mv_detail['artistName'], mv_detail['duration'] / 1000, quality=max_key)
 
 
 def generate_music_obj(detail, url):
@@ -63,10 +63,11 @@ def transfer_music_list_selector_to_panel(music_list_selector):
     button_list = []
     music_list = music_list_selector.musics
     for x in music_list:
+        time_fmt = str(int(x.duration // 60)) + ':' + str(int(x.duration % 60))
         button_list.append([
             InlineKeyboardButton(
                 text='[{0:.2f}] {1} ({2})'.format(
-                    x.duration, x.name, ' / '.join(v.name for v in x.artists)),
+                    time_fmt, x.name, ' / '.join(v.name for v in x.artists)),
                 callback_data='netease:' + str(x.mid)
             )
         ])
