@@ -8,8 +8,7 @@ TIMEOUT = 1000
 CHUNK_SIZE = 1024 * 256
 
 TOOL_PROXY = {
-    'http': 'socks5://117.135.132.107:3000',
-    'https': 'socks5://117.135.132.107:3000'
+    'http': 'http://112.35.56.133:8088'
 }
 
 SQLITE_DB = 'sql.db'
