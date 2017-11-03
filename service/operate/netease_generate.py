@@ -64,7 +64,7 @@ def transfer_music_list_selector_to_panel(music_list_selector):
     music_list = music_list_selector.musics
     for x in music_list:
         # 跟 music_obj 无关
-        time_fmt = '{0}:{1}'.format(int(x.duration // 60000), int(x.duration % 60000))
+        time_fmt = '{0}:{1:0>2d}'.format(int(x.duration / 1000 // 60), int(x.duration / 1000 % 60))
         button_list.append([
             InlineKeyboardButton(
                 text='[{0}] {1} ({2})'.format(
@@ -132,7 +132,7 @@ def transfer_playlist_selector_to_panel(playlist_selector, cur_pagecode=1):
     music_list = playlist_selector.musics[start:start + 5]
 
     for x in music_list:
-        time_fmt = str(int(x.duration // 60)) + ':' + str(int(x.duration % 60))
+        time_fmt = '{0}:{1:0>2d}'.format(int(x.duration / 1000 // 60), int(x.duration / 1000 % 60))
         button_list.append([
             InlineKeyboardButton(
                 text='[{0}] {1} ({2})'.format(
