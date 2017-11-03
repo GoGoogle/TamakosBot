@@ -18,7 +18,7 @@ class DBAudio(object):
         cursor = self.conn.cursor()
         try:
             create_tb = 'CREATE TABLE IF NOT EXISTS audio (file_id VARCHAR(15) PRIMARY KEY ,' \
-                        'platform_id VARCHAR(15), title VARCHAR(20),duration INT(10), ' \
+                        'platform_id VARCHAR(15), title VARCHAR(20),duration FLOAT(10), ' \
                         'scheme VARCHAR(15), create_time TIMESTAMP )'
             cursor.execute(create_tb)
             # cursor.execute('DELETE FROM audio')
