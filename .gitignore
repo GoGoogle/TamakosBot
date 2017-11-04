@@ -2,7 +2,7 @@
 .idea/
 error.log
 sql.db
-tmp/*
+tmp/
 cmake-build-debug/
 *.iws
 out/
