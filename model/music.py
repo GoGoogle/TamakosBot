@@ -100,3 +100,21 @@ class PlayListSelector(object):
         self.track_count = track_count
         self.total_page_num = total_page_num
         self.musics = musics
+
+
+class TraceFile(object):
+    def __init__(self,
+                 file_id,
+                 platform_id,
+                 name,
+                 duration,
+                 quality,
+                 created_time
+                 ):
+        self.logger = logging.getLogger(__name__)
+        self.file_id = file_id
+        self.platform_id = platform_id
+        self.name = name
+        self.duration = duration
+        self.quality = quality
+        self.created_time = created_time
