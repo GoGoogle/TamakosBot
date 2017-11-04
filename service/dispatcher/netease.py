@@ -24,6 +24,8 @@ def search_music(bot, update, args):
     except IndexError:
         text = "请提供要搜索的音乐的名字"
         update.message.reply_text(text=text)
+    except Exception as e:
+        logger.error('search music error', exc_info=True)
 
 
 def listen_selector_reply(bot, update):

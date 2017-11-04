@@ -15,17 +15,18 @@ from service.operate import netease_generate
 
 logger = logging.getLogger(__name__)
 
+tool_proxies = application.TOOL_PROXY
+
 
 def download_continuous(bot, query, true_download_url, file, file_title, edited_msg,
                         false_download_url=''):
     logger.info('{} ..下载中'.format(file_title))
     try:
-        if application.TOOL_PROXY:
+        if tool_proxies:
             # 代理使用国内服务器转发接口
-            proxies = application.TOOL_PROXY
-            r = requests.get(true_download_url, stream=True, verify=False, timeout=TIMEOUT, proxies=proxies)
+            r = requests.get(true_download_url, stream=True, timeout=TIMEOUT, proxies=tool_proxies)
         else:
-            r = requests.get(true_download_url, stream=True, verify=False, timeout=TIMEOUT)
+            r = requests.get(true_download_url, stream=True, timeout=TIMEOUT)
 
         start = time.time()
         total_length = int(r.headers.get('content-length'))
@@ -101,10 +102,10 @@ def send_music_file(bot, query, file, netease_id, file_name, file_duration, file
 @run_async
 def send_movie_file(bot, query, mv_true_url, mv_id, mv_name, mv_duration, mv_quality, file_caption,
                     false_download_url=''):
-    logger.info("文件：{}， ..准备下载中".format(mv_name))
+    logger.info("文件：{0}， ..准备下载中\n地址为：{1}".format(mv_name, mv_true_url))
     bot.send_chat_action(query.message.chat.id, action=telegram.ChatAction.UPLOAD_VIDEO)
 
-    file_path = '{0}/{1}'.format(application.TMP_Folder, mv_name)
+    file_path = os.path.join(application.TMP_Folder, mv_name)
 
     # 查询数据库 compare the files with the database ,and find the file_Id
     logger.info(
@@ -126,12 +127,11 @@ def send_movie_file(bot, query, mv_true_url, mv_id, mv_name, mv_duration, mv_qua
                                        timeout=application.TIMEOUT)
         else:
             logger.info('{} ..下载中'.format(mv_name))
-            if application.TOOL_PROXY:
+            if tool_proxies:
                 # 代理使用国内服务器转发接口
-                proxies = application.TOOL_PROXY
-                r = requests.get(mv_true_url, stream=True, verify=False, proxies=proxies)
+                r = requests.get(mv_true_url, stream=True, timeout=TIMEOUT, proxies=tool_proxies)
             else:
-                r = requests.get(mv_true_url, stream=True, verify=False)
+                r = requests.get(mv_true_url, stream=True, timeout=TIMEOUT)
 
             with open(file_path, 'wb') as fd:
                 for chunk in r.iter_content(application.CHUNK_SIZE):
@@ -154,7 +154,9 @@ def send_movie_file(bot, query, mv_true_url, mv_id, mv_name, mv_duration, mv_qua
         if video_msg:
             video_msg.delete()
     finally:
-        os.remove(file_path)
+        if os.path.exists(file_path):
+            # os.remove(file_path)
+            pass
         logger.info('{} has finished downloading'.format(file_path))
 
 
@@ -222,16 +224,17 @@ def selector_send_music(bot, query, music_id, delete):
         if music_obj.mv:
             logger.info('selector download MV: mvid={0}'.format(music_obj.mv.mid))
 
-            time_fmt = '{0}分{1}秒'.format(int(music_obj.mv.duration // 60), int(music_obj.mv.duration % 60))
-            mv_caption = "标题: {0}\n演唱: {1}\n时长：{2}\n品质: {3}p\n☁️ID: {4}".format(
-                music_obj.mv.name, music_obj.mv.artist_name, time_fmt,
-                music_obj.mv.quality, music_obj.mv.mid
-            )
-
             mv_file_fullname = '{0} - {1}.mp4'.format(
                 music_obj.mv.artist_name, music_obj.mv.name)
 
             mv_true_url = netease_api.get_mv_true_url_by_mv_url(music_obj.mv.url)  # true url
+
+            time_fmt = '{0}分{1}秒'.format(int(music_obj.mv.duration // 60), int(music_obj.mv.duration % 60))
+
+            mv_caption = "标题: {0}\n演唱: {1}\n时长：{2}\n品质: {3}p\n☁️ID: {4}".format(
+                music_obj.mv.name, music_obj.mv.artist_name, time_fmt,
+                music_obj.mv.quality, music_obj.mv.mid
+            )
 
             send_movie_file(bot, query, mv_true_url, music_obj.mv.mid, mv_file_fullname, music_obj.mv.duration,
                             music_obj.mv.quality, mv_caption, music_obj.mv.url)

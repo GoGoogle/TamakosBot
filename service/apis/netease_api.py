@@ -2,9 +2,7 @@ import requests
 
 from config import application
 
-proxies = {
-    'http': 'http://119.29.165.233:3000'
-}
+proxies = application.API_PROXY
 
 
 def search_musics_by_keyword_and_pagecode(kw, pagecode=1):
