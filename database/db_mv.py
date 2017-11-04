@@ -88,3 +88,17 @@ class DBMv(object):
     def delete_file(self):
         # TODO
         pass
+
+    def select_file(self, date):
+        self.conn = sqlite3.connect(application.SQLITE_DB)
+        cursor = self.conn.cursor()
+        try:
+            select_fl = 'SELECT * FROM mv'
+            cursor.execute(select_fl)
+            file_tuple = cursor.fetchall()
+            return file_tuple
+        except:
+            self.logger.error('mv select_file failed', exc_info=True)
+        finally:
+            cursor.close()
+            self.conn.commit()

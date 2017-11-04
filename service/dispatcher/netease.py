@@ -84,9 +84,9 @@ def response_playlist(bot, update, playlist_id):
 
 def trace_music(bot, update, args):
     try:
-        day = 0
+        date = 0
         if len(args) != 0:
-            day = args[0]
-        netease_selector.selector_tracetime_list_turning(bot, update, day, cur_pagecode=1)
+            date = args[0]
+        netease_selector.selector_tracetime_list_turning(bot, update, date, cur_pagecode=1)
     except Exception as e:
         logger.error('trace music error', exc_info=True)
