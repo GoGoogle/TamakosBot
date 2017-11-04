@@ -88,7 +88,7 @@ def send_music_file(bot, query, file, netease_id, file_name, file_duration, file
                                   timeout=TIMEOUT)
 
         # 存储 database store file_id, title, duration, file_scheme and timestamp which is in 3 minutes
-        db_audio.DBAudio().store_file(file_msg.audio.file_id, netease_id, file_msg.audio.title, file_duration,
+        db_audio.DBAudio().store_file(file_msg.audio.file_id, netease_id, file_name, file_duration,
                                       file_scheme,
                                       time.time())
     except:
@@ -109,7 +109,7 @@ def send_movie_file(bot, query, mv_true_url, mv_id, mv_name, mv_duration, mv_qua
 
     # 查询数据库 compare the files with the database ,and find the file_Id
     logger.info(
-        'compare follow to database: {0}|{1}|{2}|{3}|{4}'.format(mv_id, mv_name[:mv_name.rfind('.')], mv_duration,
+        'compare follow to database: {0}|{1}|{2}|{3}|{4}'.format(mv_id, mv_name, mv_duration,
                                                                  mv_quality,
                                                                  time.time()))
     file_id = db_mv.DBMv().compare_file(mv_id, mv_name[:mv_name.rfind('.')], mv_duration,
@@ -123,7 +123,7 @@ def send_movie_file(bot, query, mv_true_url, mv_id, mv_name, mv_duration, mv_qua
             video_msg = bot.send_video(chat_id=query.message.chat.id, video=file_id,
                                        caption=file_caption,
                                        duration=mv_duration,
-                                       title=mv_name[:mv_name.rfind('.')],
+                                       title=mv_name,
                                        timeout=application.TIMEOUT)
         else:
             logger.info('{} ..下载中'.format(mv_name))
@@ -200,7 +200,7 @@ def selector_send_music(bot, query, music_id, delete):
         netease_url = 'http://music.163.com/song?id={}'.format(music_obj.mid)
 
         # 查询数据库 compare the files with the database ,and find the file_Id
-        file_id = db_audio.DBAudio().compare_file(music_id, music_filename[:music_filename.rfind('.')],
+        file_id = db_audio.DBAudio().compare_file(music_id, music_filename,
                                                   music_obj.duration,
                                                   music_obj.scheme,
                                                   time.time())
@@ -257,3 +257,7 @@ def selector_playlist_turning(bot, update, playlist_id, cur_pagecode=1):
                           text=panel['text'], quote=True, reply_markup=panel['reply_markup'],
                           disable_web_page_preview=True,
                           parse_mode=telegram.ParseMode.MARKDOWN)
+
+
+def selector_tracetime_list_turning(bot, update, day, cur_pagecode=1):
+    pass

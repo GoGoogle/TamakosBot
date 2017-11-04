@@ -80,3 +80,13 @@ def response_playlist(bot, update, playlist_id):
         netease_selector.selector_playlist_turning(bot, update, playlist_id, cur_pagecode=1)
     except IndexError:
         logger.warning('获取歌单失败', exc_info=True)
+
+
+def trace_music(bot, update, args):
+    try:
+        day = 0
+        if len(args) != 0:
+            day = args[0]
+        netease_selector.selector_tracetime_list_turning(bot, update, day, cur_pagecode=1)
+    except Exception as e:
+        logger.error('trace music error', exc_info=True)
