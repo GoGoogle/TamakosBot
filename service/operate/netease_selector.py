@@ -145,8 +145,8 @@ def send_movie_file(bot, query, mv_true_url, mv_id, mv_name, mv_duration, mv_qua
                                        timeout=application.TIMEOUT)
 
             # 存储 database store file_id, title, duration, file_scheme and timestamp which is in 3 minutes
-            db_mv.DBMv().store_file(video_msg.video.file_id, mv_id, mv_name, mv_duration, mv_quality,
-                                    time.time())
+            db_mv.DBMv().store_file(video_msg.video.file_id, mv_id, mv_name[:mv_name.rfind('.')], mv_duration,
+                                    mv_quality, time.time())
     except:
         logger.error('downloading mv failed', exc_info=True)
         # 清楚数据库内容
