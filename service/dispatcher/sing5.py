@@ -25,3 +25,16 @@ def search_music(bot, update, args):
         update.message.reply_text(text=text)
     except Exception as e:
         logger.error('search music error', exc_info=True)
+
+
+def listen_selector_reply(bot, update):
+    pass
+
+
+def response_toplist(bot, update):
+    try:
+        musics_result = sing5_api.get_music_top_by_type_pagecode_and_date()
+        panel = sing5_generate.produce_music_top_selector(musics_result)
+        update.message.reply_text(text=panel['text'], quote=True, reply_markup=panel['reply_markup'])
+    except Exception as e:
+        logger.error('search music error', exc_info=True)

@@ -37,3 +37,21 @@ def get_music_detail_by_id_and_type(music_id, song_type='fc'):
     response = requests.get('http://mobileapi.5sing.kugou.com/song/newget', params=payload, proxies=proxies)
 
     return response.json()
+
+
+def get_music_top_date():
+    response = requests.get('http://mobileapi.5sing.kugou.com/song/listsupportcardcycle', proxies=proxies)
+
+    return response.json()
+
+
+def get_music_top_by_type_pagecode_and_date(mtype='fc', pagecode=1, date=0):
+    payload = {
+        'id': mtype,
+        'pageindex': pagecode,
+        'pagesize': 5,
+        'time': date
+    }
+    response = requests.get('http://mobileapi.5sing.kugou.com/rank/detail', params=payload, proxies=proxies)
+
+    return response.json()
