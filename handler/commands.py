@@ -20,6 +20,11 @@ def netease_command(bot, update, args):
     netease.search_music(bot, update, args)
 
 
+# @run_async
+# def sing5_command(bot, update, args):
+#     sing5.search_music(bot, update, args)
+
+
 @run_async
 def history_command(bot, update, args):
     netease.trace_music(bot, update, args)
@@ -33,5 +38,6 @@ def handler_commands(dispatcher):
     dispatcher.add_handler(CommandHandler('start', start_command))
     dispatcher.add_handler(CommandHandler('help', help_command))
     dispatcher.add_handler(CommandHandler('music', netease_command, pass_args=True))
+    # dispatcher.add_handler(CommandHandler('5sing', sing5_command, pass_args=True))
     dispatcher.add_handler(CommandHandler('history', history_command, pass_args=True))
     dispatcher.add_handler(MessageHandler(Filters.command, unknown_command))
