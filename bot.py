@@ -6,7 +6,7 @@ import yaml
 from telegram.ext import Updater
 
 from config import application
-from database import db_audio, db_mv
+from database import db_audio, db_mv, db_file
 from handler import commands, messages, monitors
 
 
@@ -33,6 +33,12 @@ def setup_logging(path="config/logconfig.yaml"):
         logging.config.dictConfig(config)
 
 
+def db_init():
+    db_audio.DBAudio().setup_db()
+    db_mv.DBMv().setup_db()
+    db_file.DBFile().setup_db()
+
+
 def error(bot, update, err):
     logger.warning('Update "%s" caused error "%s"' % (update, err))
 
@@ -45,8 +51,7 @@ def mk_tmp_dir(tmp):
 if __name__ == '__main__':
     setup_logging()
     mk_tmp_dir(application.TMP_Folder)
-    db_audio.DBAudio().setup_db()
-    db_mv.DBMv().setup_db()
+    db_init()
     logger = logging.getLogger("__name__")
     logger.info('bot start..')
     main()

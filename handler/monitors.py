@@ -22,9 +22,15 @@ def upload_file(bot, update):
     upfile.upload_file(bot, update)
 
 
+def response_upfile(bot, update):
+    upfile.response_upfile(bot, update)
+
+
 def handler_monitors(dispatcher):
     dispatcher.add_handler(CallbackQueryHandler(music_selector_callback, pattern='netease'))
     dispatcher.add_handler(
         RegexHandler(r'.*https?://music.163.com/?.?/playlist((/)|(\?id=))(\d*).*', response_netease_playlist))
     dispatcher.add_handler(
         MessageHandler(Filters.audio | Filters.video | Filters.document & (~ Filters.forwarded), upload_file))
+    dispatcher.add_handler(
+        RegexHandler(r'^show up$', response_upfile))

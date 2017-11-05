@@ -1,5 +1,6 @@
 import logging
 import sqlite3
+import time
 
 from config import application
 
@@ -66,14 +67,14 @@ class DBFile(object):
         # TODO
         pass
 
-    def select_file(self, date):
+    def select_file(self, date=time.time()):
         self.conn = sqlite3.connect(application.SQLITE_DB)
         cursor = self.conn.cursor()
         try:
-            select_fl = 'SELECT * FROM file'
-            cursor.execute(select_fl)
-            file_tuple = cursor.fetchall()
-            return file_tuple
+            select_fl = 'SELECT * FROM file WHERE create_time < ?'
+            cursor.execute(select_fl, (date,))
+            file_tuples = cursor.fetchall()
+            return file_tuples
         except:
             self.logger.error('file select_file failed', exc_info=True)
         finally:

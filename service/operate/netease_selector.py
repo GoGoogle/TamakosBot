@@ -8,7 +8,6 @@ import telegram
 from telegram.ext import run_async
 
 from config import application
-from config.application import TIMEOUT
 from database import db_audio, db_mv
 from service.apis import netease_api
 from service.operate import netease_generate
@@ -24,9 +23,9 @@ def download_continuous(bot, query, true_download_url, file, file_title, edited_
     try:
         if tool_proxies:
             # 代理使用国内服务器转发接口
-            r = requests.get(true_download_url, stream=True, timeout=TIMEOUT, proxies=tool_proxies)
+            r = requests.get(true_download_url, stream=True, timeout=application.TIMEOUT, proxies=tool_proxies)
         else:
-            r = requests.get(true_download_url, stream=True, timeout=TIMEOUT)
+            r = requests.get(true_download_url, stream=True, timeout=application.TIMEOUT)
 
         start = time.time()
         total_length = int(r.headers.get('content-length'))
@@ -59,7 +58,7 @@ def download_continuous(bot, query, true_download_url, file, file_title, edited_
                 text=progress_status,
                 disable_web_page_preview=True,
                 parse_mode=telegram.ParseMode.MARKDOWN,
-                timeout=TIMEOUT
+                timeout=application.TIMEOUT
             )
 
     except:
@@ -74,7 +73,7 @@ def send_music_file(bot, query, file, netease_id, file_name, file_duration, file
         text='☁️🎵 [{0}]({1}) >> 发送中'.format(file_name, false_download_url),
         parse_mode=telegram.ParseMode.MARKDOWN,
         disable_web_page_preview=True,
-        timeout=TIMEOUT
+        timeout=application.TIMEOUT
     )
 
     logger.info("文件：{}/mp4 >> 正在发送中".format(file_name))
@@ -85,7 +84,7 @@ def send_music_file(bot, query, file, netease_id, file_name, file_duration, file
         file_msg = bot.send_audio(chat_id=query.message.chat.id, audio=file, caption=file_caption,
                                   duration=file_duration,
                                   title=file_name[:file_name.rfind('.')],
-                                  timeout=TIMEOUT)
+                                  timeout=application.TIMEOUT)
 
         # 存储 database store file_id, title, duration, file_scheme and timestamp which is in 3 minutes
         db_audio.DBAudio().store_file(file_msg.audio.file_id, netease_id, file_name, file_duration,
@@ -129,9 +128,9 @@ def send_movie_file(bot, query, mv_true_url, mv_id, mv_name, mv_duration, mv_qua
             logger.info('{} ..下载中'.format(mv_name))
             if tool_proxies:
                 # 代理使用国内服务器转发接口
-                r = requests.get(mv_true_url, stream=True, timeout=TIMEOUT, proxies=tool_proxies)
+                r = requests.get(mv_true_url, stream=True, timeout=application.TIMEOUT, proxies=tool_proxies)
             else:
-                r = requests.get(mv_true_url, stream=True, timeout=TIMEOUT)
+                r = requests.get(mv_true_url, stream=True, timeout=application.TIMEOUT)
 
             with open(file_path, 'wb') as fd:
                 for chunk in r.iter_content(application.CHUNK_SIZE):
@@ -165,14 +164,14 @@ def selector_page_turning(bot, query, kw, page_code):
     search_musics_dict = netease_api.search_musics_by_keyword_and_pagecode(kw, pagecode=page_code)
     music_list_selector = netease_generate.produce_music_list_selector(kw, page_code, search_musics_dict['result'])
     panel = netease_generate.transfer_music_list_selector_to_panel(music_list_selector)
-    query.message.edit_text(text=panel['text'], reply_markup=panel['reply_markup'], timeout=TIMEOUT)
+    query.message.edit_text(text=panel['text'], reply_markup=panel['reply_markup'], timeout=application.TIMEOUT)
 
 
 def selector_cancel(bot, query):
     bot.answerCallbackQuery(query.id,
                             text="⑧",
                             show_alert=False,
-                            timeout=TIMEOUT)
+                            timeout=application.TIMEOUT)
     query.message.delete()
 
 
@@ -182,7 +181,7 @@ def selector_send_music(bot, query, music_id, delete):
         selector_cancel(bot, query)
 
     edited_msg = bot.send_message(chat_id=query.message.chat.id, text="..获取中",
-                                  timeout=TIMEOUT)
+                                  timeout=application.TIMEOUT)
     detail = netease_api.get_music_detail_by_musicid(music_id)['songs'][0]
 
     # 转为对象好处理
