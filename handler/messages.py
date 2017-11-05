@@ -1,10 +1,7 @@
 import logging
 import random
-import re
 
 from telegram.ext import RegexHandler
-
-from service.dispatcher import netease
 
 logger = logging.getLogger(__name__)
 
@@ -34,14 +31,7 @@ def tks_message(bot, update):
     bot.send_message(chat_id=update.message.chat_id, text=text)
 
 
-def response_netease_playlist(bot, update):
-    playlist_id = re.search(r'https?://music.163.com/?.?/playlist((/)|(\?id=))(\d*)', update.message.text).group(4)
-    netease.response_playlist(bot, update, playlist_id)
-
-
 def handler_messages(dispatcher):
     dispatcher.add_handler(RegexHandler(r'^(Hi|你好)$', hi_message))
     dispatcher.add_handler(RegexHandler(r'.*bye$', bye_message))
     dispatcher.add_handler(RegexHandler(r'.*naive.*', tks_message))
-    dispatcher.add_handler(
-        RegexHandler(r'.*https?://music.163.com/?.?/playlist((/)|(\?id=))(\d*).*', response_netease_playlist))

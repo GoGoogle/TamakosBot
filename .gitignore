@@ -1,7 +1,7 @@
 # Created by .ignore support plugin (hsz.mobi)
 .idea/
 error.log
-sql.db
+#sql.db
 tmp/
 cmake-build-debug/
 *.iws

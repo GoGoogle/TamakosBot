@@ -7,7 +7,7 @@ from telegram.ext import Updater
 
 from config import application
 from database import db_audio, db_mv
-from handler import commands, messages, listeners
+from handler import commands, messages, monitors
 
 
 def main():
@@ -23,7 +23,7 @@ def main():
 def router(dp):
     commands.handler_commands(dp)
     messages.handler_messages(dp)
-    listeners.handler_listeners(dp)
+    monitors.handler_monitors(dp)
     dp.add_error_handler(error)
 
 
