@@ -47,4 +47,4 @@ def handler_monitors(dispatcher):
         RegexHandler(r'^show up$', response_upfile))
     dispatcher.add_handler(CallbackQueryHandler(sing5_music_selector_callback, pattern='sing5'))
     dispatcher.add_handler(
-        RegexHandler(r'^5sing top$', response_upfile))
+        RegexHandler(r'^5sing top$', response_sing5_toplist))

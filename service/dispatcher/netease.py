@@ -35,7 +35,7 @@ def listen_selector_reply(bot, update):
     如果为下载，则获取 music_id 并生成 NeteaseMusic。然后，加载-获取歌曲url，发送音乐文件，删除上一条信息
     :return:
     """
-    logger.info('listen_selector_reply: data={}'.format(update.callback_query.data))
+    logger.info('netease listen_selector_reply: data={}'.format(update.callback_query.data))
     query = update.callback_query
     index1 = query.data.find('*')
     index2 = query.data.find('+')

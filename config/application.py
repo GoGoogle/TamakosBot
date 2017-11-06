@@ -15,7 +15,7 @@ TOOL_PROXY = {
     'http': 'http://182.254.233.27:8090',
     'https': 'http://182.254.233.27:8090'
 }
-# TOOL_PROXY = None
+# TOOL_PROXY = {}
 
 SQLITE_DB = 'sql.db'
 

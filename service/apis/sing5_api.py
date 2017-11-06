@@ -1,5 +1,4 @@
 # https://github.com/i5sing/5sing-mobile-api
-# https://github.com/i5sing/5sing-mobile-api
 
 import requests
 
