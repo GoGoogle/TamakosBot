@@ -90,6 +90,7 @@ def send_music_file(bot, query, file, netease_id, file_name, file_duration, file
         db_audio.DBAudio().store_file(file_msg.audio.file_id, netease_id, file_name, file_duration,
                                       file_scheme,
                                       time.time())
+        logger.info("文件：{}/mp4 发送成功.".format(file_name))
     except:
         # 清除数据库内容
         # TODO

@@ -68,7 +68,7 @@ def send_music_file(bot, query, file, sing5_id, file_name, file_caption, edited_
     bot.edit_message_text(
         chat_id=query.message.chat.id,
         message_id=edited_msg.message_id,
-        text='☁️🎵 [{0}]({1}) >> 发送中'.format(file_name, false_download_url),
+        text='5 🎵 [{0}]({1}) >> 发送中'.format(file_name, false_download_url),
         parse_mode=telegram.ParseMode.MARKDOWN,
         disable_web_page_preview=True,
         timeout=application.TIMEOUT
@@ -87,6 +87,7 @@ def send_music_file(bot, query, file, sing5_id, file_name, file_caption, edited_
         db_audio.DBAudio().store_file(file_msg.audio.file_id, sing5_id, file_name, 0,
                                       '',
                                       time.time())
+        logger.info("文件：{}/mp4 发送成功.".format(file_name))
     except:
         # 清除数据库内容
         # TODO
@@ -128,7 +129,7 @@ def selector_send_music(bot, query, music_id, mtype, delete):
 
     music_file = BytesIO()
     try:
-        music_caption = "曲目: {0}\n演唱: {1}\n☁️ID: {2}".format(
+        music_caption = "曲目: {0}\n演唱: {1}\n5 ️ID: {2}".format(
             music_obj.name, music_obj.singer.name,
             music_obj.mid
         )

@@ -53,7 +53,7 @@ def produce_music_top_selector(mtype, pagecode, musics_result):
 
 
 def transfer_music_top_selector_to_panel(top_selector):
-    caption_text = '️🎵️🎵「{0}」p: {1}/{2}'.format(
+    caption_text = '️5 🎵「{0}」p: {1}/{2}'.format(
         top_selector.title,
         top_selector.cur_page_code,
         top_selector.total_page_num
