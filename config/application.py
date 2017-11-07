@@ -8,14 +8,10 @@ TIMEOUT = 1000
 CHUNK_SIZE = 1024 * 512
 
 API_PROXY = {
-    'http': 'http://182.254.233.27:3000'
+    'http': 'http://127.0.0.1:3000'
 }
 
-TOOL_PROXY = {
-    'http': 'http://182.254.233.27:8118',
-    'https': 'http://182.254.233.27:8118'
-}
-# TOOL_PROXY = {}
+TOOL_PROXY = {}
 
 SQLITE_DB = 'sql.db'
 
