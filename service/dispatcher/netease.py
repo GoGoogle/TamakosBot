@@ -7,7 +7,15 @@ from service.operate import netease_selector, netease_generate
 logger = logging.getLogger(__name__)
 
 
+def init_api():
+    result_dict = netease_api.account_login()
+    if result_dict['code'] == 200:
+        username = result_dict['account']['userName']
+        logger.info('登录成功, 用户名为：{}'.format(username))
+
+
 def search_music(bot, update, args):
+    init_api()
     try:
         key_word = args[0]
         logger.info('get_music: {}'.format(key_word))
@@ -70,6 +78,7 @@ def listen_selector_reply(bot, update):
 
 
 def response_playlist(bot, update, playlist_id):
+    init_api()
     try:
         logger.info('response_playlist: playlist_id={}'.format(playlist_id))
         edited_msg = bot.send_message(chat_id=update.message.chat.id,
