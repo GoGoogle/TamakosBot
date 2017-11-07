@@ -209,6 +209,8 @@ def selector_send_music(bot, query, music_id, delete):
                             edited_msg,
                             netease_url)
         else:
+            logger.info('163 song url is {}'.format(music_obj.url))
+
             download_continuous(bot, query, music_obj.url, music_file, music_filename, edited_msg,
                                 false_download_url=netease_url)
 
