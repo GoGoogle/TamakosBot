@@ -6,10 +6,12 @@ proxies = application.API_PROXY
 
 
 def account_login():
-    payload = application.NETEASE_ACCOUNT
-    response = requests.get('http://localhost//login/cellphone', params=payload, proxies=proxies)
-
-    return response.json()
+    account = application.NETEASE_ACCOUNT
+    if account:
+        response = requests.get('http://localhost//login/cellphone', params=payload, proxies=proxies)
+        return response.json()
+    else:
+        return {'code': 400}
 
 
 def search_musics_by_keyword_and_pagecode(kw, pagecode=1):

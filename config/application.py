@@ -19,7 +19,8 @@ TMP_Folder = 'tmp'
 
 LOG_FILE = 'debug.log'
 
-NETEASE_ACCOUNT = {
-    'phone': '136256253xx',
-    'password': 'xx520'
-}
+# NETEASE_ACCOUNT = {
+#     'phone': '136256253xx',
+#     'password': 'xx520'
+# }
+NETEASE_ACCOUNT = {}
