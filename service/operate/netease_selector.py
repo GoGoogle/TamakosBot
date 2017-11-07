@@ -155,8 +155,7 @@ def send_movie_file(bot, query, mv_true_url, mv_id, mv_name, mv_duration, mv_qua
             video_msg.delete()
     finally:
         if os.path.exists(file_path):
-            # os.remove(file_path)
-            pass
+            os.remove(file_path)
         logger.info('{} has finished downloading'.format(file_path))
 
 
