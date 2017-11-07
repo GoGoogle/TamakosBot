@@ -2,7 +2,7 @@ import logging
 
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 
-from model.netease import Mv, Artist, Album, Music, MusicListSelector, PlayListSelector
+from entity.netease import Mv, Artist, Album, Music, MusicListSelector, PlayListSelector
 from service.apis import netease_api
 
 logger = logging.getLogger(__name__)

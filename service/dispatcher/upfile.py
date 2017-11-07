@@ -4,7 +4,7 @@ import time
 import telegram
 
 from database import db_file
-from model.file import File
+from entity.file import File
 
 logger = logging.getLogger(__name__)
 

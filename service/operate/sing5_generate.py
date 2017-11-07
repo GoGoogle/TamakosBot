@@ -2,7 +2,7 @@ import logging
 
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 
-from model.sing5 import MusicTopSelector, Song, Singer
+from entity.sing5 import MusicTopSelector, Song, Singer
 
 logger = logging.getLogger(__name__)
 

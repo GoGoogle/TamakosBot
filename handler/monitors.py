@@ -4,7 +4,7 @@ import re
 from telegram.ext import CallbackQueryHandler, run_async, RegexHandler, MessageHandler, Filters
 
 from service.dispatcher import netease, upfile, sing5, admin
-from util.utils import restricted
+from util.util import restricted
 
 logger = logging.getLogger(__name__)
 

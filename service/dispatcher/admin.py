@@ -4,7 +4,6 @@ import os
 from telegram.error import BadRequest, ChatMigrated, TelegramError, Unauthorized
 
 from config import application
-from util import utils
 
 logger = logging.getLogger(__name__)
 
@@ -23,10 +22,9 @@ def manage_bot(bot, update, payload):
 def command_analyzing(bot, update, command, params):
     if command == 'logs':
         log_path = os.path.join(os.getcwd(), application.LOG_FILE)
-        content = utils.tail(log_path, 16)
-        bot.send_message(chat_id=update.message.from_user.id,
-                         text=content,
-                         timeout=application.TIMEOUT)
+        bot.send_document(chat_id=update.message.from_user.id,
+                          document=open(log_path),
+                          timeout=application.TIMEOUT)
     elif command == 'leaveChat':
         payload = params[0]
         bot.leave_chat(chat_id=payload)
