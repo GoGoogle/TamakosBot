@@ -20,10 +20,11 @@ def manage_bot(bot, update, payload):
 
 
 def command_analyzing(bot, update, command, params):
-    if command == 'logs':
+    if command == 'log':
         log_path = os.path.join(os.getcwd(), application.LOG_FILE)
-        bot.send_document(chat_id=update.message.from_user.id,
-                          document=open(log_path),
+        print(log_path)
+        bot.send_document(chat_id=update.message.chat.id,
+                          document=open(log_path, 'rb'),
                           timeout=application.TIMEOUT)
     elif command == 'leaveChat':
         payload = params[0]

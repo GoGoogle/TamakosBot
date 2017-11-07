@@ -17,7 +17,7 @@ tool_proxies = application.TOOL_PROXY
 
 def download_continuous(bot, query, true_download_url, file, file_title, edited_msg,
                         false_download_url=''):
-    logger.info('{0} ..下载中,url={1}'.format(file_title, true_download_url))
+    logger.info('{0} 下载中,url={1}'.format(file_title, true_download_url))
     try:
         if tool_proxies:
             # 代理使用国内服务器转发接口
@@ -48,7 +48,7 @@ def download_continuous(bot, query, true_download_url, file, file_title, edited_
                                                                   total_length / (1024 * 1024),
                                                                   dl / total_length * 100,
                                                                   network_speed_status)
-            progress_status = '5 ️🎵 [{0}]({1})  ..下载中\n{2}'.format(file_title, false_download_url, progress)
+            progress_status = '5sing ️🎵  \n[{0}]({1})\n正在飞速下载\n{2}'.format(file_title, false_download_url, progress)
 
             bot.edit_message_text(
                 chat_id=query.message.chat.id,
@@ -68,7 +68,7 @@ def send_music_file(bot, query, file, sing5_id, file_name, file_caption, edited_
     bot.edit_message_text(
         chat_id=query.message.chat.id,
         message_id=edited_msg.message_id,
-        text='5 🎵 [{0}]({1}) >> 发送中'.format(file_name, false_download_url),
+        text='5sing 🎵 \n[{0}]({1})\n在发送的路上~'.format(file_name, false_download_url),
         parse_mode=telegram.ParseMode.MARKDOWN,
         disable_web_page_preview=True,
         timeout=application.TIMEOUT
@@ -98,7 +98,7 @@ def send_music_file(bot, query, file, sing5_id, file_name, file_caption, edited_
 
 def selector_cancel(bot, query):
     bot.answerCallbackQuery(query.id,
-                            text="⑧",
+                            text="叮~",
                             show_alert=False,
                             timeout=application.TIMEOUT)
     query.message.delete()
@@ -117,7 +117,7 @@ def selector_send_music(bot, query, music_id, mtype, delete):
     if delete:
         selector_cancel(bot, query)
 
-    edited_msg = bot.send_message(chat_id=query.message.chat.id, text="..获取中",
+    edited_msg = bot.send_message(chat_id=query.message.chat.id, text="正在加载，请稍后~",
                                   timeout=application.TIMEOUT)
     #
     detail = sing5_api.get_music_detail_by_id_and_type(music_id, song_type=mtype)['data']
@@ -129,9 +129,8 @@ def selector_send_music(bot, query, music_id, mtype, delete):
 
     music_file = BytesIO()
     try:
-        music_caption = "曲目: {0}\n演唱: {1}\n5 ️ID: {2}".format(
-            music_obj.name, music_obj.singer.name,
-            music_obj.mid
+        music_caption = "曲目: {0}\n演唱: {1}".format(
+            music_obj.name, music_obj.singer.name
         )
         music_filename = '{0} - {1}.mp3'.format(
             music_obj.singer.name, music_obj.name)

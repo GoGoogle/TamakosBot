@@ -55,7 +55,7 @@ def produce_music_list_selector(kw, pagecode, search_musics_result):
 
 
 def transfer_music_list_selector_to_panel(music_list_selector):
-    list_text = '☁️🎵关键字「{0}」p: {1}/{2}'.format(
+    list_text = '163 ️🎵关键字「{0}」p: {1}/{2}'.format(
         music_list_selector.keyword,
         music_list_selector.cur_page_code,
         music_list_selector.total_page_num
@@ -125,7 +125,7 @@ def produce_playlist_selector(playlist):
 
 def transfer_playlist_selector_to_panel(playlist_selector, cur_pagecode=1):
     playlist_url = 'http://music.163.com/playlist/{}'.format(playlist_selector.pid)
-    list_text = "☁️🎵歌单 「[{0}]({1})」\n创建者 {2}\n歌曲数目 {3} 首歌".format(
+    list_text = "163 🎵歌单 「[{0}]({1})」\n创建者 {2}\n歌曲数目 {3} 首歌".format(
         playlist_selector.name, playlist_url, playlist_selector.creator_name, playlist_selector.track_count)
     button_list = []
     start = cur_pagecode * 5 - 5

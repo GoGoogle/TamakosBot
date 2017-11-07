@@ -20,7 +20,6 @@ def search_music(bot, update, args):
                                                                                search_musics_dict['result'])
             panel = netease_generate.transfer_music_list_selector_to_panel(music_list_selector)
             update.message.reply_text(text=panel['text'], quote=True, reply_markup=panel['reply_markup'])
-
     except IndexError:
         text = "请提供要搜索的音乐的名字"
         update.message.reply_text(text=text)

@@ -50,7 +50,7 @@ def download_continuous(bot, query, true_download_url, file, file_title, edited_
                                                                   total_length / (1024 * 1024),
                                                                   dl / total_length * 100,
                                                                   network_speed_status)
-            progress_status = '☁️🎵 [{0}]({1})  ..下载中\n{2}'.format(file_title, false_download_url, progress)
+            progress_status = '163 ️🎵  \n[{0}]({1})\n正在飞速下载\n{2}'.format(file_title, false_download_url, progress)
 
             bot.edit_message_text(
                 chat_id=query.message.chat.id,
@@ -70,7 +70,7 @@ def send_music_file(bot, query, file, netease_id, file_name, file_duration, file
     bot.edit_message_text(
         chat_id=query.message.chat.id,
         message_id=edited_msg.message_id,
-        text='☁️🎵 [{0}]({1}) >> 发送中'.format(file_name, false_download_url),
+        text='163 🎵 \n[{0}]({1})\n在发送的路上~'.format(file_name, false_download_url),
         parse_mode=telegram.ParseMode.MARKDOWN,
         disable_web_page_preview=True,
         timeout=application.TIMEOUT
@@ -170,7 +170,7 @@ def selector_page_turning(bot, query, kw, page_code):
 
 def selector_cancel(bot, query):
     bot.answerCallbackQuery(query.id,
-                            text="⑧",
+                            text="叮~",
                             show_alert=False,
                             timeout=application.TIMEOUT)
     query.message.delete()
@@ -181,7 +181,7 @@ def selector_send_music(bot, query, music_id, delete):
     if delete:
         selector_cancel(bot, query)
 
-    edited_msg = bot.send_message(chat_id=query.message.chat.id, text="..获取中",
+    edited_msg = bot.send_message(chat_id=query.message.chat.id, text="正在加载，请稍后~",
                                   timeout=application.TIMEOUT)
     detail = netease_api.get_music_detail_by_musicid(music_id)['songs'][0]
 
@@ -191,9 +191,9 @@ def selector_send_music(bot, query, music_id, delete):
 
     music_file = BytesIO()
     try:
-        music_caption = "曲目: {0}\n演唱: {1}\n专辑: {2}\n格式：{3}\n☁️ID: {4}".format(
+        music_caption = "曲目: {0}\n演唱: {1}\n格式：{3}\n专辑: {2}".format(
             music_obj.name, ' '.join(v.name for v in music_obj.artists),
-            music_obj.album.name, music_obj.scheme, music_obj.mid
+            music_obj.album.name, music_obj.scheme
         )
         music_filename = '{0} - {1}.mp3'.format(
             ' / '.join(v.name for v in music_obj.artists), music_obj.name)
@@ -231,9 +231,9 @@ def selector_send_music(bot, query, music_id, delete):
 
             time_fmt = '{0}分{1}秒'.format(int(music_obj.mv.duration // 60), int(music_obj.mv.duration % 60))
 
-            mv_caption = "标题: {0}\n演唱: {1}\n时长：{2}\n品质: {3}p\n☁️ID: {4}".format(
+            mv_caption = "标题: {0}\n演唱: {1}\n时长：{2}\n品质: {3}p".format(
                 music_obj.mv.name, music_obj.mv.artist_name, time_fmt,
-                music_obj.mv.quality, music_obj.mv.mid
+                music_obj.mv.quality
             )
 
             send_movie_file(bot, query, mv_true_url, music_obj.mv.mid, mv_file_fullname, music_obj.mv.duration,

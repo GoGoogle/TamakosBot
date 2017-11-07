@@ -214,3 +214,134 @@ Traceback (most recent call last):
   File "/home/lg/Documents/Project/PycharmProjects/GeziBot/util/utils.py", line 25, in tail
     f.seek(0, 2)
 AttributeError: 'str' object has no attribute 'seek'
+2017-11-07 15:16:40,193 - db_audio.py - 26 - [ERROR] setup audio table
+Traceback (most recent call last):
+  File "/home/lg/Documents/Project/PycharmProjects/GeziBot/database/db_audio.py", line 23, in setup_db
+    cursor.execute(create_tb)
+sqlite3.DatabaseError: file is not a database
+2017-11-07 15:16:40,194 - db_mv.py - 26 - [ERROR] setup mv table
+Traceback (most recent call last):
+  File "/home/lg/Documents/Project/PycharmProjects/GeziBot/database/db_mv.py", line 23, in setup_db
+    cursor.execute(create_tb)
+sqlite3.DatabaseError: file is not a database
+2017-11-07 15:16:40,194 - db_file.py - 27 - [ERROR] setup file table failed
+Traceback (most recent call last):
+  File "/home/lg/Documents/Project/PycharmProjects/GeziBot/database/db_file.py", line 24, in setup_db
+    cursor.execute(create_tb)
+sqlite3.DatabaseError: file is not a database
+2017-11-07 15:17:55,670 - updater.py - 288 - [ERROR] Error while getting Updates: Timed out
+2017-11-07 15:18:05,335 - dispatcher.py - 292 - [ERROR] An uncaught error was raised while processing the update
+Traceback (most recent call last):
+  File "/usr/lib/python3.6/site-packages/telegram/ext/dispatcher.py", line 270, in process_update
+    handler.handle_update(update, self)
+  File "/usr/lib/python3.6/site-packages/telegram/ext/regexhandler.py", line 173, in handle_update
+    return self.callback(dispatcher.bot, update, **optional_args)
+  File "/home/lg/Documents/Project/PycharmProjects/GeziBot/util/util.py", line 16, in wrapped
+    return func(bot, update, *args, **kwargs)
+  File "/home/lg/Documents/Project/PycharmProjects/GeziBot/handler/monitors.py", line 44, in manage_bot
+    admin.manage_bot(bot, update, payload)
+  File "/home/lg/Documents/Project/PycharmProjects/GeziBot/service/dispatcher/admin.py", line 15, in manage_bot
+    command_analyzing(bot, update, command, params)
+  File "/home/lg/Documents/Project/PycharmProjects/GeziBot/service/dispatcher/admin.py", line 27, in command_analyzing
+    timeout=application.TIMEOUT)
+  File "/usr/lib/python3.6/site-packages/telegram/bot.py", line 57, in decorator
+    result = func(self, *args, **kwargs)
+  File "/usr/lib/python3.6/site-packages/telegram/bot.py", line 82, in decorator
+    result = self._request.post(url, data, timeout=kwargs.get('timeout'))
+  File "/usr/lib/python3.6/site-packages/telegram/utils/request.py", line 262, in post
+    data = InputFile(data)
+  File "/usr/lib/python3.6/site-packages/telegram/files/inputfile.py", line 79, in __init__
+    self.mimetype = self.is_image(self.input_file_content)
+  File "/usr/lib/python3.6/site-packages/telegram/files/inputfile.py", line 154, in is_image
+    image = imghdr.what(None, stream)
+  File "/usr/lib/python3.6/imghdr.py", line 23, in what
+    res = tf(h, f)
+  File "/usr/lib/python3.6/imghdr.py", line 45, in test_png
+    if h.startswith(b'\211PNG\r\n\032\n'):
+TypeError: startswith first arg must be str or a tuple of str, not bytes
+2017-11-07 15:21:24,964 - updater.py - 288 - [ERROR] Error while getting Updates: Timed out
+2017-11-07 15:22:37,035 - netease.py - 29 - [ERROR] search music error
+Traceback (most recent call last):
+  File "/usr/lib/python3.6/site-packages/urllib3/connection.py", line 141, in _new_conn
+    (self.host, self.port), self.timeout, **extra_kw)
+  File "/usr/lib/python3.6/site-packages/urllib3/util/connection.py", line 83, in create_connection
+    raise err
+  File "/usr/lib/python3.6/site-packages/urllib3/util/connection.py", line 73, in create_connection
+    sock.connect(sa)
+ConnectionRefusedError: [Errno 111] Connection refused
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/lib/python3.6/site-packages/urllib3/connectionpool.py", line 601, in urlopen
+    chunked=chunked)
+  File "/usr/lib/python3.6/site-packages/urllib3/connectionpool.py", line 357, in _make_request
+    conn.request(method, url, **httplib_request_kw)
+  File "/usr/lib/python3.6/http/client.py", line 1239, in request
+    self._send_request(method, url, body, headers, encode_chunked)
+  File "/usr/lib/python3.6/http/client.py", line 1285, in _send_request
+    self.endheaders(body, encode_chunked=encode_chunked)
+  File "/usr/lib/python3.6/http/client.py", line 1234, in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+  File "/usr/lib/python3.6/http/client.py", line 1026, in _send_output
+    self.send(msg)
+  File "/usr/lib/python3.6/http/client.py", line 964, in send
+    self.connect()
+  File "/usr/lib/python3.6/site-packages/urllib3/connection.py", line 166, in connect
+    conn = self._new_conn()
+  File "/usr/lib/python3.6/site-packages/urllib3/connection.py", line 150, in _new_conn
+    self, "Failed to establish a new connection: %s" % e)
+urllib3.exceptions.NewConnectionError: <urllib3.connection.HTTPConnection object at 0x7f04081e9cf8>: Failed to establish a new connection: [Errno 111] Connection refused
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/lib/python3.6/site-packages/requests/adapters.py", line 440, in send
+    timeout=timeout
+  File "/usr/lib/python3.6/site-packages/urllib3/connectionpool.py", line 639, in urlopen
+    _stacktrace=sys.exc_info()[2])
+  File "/usr/lib/python3.6/site-packages/urllib3/util/retry.py", line 388, in increment
+    raise MaxRetryError(_pool, url, error or ResponseError(cause))
+urllib3.exceptions.MaxRetryError: HTTPConnectionPool(host='127.0.0.1', port=3000): Max retries exceeded with url: http://localhost/search?keywords=%E6%98%8E%E5%A4%A9%E4%BD%A0%E5%A5%BD&limit=5&offset=0 (Caused by ProxyError('Cannot connect to proxy.', NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f04081e9cf8>: Failed to establish a new connection: [Errno 111] Connection refused',)))
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/lg/Documents/Project/PycharmProjects/GeziBot/service/dispatcher/netease.py", line 14, in search_music
+    search_musics_dict = netease_api.search_musics_by_keyword_and_pagecode(key_word, pagecode=1)
+  File "/home/lg/Documents/Project/PycharmProjects/GeziBot/service/apis/netease_api.py", line 14, in search_musics_by_keyword_and_pagecode
+    response = requests.get('http://localhost/search', params=payload, proxies=proxies)
+  File "/usr/lib/python3.6/site-packages/requests/api.py", line 72, in get
+    return request('get', url, params=params, **kwargs)
+  File "/usr/lib/python3.6/site-packages/requests/api.py", line 58, in request
+    return session.request(method=method, url=url, **kwargs)
+  File "/usr/lib/python3.6/site-packages/requests/sessions.py", line 508, in request
+    resp = self.send(prep, **send_kwargs)
+  File "/usr/lib/python3.6/site-packages/requests/sessions.py", line 618, in send
+    r = adapter.send(request, **kwargs)
+  File "/usr/lib/python3.6/site-packages/requests/adapters.py", line 502, in send
+    raise ProxyError(e, request=request)
+requests.exceptions.ProxyError: HTTPConnectionPool(host='127.0.0.1', port=3000): Max retries exceeded with url: http://localhost/search?keywords=%E6%98%8E%E5%A4%A9%E4%BD%A0%E5%A5%BD&limit=5&offset=0 (Caused by ProxyError('Cannot connect to proxy.', NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f04081e9cf8>: Failed to establish a new connection: [Errno 111] Connection refused',)))
+2017-11-07 15:23:20,428 - netease.py - 29 - [ERROR] search music error
+Traceback (most recent call last):
+  File "/home/lg/Documents/Project/PycharmProjects/GeziBot/service/dispatcher/netease.py", line 23, in search_music
+    update.from_user.message.delete()
+AttributeError: 'Update' object has no attribute 'from_user'
+2017-11-07 16:11:09,217 - updater.py - 288 - [ERROR] Error while getting Updates: Timed out
+2017-11-07 16:11:32,529 - updater.py - 288 - [ERROR] Error while getting Updates: urllib3 HTTPError HTTPSConnectionPool(host='api.telegram.org', port=443): Max retries exceeded with url: /bot425909661:AAHC_a9-htfYsjaZuKfP6jjcl8n2sjizctg/getUpdates (Caused by ProxyError('Cannot connect to proxy.', timeout('_ssl.c:732: The handshake operation timed out',)))
+2017-11-07 16:11:47,232 - sing5_selector.py - 158 - [ERROR] send file failed
+Traceback (most recent call last):
+  File "/home/lg/Documents/Project/PycharmProjects/GeziBot/service/operate/sing5_selector.py", line 133, in selector_send_music
+    music_obj.name, music_obj.singer.name
+ValueError: Single '}' encountered in format string
+2017-11-07 16:11:47,898 - sing5_selector.py - 158 - [ERROR] send file failed
+Traceback (most recent call last):
+  File "/home/lg/Documents/Project/PycharmProjects/GeziBot/service/operate/sing5_selector.py", line 133, in selector_send_music
+    music_obj.name, music_obj.singer.name
+ValueError: Single '}' encountered in format string
+2017-11-07 16:12:43,432 - sing5_selector.py - 158 - [ERROR] send file failed
+Traceback (most recent call last):
+  File "/home/lg/Documents/Project/PycharmProjects/GeziBot/service/operate/sing5_selector.py", line 133, in selector_send_music
+    music_obj.name, music_obj.singer.name
+ValueError: Single '}' encountered in format string
+2017-11-07 16:13:00,017 - updater.py - 288 - [ERROR] Error while getting Updates: Timed out
