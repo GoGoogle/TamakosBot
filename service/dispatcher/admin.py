@@ -28,7 +28,12 @@ def command_analyzing(bot, update, command, params):
                           timeout=application.TIMEOUT)
     elif command == 'leaveChat':
         payload = params[0]
-        bot.leave_chat(chat_id=payload)
+        try:
+            result = bot.leave_chat(chat_id=payload)
+            bot.send_message(chat_id=update.message.chat.id, text="退出该群成功", timeout=application.TIMEOUT)
+        except:
+            bot.send_message(chat_id=update.message.chat.id, text="退出该群失败", timeout=application.TIMEOUT)
+
     else:
         text = "你的命令无效.你的命令是 {0}, 该命令的参数是 {1}".format(command, params)
         bot.send_message(chat_id=update.message.from_user.id,
