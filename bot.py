@@ -16,9 +16,11 @@ def main():
 
     router(dp)  # route the handler
 
-    updater.start_polling(timeout=20)  # 开始轮询
-    updater.idle()
-
+    # updater.start_polling(timeout=20)  # 开始轮询
+    # updater.idle()
+    updater.start_webhook(listen='127.0.0.1', port=5000, url_path='bottoken')
+    updater.bot.set_webhook(webhook_url='https://www.lemo.site/bottoken',
+                            certificate=open('/etc/letsencrypt/live/www.lemo.site/fullchain.pem', 'rb'))
 
 def router(dp):
     commands.handler_commands(dp)
