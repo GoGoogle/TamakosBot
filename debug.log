@@ -1,0 +1,216 @@
+2017-11-07 00:06:31,835 - dispatcher.py - 292 - [ERROR] An uncaught error was raised while processing the update
+Traceback (most recent call last):
+  File "/usr/lib/python3.6/site-packages/telegram/ext/dispatcher.py", line 270, in process_update
+    handler.handle_update(update, self)
+  File "/usr/lib/python3.6/site-packages/telegram/ext/regexhandler.py", line 173, in handle_update
+    return self.callback(dispatcher.bot, update, **optional_args)
+  File "/home/lg/Documents/Project/PycharmProjects/GeziBot/util/utils.py", line 17, in wrapped
+    return func(bot, update, *args, **kwargs)
+  File "/home/lg/Documents/Project/PycharmProjects/GeziBot/handler/monitors.py", line 44, in manage_bot
+    admin.manage_bot(bot, update, payload)
+  File "/home/lg/Documents/Project/PycharmProjects/GeziBot/service/dispatcher/admin.py", line 16, in manage_bot
+    command_analyzing(bot, update, command, params)
+  File "/home/lg/Documents/Project/PycharmProjects/GeziBot/service/dispatcher/admin.py", line 26, in command_analyzing
+    content = utils.tail(log_path, 6)
+  File "/home/lg/Documents/Project/PycharmProjects/GeziBot/util/utils.py", line 27, in tail
+    fm = mmap.mmap(f.fileno(), 0, mmap.MAP_SHARED, mmap.PROT_READ)
+ValueError: cannot mmap an empty file
+2017-11-07 00:08:16,271 - dispatcher.py - 292 - [ERROR] An uncaught error was raised while processing the update
+Traceback (most recent call last):
+  File "/usr/lib/python3.6/site-packages/telegram/ext/dispatcher.py", line 270, in process_update
+    handler.handle_update(update, self)
+  File "/usr/lib/python3.6/site-packages/telegram/ext/regexhandler.py", line 173, in handle_update
+    return self.callback(dispatcher.bot, update, **optional_args)
+  File "/home/lg/Documents/Project/PycharmProjects/GeziBot/util/utils.py", line 17, in wrapped
+    return func(bot, update, *args, **kwargs)
+  File "/home/lg/Documents/Project/PycharmProjects/GeziBot/handler/monitors.py", line 44, in manage_bot
+    admin.manage_bot(bot, update, payload)
+  File "/home/lg/Documents/Project/PycharmProjects/GeziBot/service/dispatcher/admin.py", line 16, in manage_bot
+    command_analyzing(bot, update, command, params)
+  File "/home/lg/Documents/Project/PycharmProjects/GeziBot/service/dispatcher/admin.py", line 26, in command_analyzing
+    content = utils.tail(log_path, 6)
+  File "/home/lg/Documents/Project/PycharmProjects/GeziBot/util/utils.py", line 23, in tail
+    the_file.seek(0, 2)  # go to end of file
+AttributeError: 'str' object has no attribute 'seek'
+2017-11-07 00:09:05,512 - dispatcher.py - 292 - [ERROR] An uncaught error was raised while processing the update
+Traceback (most recent call last):
+  File "/usr/lib/python3.6/site-packages/telegram/ext/dispatcher.py", line 270, in process_update
+    handler.handle_update(update, self)
+  File "/usr/lib/python3.6/site-packages/telegram/ext/regexhandler.py", line 173, in handle_update
+    return self.callback(dispatcher.bot, update, **optional_args)
+  File "/home/lg/Documents/Project/PycharmProjects/GeziBot/util/utils.py", line 17, in wrapped
+    return func(bot, update, *args, **kwargs)
+  File "/home/lg/Documents/Project/PycharmProjects/GeziBot/handler/monitors.py", line 44, in manage_bot
+    admin.manage_bot(bot, update, payload)
+  File "/home/lg/Documents/Project/PycharmProjects/GeziBot/service/dispatcher/admin.py", line 16, in manage_bot
+    command_analyzing(bot, update, command, params)
+  File "/home/lg/Documents/Project/PycharmProjects/GeziBot/service/dispatcher/admin.py", line 26, in command_analyzing
+    content = utils.tail(log_path, 6)
+  File "/home/lg/Documents/Project/PycharmProjects/GeziBot/util/utils.py", line 24, in tail
+    f.seek(-1, 2)
+io.UnsupportedOperation: can't do nonzero end-relative seeks
+2017-11-07 00:16:08,714 - dispatcher.py - 292 - [ERROR] An uncaught error was raised while processing the update
+Traceback (most recent call last):
+  File "/usr/lib/python3.6/site-packages/telegram/ext/dispatcher.py", line 270, in process_update
+    handler.handle_update(update, self)
+  File "/usr/lib/python3.6/site-packages/telegram/ext/regexhandler.py", line 173, in handle_update
+    return self.callback(dispatcher.bot, update, **optional_args)
+  File "/home/lg/Documents/Project/PycharmProjects/GeziBot/util/utils.py", line 17, in wrapped
+    return func(bot, update, *args, **kwargs)
+  File "/home/lg/Documents/Project/PycharmProjects/GeziBot/handler/monitors.py", line 44, in manage_bot
+    admin.manage_bot(bot, update, payload)
+  File "/home/lg/Documents/Project/PycharmProjects/GeziBot/service/dispatcher/admin.py", line 16, in manage_bot
+    command_analyzing(bot, update, command, params)
+  File "/home/lg/Documents/Project/PycharmProjects/GeziBot/service/dispatcher/admin.py", line 26, in command_analyzing
+    content = utils.tail(log_path, 6)
+  File "/home/lg/Documents/Project/PycharmProjects/GeziBot/util/utils.py", line 34, in tail
+    f.seek(block_counter * _buffer, os.SEEK_END)
+AttributeError: 'str' object has no attribute 'seek'
+2017-11-07 00:17:46,739 - dispatcher.py - 292 - [ERROR] An uncaught error was raised while processing the update
+Traceback (most recent call last):
+  File "/usr/lib/python3.6/site-packages/telegram/ext/dispatcher.py", line 270, in process_update
+    handler.handle_update(update, self)
+  File "/usr/lib/python3.6/site-packages/telegram/ext/regexhandler.py", line 173, in handle_update
+    return self.callback(dispatcher.bot, update, **optional_args)
+  File "/home/lg/Documents/Project/PycharmProjects/GeziBot/util/utils.py", line 16, in wrapped
+    return func(bot, update, *args, **kwargs)
+  File "/home/lg/Documents/Project/PycharmProjects/GeziBot/handler/monitors.py", line 44, in manage_bot
+    admin.manage_bot(bot, update, payload)
+  File "/home/lg/Documents/Project/PycharmProjects/GeziBot/service/dispatcher/admin.py", line 16, in manage_bot
+    command_analyzing(bot, update, command, params)
+  File "/home/lg/Documents/Project/PycharmProjects/GeziBot/service/dispatcher/admin.py", line 26, in command_analyzing
+    content = utils.tail(log_path, 6)
+  File "/home/lg/Documents/Project/PycharmProjects/GeziBot/util/utils.py", line 23, in tail
+    f.seek(-1, 2)
+io.UnsupportedOperation: can't do nonzero end-relative seeks
+2017-11-07 00:26:49,319 - dispatcher.py - 292 - [ERROR] An uncaught error was raised while processing the update
+Traceback (most recent call last):
+  File "/usr/lib/python3.6/site-packages/telegram/ext/dispatcher.py", line 270, in process_update
+    handler.handle_update(update, self)
+  File "/usr/lib/python3.6/site-packages/telegram/ext/regexhandler.py", line 173, in handle_update
+    return self.callback(dispatcher.bot, update, **optional_args)
+  File "/home/lg/Documents/Project/PycharmProjects/GeziBot/util/utils.py", line 16, in wrapped
+    return func(bot, update, *args, **kwargs)
+  File "/home/lg/Documents/Project/PycharmProjects/GeziBot/handler/monitors.py", line 44, in manage_bot
+    admin.manage_bot(bot, update, payload)
+  File "/home/lg/Documents/Project/PycharmProjects/GeziBot/service/dispatcher/admin.py", line 18, in manage_bot
+    command_analyzing(bot, update, command, params)
+  File "/home/lg/Documents/Project/PycharmProjects/GeziBot/service/dispatcher/admin.py", line 28, in command_analyzing
+    content = utils.tail(log_path, 16)
+  File "/home/lg/Documents/Project/PycharmProjects/GeziBot/util/utils.py", line 28, in tail
+    f.seek(0, 2)
+AttributeError: 'str' object has no attribute 'seek'
+2017-11-07 00:27:36,495 - dispatcher.py - 292 - [ERROR] An uncaught error was raised while processing the update
+Traceback (most recent call last):
+  File "/usr/lib/python3.6/site-packages/telegram/ext/dispatcher.py", line 270, in process_update
+    handler.handle_update(update, self)
+  File "/usr/lib/python3.6/site-packages/telegram/ext/regexhandler.py", line 173, in handle_update
+    return self.callback(dispatcher.bot, update, **optional_args)
+  File "/home/lg/Documents/Project/PycharmProjects/GeziBot/util/utils.py", line 16, in wrapped
+    return func(bot, update, *args, **kwargs)
+  File "/home/lg/Documents/Project/PycharmProjects/GeziBot/handler/monitors.py", line 44, in manage_bot
+    admin.manage_bot(bot, update, payload)
+  File "/home/lg/Documents/Project/PycharmProjects/GeziBot/service/dispatcher/admin.py", line 18, in manage_bot
+    command_analyzing(bot, update, command, params)
+  File "/home/lg/Documents/Project/PycharmProjects/GeziBot/service/dispatcher/admin.py", line 32, in command_analyzing
+    timeout=application.TIMEOUT)
+  File "/usr/lib/python3.6/site-packages/telegram/bot.py", line 57, in decorator
+    result = func(self, *args, **kwargs)
+  File "/usr/lib/python3.6/site-packages/telegram/bot.py", line 82, in decorator
+    result = self._request.post(url, data, timeout=kwargs.get('timeout'))
+  File "/usr/lib/python3.6/site-packages/telegram/utils/request.py", line 266, in post
+    data = json.dumps(data)
+  File "/usr/lib/python3.6/json/__init__.py", line 231, in dumps
+    return _default_encoder.encode(obj)
+  File "/usr/lib/python3.6/json/encoder.py", line 199, in encode
+    chunks = self.iterencode(o, _one_shot=True)
+  File "/usr/lib/python3.6/json/encoder.py", line 257, in iterencode
+    return _iterencode(o, 0)
+  File "/usr/lib/python3.6/json/encoder.py", line 180, in default
+    o.__class__.__name__)
+TypeError: Object of type 'generator' is not JSON serializable
+2017-11-07 00:29:16,555 - dispatcher.py - 292 - [ERROR] An uncaught error was raised while processing the update
+Traceback (most recent call last):
+  File "/usr/lib/python3.6/site-packages/telegram/ext/dispatcher.py", line 270, in process_update
+    handler.handle_update(update, self)
+  File "/usr/lib/python3.6/site-packages/telegram/ext/regexhandler.py", line 173, in handle_update
+    return self.callback(dispatcher.bot, update, **optional_args)
+  File "/home/lg/Documents/Project/PycharmProjects/GeziBot/util/utils.py", line 16, in wrapped
+    return func(bot, update, *args, **kwargs)
+  File "/home/lg/Documents/Project/PycharmProjects/GeziBot/handler/monitors.py", line 44, in manage_bot
+    admin.manage_bot(bot, update, payload)
+  File "/home/lg/Documents/Project/PycharmProjects/GeziBot/service/dispatcher/admin.py", line 16, in manage_bot
+    command_analyzing(bot, update, command, params)
+  File "/home/lg/Documents/Project/PycharmProjects/GeziBot/service/dispatcher/admin.py", line 26, in command_analyzing
+    content = utils.tail(log_path, 16)
+  File "/home/lg/Documents/Project/PycharmProjects/GeziBot/util/utils.py", line 22, in tail
+    return "\n".join(f.read().split("\n")[-n:])
+AttributeError: 'str' object has no attribute 'read'
+2017-11-07 00:29:47,342 - dispatcher.py - 292 - [ERROR] An uncaught error was raised while processing the update
+Traceback (most recent call last):
+  File "/usr/lib/python3.6/site-packages/telegram/ext/dispatcher.py", line 270, in process_update
+    handler.handle_update(update, self)
+  File "/usr/lib/python3.6/site-packages/telegram/ext/regexhandler.py", line 173, in handle_update
+    return self.callback(dispatcher.bot, update, **optional_args)
+  File "/home/lg/Documents/Project/PycharmProjects/GeziBot/util/utils.py", line 16, in wrapped
+    return func(bot, update, *args, **kwargs)
+  File "/home/lg/Documents/Project/PycharmProjects/GeziBot/handler/monitors.py", line 44, in manage_bot
+    admin.manage_bot(bot, update, payload)
+  File "/home/lg/Documents/Project/PycharmProjects/GeziBot/service/dispatcher/admin.py", line 16, in manage_bot
+    command_analyzing(bot, update, command, params)
+  File "/home/lg/Documents/Project/PycharmProjects/GeziBot/service/dispatcher/admin.py", line 26, in command_analyzing
+    content = utils.tail(log_path, 16)
+  File "/home/lg/Documents/Project/PycharmProjects/GeziBot/util/utils.py", line 27, in tail
+    f.seek(-(avg_line_length * to_read), 2)
+AttributeError: 'str' object has no attribute 'seek'
+2017-11-07 00:30:34,414 - dispatcher.py - 292 - [ERROR] An uncaught error was raised while processing the update
+Traceback (most recent call last):
+  File "/usr/lib/python3.6/site-packages/telegram/ext/dispatcher.py", line 270, in process_update
+    handler.handle_update(update, self)
+  File "/usr/lib/python3.6/site-packages/telegram/ext/regexhandler.py", line 173, in handle_update
+    return self.callback(dispatcher.bot, update, **optional_args)
+  File "/home/lg/Documents/Project/PycharmProjects/GeziBot/util/utils.py", line 16, in wrapped
+    return func(bot, update, *args, **kwargs)
+  File "/home/lg/Documents/Project/PycharmProjects/GeziBot/handler/monitors.py", line 44, in manage_bot
+    admin.manage_bot(bot, update, payload)
+  File "/home/lg/Documents/Project/PycharmProjects/GeziBot/service/dispatcher/admin.py", line 16, in manage_bot
+    command_analyzing(bot, update, command, params)
+  File "/home/lg/Documents/Project/PycharmProjects/GeziBot/service/dispatcher/admin.py", line 26, in command_analyzing
+    content = utils.tail(log_path, 16)
+  File "/home/lg/Documents/Project/PycharmProjects/GeziBot/util/utils.py", line 26, in tail
+    f.seek(-pos, 2)
+AttributeError: 'str' object has no attribute 'seek'
+2017-11-07 00:31:41,468 - dispatcher.py - 292 - [ERROR] An uncaught error was raised while processing the update
+Traceback (most recent call last):
+  File "/usr/lib/python3.6/site-packages/telegram/ext/dispatcher.py", line 270, in process_update
+    handler.handle_update(update, self)
+  File "/usr/lib/python3.6/site-packages/telegram/ext/regexhandler.py", line 173, in handle_update
+    return self.callback(dispatcher.bot, update, **optional_args)
+  File "/home/lg/Documents/Project/PycharmProjects/GeziBot/util/utils.py", line 16, in wrapped
+    return func(bot, update, *args, **kwargs)
+  File "/home/lg/Documents/Project/PycharmProjects/GeziBot/handler/monitors.py", line 44, in manage_bot
+    admin.manage_bot(bot, update, payload)
+  File "/home/lg/Documents/Project/PycharmProjects/GeziBot/service/dispatcher/admin.py", line 16, in manage_bot
+    command_analyzing(bot, update, command, params)
+  File "/home/lg/Documents/Project/PycharmProjects/GeziBot/service/dispatcher/admin.py", line 26, in command_analyzing
+    content = utils.tail(log_path, 16)
+  File "/home/lg/Documents/Project/PycharmProjects/GeziBot/util/utils.py", line 27, in tail
+    f.seek(-(avg_line_length * to_read), 2)
+AttributeError: 'str' object has no attribute 'seek'
+2017-11-07 00:32:05,230 - dispatcher.py - 292 - [ERROR] An uncaught error was raised while processing the update
+Traceback (most recent call last):
+  File "/usr/lib/python3.6/site-packages/telegram/ext/dispatcher.py", line 270, in process_update
+    handler.handle_update(update, self)
+  File "/usr/lib/python3.6/site-packages/telegram/ext/regexhandler.py", line 173, in handle_update
+    return self.callback(dispatcher.bot, update, **optional_args)
+  File "/home/lg/Documents/Project/PycharmProjects/GeziBot/util/utils.py", line 16, in wrapped
+    return func(bot, update, *args, **kwargs)
+  File "/home/lg/Documents/Project/PycharmProjects/GeziBot/handler/monitors.py", line 44, in manage_bot
+    admin.manage_bot(bot, update, payload)
+  File "/home/lg/Documents/Project/PycharmProjects/GeziBot/service/dispatcher/admin.py", line 16, in manage_bot
+    command_analyzing(bot, update, command, params)
+  File "/home/lg/Documents/Project/PycharmProjects/GeziBot/service/dispatcher/admin.py", line 26, in command_analyzing
+    content = utils.tail(log_path, 16)
+  File "/home/lg/Documents/Project/PycharmProjects/GeziBot/util/utils.py", line 25, in tail
+    f.seek(0, 2)
+AttributeError: 'str' object has no attribute 'seek'

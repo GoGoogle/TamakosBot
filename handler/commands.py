@@ -1,5 +1,6 @@
 import logging
 
+from telegram import Chat
 from telegram.ext import CommandHandler, MessageHandler, Filters, run_async
 
 from service.dispatcher import netease
@@ -31,7 +32,8 @@ def history_command(bot, update, args):
 
 
 def unknown_command(bot, update):
-    update.message.reply_text(text="格子表示无法找到此命令。")
+    if update.message.chat.type not in (Chat.GROUP, Chat.SUPERGROUP, Chat.CHANNEL):
+        update.message.reply_text(text="格子表示无法找到此命令。")
 
 
 def handler_commands(dispatcher):

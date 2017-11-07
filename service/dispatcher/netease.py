@@ -1,6 +1,6 @@
 import logging
 
-from config.application import TIMEOUT
+from config import application
 from service.apis import netease_api
 from service.operate import netease_selector, netease_generate
 
@@ -75,7 +75,7 @@ def response_playlist(bot, update, playlist_id):
         logger.info('response_playlist: playlist_id={}'.format(playlist_id))
         edited_msg = bot.send_message(chat_id=update.message.chat.id,
                                       text="..歌单导入中",
-                                      timeout=TIMEOUT)
+                                      timeout=application.TIMEOUT)
         update.message.message_id = edited_msg.message_id
         netease_selector.selector_playlist_turning(bot, update, playlist_id, cur_pagecode=1)
     except IndexError:

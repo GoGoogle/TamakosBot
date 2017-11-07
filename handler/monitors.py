@@ -3,7 +3,8 @@ import re
 
 from telegram.ext import CallbackQueryHandler, run_async, RegexHandler, MessageHandler, Filters
 
-from service.dispatcher import netease, upfile, sing5
+from service.dispatcher import netease, upfile, sing5, admin
+from util.utils import restricted
 
 logger = logging.getLogger(__name__)
 
@@ -37,6 +38,12 @@ def response_sing5_toplist(bot, update):
     sing5.response_toplist(bot, update)
 
 
+@restricted
+def manage_bot(bot, update):
+    payload = re.search(r'^admin:(\w+)\s?(\w*)', update.message.text).groups()
+    admin.manage_bot(bot, update, payload)
+
+
 def handler_monitors(dispatcher):
     dispatcher.add_handler(CallbackQueryHandler(netease_music_selector_callback, pattern='netease'))
     dispatcher.add_handler(
@@ -48,3 +55,5 @@ def handler_monitors(dispatcher):
     dispatcher.add_handler(CallbackQueryHandler(sing5_music_selector_callback, pattern='sing5'))
     dispatcher.add_handler(
         RegexHandler(r'^5sing top$', response_sing5_toplist))
+    dispatcher.add_handler(
+        RegexHandler(r'^admin:.*', manage_bot))

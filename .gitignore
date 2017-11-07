@@ -1,6 +1,6 @@
 # Created by .ignore support plugin (hsz.mobi)
 .idea/
-error.log
+debug.log
 #sql.db
 tmp/
 cmake-build-debug/
