@@ -11,7 +11,7 @@ handlers:
     stream: ext://sys.stdout
   logfile:
     class: logging.handlers.RotatingFileHandler
-    level: ERROR
+    level: DEBUG
     formatter: simple
     filename: debug.log
     maxBytes: 10485760
