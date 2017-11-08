@@ -8,6 +8,7 @@ logger = logging.getLogger(__name__)
 
 
 def search_music(bot, update, args):
+    netease_api.init_login()
     try:
         key_word = args[0]
         logger.info('get_music: {}'.format(key_word))
@@ -70,6 +71,7 @@ def listen_selector_reply(bot, update):
 
 
 def response_playlist(bot, update, playlist_id):
+    netease_api.init_login()
     try:
         logger.info('response_playlist: playlist_id={}'.format(playlist_id))
         edited_msg = bot.send_message(chat_id=update.message.chat.id,
