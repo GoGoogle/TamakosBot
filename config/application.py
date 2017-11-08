@@ -18,3 +18,8 @@ SQLITE_DB = 'sql.db'
 TMP_Folder = 'tmp'
 
 LOG_FILE = 'debug.log'
+
+LOGIN_PAYLOAD = {
+    'phone': '136xxxxxxxx',
+    'password': 'xxxxxxx'
+}
