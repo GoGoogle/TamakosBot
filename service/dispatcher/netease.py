@@ -1,5 +1,7 @@
 import logging
 
+import telegram
+
 from config import application
 from service.apis import netease_api
 from service.operate import netease_selector, netease_generate
@@ -22,8 +24,9 @@ def search_music(bot, update, args):
             panel = netease_generate.transfer_music_list_selector_to_panel(music_list_selector)
             update.message.reply_text(text=panel['text'], quote=True, reply_markup=panel['reply_markup'])
     except IndexError:
-        text = "请提供要搜索的音乐的名字"
-        update.message.reply_text(text=text)
+        text = "请在该命令后提供要搜索的音乐的名字。\n" \
+               "如 ` /music 李香兰 ` "
+        update.message.reply_text(text=text, parse_mode=telegram.ParseMode.MARKDOWN)
     except Exception as e:
         logger.error('search music error', exc_info=True)
 

@@ -190,7 +190,7 @@ def selector_send_music(bot, query, music_id, delete):
 
     music_file = BytesIO()
     try:
-        music_caption = "曲目: {0}\n演唱: {1}\n格式:{3}\n专辑: {2}".format(
+        music_caption = "曲目: {0}\n演唱: {1}\n格式: {3}\n专辑: {2}".format(
             music_obj.name, ' '.join(v.name for v in music_obj.artists),
             music_obj.album.name, music_obj.scheme
         )
