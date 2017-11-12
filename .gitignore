@@ -1,9 +1,6 @@
 # Created by .ignore support plugin (hsz.mobi)
 .idea/
-debug.log
-#sql.db
 config/application.py.bak
-tmp/
 cmake-build-debug/
 *.iws
 out/
@@ -13,3 +10,6 @@ com_crashlytics_export_strings.xml
 crashlytics.properties
 crashlytics-build.properties
 fabric.properties
+
+tmp/
+info.log

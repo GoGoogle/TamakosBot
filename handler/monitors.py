@@ -16,7 +16,7 @@ def netease_music_selector_callback(bot, update):
 
 @run_async
 def response_netease_playlist(bot, update):
-    playlist_id = re.search(r'https?://music.163.com/?.?/playlist((/)|(\?id=))(\d*)', update.message.text).group(4)
+    playlist_id = re.search(r'https?://music.163.com/?#?/?m?/playlist((/)|(\?id=))(\d*)', update.message.text).group(4)
     netease.response_playlist(bot, update, playlist_id)
 
 
@@ -47,7 +47,7 @@ def manage_bot(bot, update):
 def handler_monitors(dispatcher):
     dispatcher.add_handler(CallbackQueryHandler(netease_music_selector_callback, pattern='netease'))
     dispatcher.add_handler(
-        RegexHandler(r'.*https?://music.163.com/?.?/playlist((/)|(\?id=))(\d*).*', response_netease_playlist))
+        RegexHandler(r'.*https?://music.163.com/?#?/?m?/playlist((/)|(\?id=))(\d*).*', response_netease_playlist))
     dispatcher.add_handler(
         MessageHandler(Filters.audio | Filters.video | Filters.document & (~ Filters.forwarded), upload_file))
     dispatcher.add_handler(

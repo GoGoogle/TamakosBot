@@ -74,7 +74,7 @@ def send_music_file(bot, query, file, sing5_id, file_name, file_caption, edited_
         timeout=application.TIMEOUT
     )
 
-    logger.info("文件：{}/mp4 >> 正在发送中".format(file_name))
+    logger.info("文件: {}/mp4 >> 正在发送中".format(file_name))
     bot.send_chat_action(query.message.chat.id, action=telegram.ChatAction.UPLOAD_AUDIO)
 
     file_msg = None
@@ -87,7 +87,7 @@ def send_music_file(bot, query, file, sing5_id, file_name, file_caption, edited_
         db_audio.DBAudio().store_file(file_msg.audio.file_id, sing5_id, file_name, 0,
                                       '',
                                       time.time())
-        logger.info("文件：{}/mp4 发送成功.".format(file_name))
+        logger.info("文件: {}/mp4 发送成功.".format(file_name))
     except:
         # 清除数据库内容
         # TODO

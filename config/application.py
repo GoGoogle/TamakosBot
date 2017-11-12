@@ -13,11 +13,11 @@ API_PROXY = {
 
 TOOL_PROXY = {}
 
-SQLITE_DB = 'sql.db'
+SQLITE_DB = 'mbot.sqlite'
 
 TMP_Folder = 'tmp'
 
-LOG_FILE = 'debug.log'
+LOG_FILE = 'info.log'
 
 LOGIN_PAYLOAD = {
     'phone': '136xxxxxx',

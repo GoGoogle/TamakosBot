@@ -76,7 +76,7 @@ def send_music_file(bot, query, file, netease_id, file_name, file_duration, file
         timeout=application.TIMEOUT
     )
 
-    logger.info("文件：{}/mp4 >> 正在发送中".format(file_name))
+    logger.info("文件: {}/mp4 >> 正在发送中".format(file_name))
     bot.send_chat_action(query.message.chat.id, action=telegram.ChatAction.UPLOAD_AUDIO)
 
     file_msg = None
@@ -90,7 +90,7 @@ def send_music_file(bot, query, file, netease_id, file_name, file_duration, file
         db_audio.DBAudio().store_file(file_msg.audio.file_id, netease_id, file_name, file_duration,
                                       file_scheme,
                                       time.time())
-        logger.info("文件：{}/mp4 发送成功.".format(file_name))
+        logger.info("文件: {}/mp4 发送成功.".format(file_name))
     except:
         # 清除数据库内容
         # TODO
@@ -102,7 +102,7 @@ def send_music_file(bot, query, file, netease_id, file_name, file_duration, file
 @run_async
 def send_movie_file(bot, query, mv_true_url, mv_id, mv_name, mv_duration, mv_quality, file_caption,
                     false_download_url=''):
-    logger.info("文件：{0}， ..准备下载中\n地址为：{1}".format(mv_name, mv_true_url))
+    logger.info("文件: {0}， ..准备下载中\n地址为: {1}".format(mv_name, mv_true_url))
     bot.send_chat_action(query.message.chat.id, action=telegram.ChatAction.UPLOAD_VIDEO)
 
     file_path = os.path.join(application.TMP_Folder, mv_name)
@@ -119,7 +119,7 @@ def send_movie_file(bot, query, mv_true_url, mv_id, mv_name, mv_duration, mv_qua
 
     try:
         if file_id:
-            logger.info("文件：{}， >> 正在发送中".format(mv_name))
+            logger.info("文件: {}， >> 正在发送中".format(mv_name))
             video_msg = bot.send_video(chat_id=query.message.chat.id, video=file_id,
                                        caption=file_caption,
                                        duration=mv_duration,
@@ -137,7 +137,7 @@ def send_movie_file(bot, query, mv_true_url, mv_id, mv_name, mv_duration, mv_qua
                 for chunk in r.iter_content(application.CHUNK_SIZE):
                     fd.write(chunk)
 
-            logger.info("文件：{}， >> 正在发送中".format(mv_name))
+            logger.info("文件: {}， >> 正在发送中".format(mv_name))
             video_msg = bot.send_video(chat_id=query.message.chat.id, video=open(file_path, 'rb'),
                                        caption=file_caption,
                                        duration=mv_duration,
@@ -190,7 +190,7 @@ def selector_send_music(bot, query, music_id, delete):
 
     music_file = BytesIO()
     try:
-        music_caption = "曲目: {0}\n演唱: {1}\n格式：{3}\n专辑: {2}".format(
+        music_caption = "曲目: {0}\n演唱: {1}\n格式:{3}\n专辑: {2}".format(
             music_obj.name, ' '.join(v.name for v in music_obj.artists),
             music_obj.album.name, music_obj.scheme
         )
@@ -232,7 +232,7 @@ def selector_send_music(bot, query, music_id, delete):
 
             time_fmt = '{0}分{1}秒'.format(int(music_obj.mv.duration // 60), int(music_obj.mv.duration % 60))
 
-            mv_caption = "标题: {0}\n演唱: {1}\n时长：{2}\n品质: {3}p".format(
+            mv_caption = "标题: {0}\n演唱: {1}\n时长: {2}\n品质: {3}p".format(
                 music_obj.mv.name, music_obj.mv.artist_name, time_fmt,
                 music_obj.mv.quality
             )
