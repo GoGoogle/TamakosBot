@@ -15,9 +15,9 @@ def start_command(bot, update):
 
 def help_command(bot, update):
     text = '<pre>## 使用示例</pre>' \
-           '<pre>排行榜: 5sing top</pre>' \
-           '<pre>查询歌曲: /music 七里香</pre>' \
-           '<pre>歌单: 歌单链接，粘贴即可</pre>'
+           '<pre>查询: /music 七里香</pre>' \
+           '<pre>歌单: 歌单链接，粘贴即可</pre>' \
+           '<pre>排行榜: 5sing top</pre>'
     bot.send_message(chat_id=update.message.chat_id, text=text, parse_mode=telegram.ParseMode.HTML)
 
 

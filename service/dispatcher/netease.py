@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 def search_music(bot, update, args):
     netease_api.init_login()
     try:
-        key_word = args[0]
+        key_word = ' '.join(args[:])
         logger.info('get_music: {}'.format(key_word))
         search_musics_dict = netease_api.search_musics_by_keyword_and_pagecode(key_word, pagecode=1)
         if search_musics_dict['result']['songCount'] == 0:
@@ -24,8 +24,8 @@ def search_music(bot, update, args):
             panel = netease_generate.transfer_music_list_selector_to_panel(music_list_selector)
             update.message.reply_text(text=panel['text'], quote=True, reply_markup=panel['reply_markup'])
     except IndexError:
-        text = "请在该命令后提供要搜索的音乐的名字。\n" \
-               "如 ` /music 李香兰 ` "
+        text = "请在该命令后提供要搜索的音乐的名字，如 " \
+               "\"/music 李香兰\" "
         update.message.reply_text(text=text, parse_mode=telegram.ParseMode.MARKDOWN)
     except Exception as e:
         logger.error('search music error', exc_info=True)
