@@ -15,7 +15,13 @@ def search_music(bot, update, args):
         key_word = ' '.join(args[:])
         logger.info('get_music: {}'.format(key_word))
         search_musics_dict = netease_api.search_musics_by_keyword_and_pagecode(key_word, pagecode=1)
-        if search_musics_dict['result']['songCount'] == 0:
+
+        if search_musics_dict['code'] == 400:
+            text = "请在该命令后提供要搜索的音乐的名字，如 " \
+                   "\"/music 李香兰\" "
+            update.message.reply_text(text=text, parse_mode=telegram.ParseMode.MARKDOWN)
+
+        elif search_musics_dict['result']['songCount'] == 0:
             text = "没有搜索到~"
             update.message.reply_text(text=text)
         else:
@@ -23,10 +29,7 @@ def search_music(bot, update, args):
                                                                                search_musics_dict['result'])
             panel = netease_generate.transfer_music_list_selector_to_panel(music_list_selector)
             update.message.reply_text(text=panel['text'], quote=True, reply_markup=panel['reply_markup'])
-    except IndexError:
-        text = "请在该命令后提供要搜索的音乐的名字，如 " \
-               "\"/music 李香兰\" "
-        update.message.reply_text(text=text, parse_mode=telegram.ParseMode.MARKDOWN)
+
     except Exception as e:
         logger.error('search music error', exc_info=True)
 
