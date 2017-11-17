@@ -1,7 +1,6 @@
 import logging
 import os
 import time
-from io import BytesIO
 
 import telegram
 
@@ -91,9 +90,6 @@ def selector_send_music(bot, query, music_id, mtype, delete):
     # 转为对象好处理
     music_obj = sing5_util.generate_music_obj(detail,
                                               url_detail)
-
-    music_file = BytesIO()
-
     # music_caption = "曲目: {0}\n演唱: {1}".format(
     #     music_obj.name, music_obj.singer.name
     # )
@@ -114,8 +110,8 @@ def selector_send_music(bot, query, music_id, mtype, delete):
             sing5_util.download_continuous(bot, query, music_obj, music_file, edited_msg)
 
             # 填写 id3tags
-            util.write_id3tags(music_file_path, music_obj.name, music_obj.singer.name)
-            
+            util.write_id3tags(music_file_path, song_title=music_obj.name, song_artist=music_obj.singer.name)
+
             music_file.seek(0, os.SEEK_SET)  # 从开始位置开始读
 
             send_music_file(bot, query, music_file, music_obj, music_caption, edited_msg)
