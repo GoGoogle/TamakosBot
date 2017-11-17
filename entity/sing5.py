@@ -11,7 +11,8 @@ class Song(object):
                  singer=None,
                  mtype='fc',
                  size=0,
-                 popularity=0
+                 popularity=0,
+                 falseurl=''
                  ):
         self.logger = logging.getLogger(__name__)
         self.mid = mid
@@ -21,6 +22,7 @@ class Song(object):
         self.mtype = mtype
         self.size = size
         self.popularity = popularity
+        self.falseurl = falseurl
 
 
 class Singer(object):

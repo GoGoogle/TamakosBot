@@ -1,18 +1,15 @@
 import logging
+import time
 
+import requests
+import telegram
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 
+from config import application
 from entity.netease import Mv, Artist, Album, Music, MusicListSelector, PlayListSelector
-from service.apis import netease_api
+from service import netease_api
 
 logger = logging.getLogger(__name__)
-
-
-def generate_mv(mvid):
-    mv_detail = netease_api.get_mv_detail_by_mvid(mvid)['data']
-    max_key = str(max(map(lambda x: int(x), mv_detail['brs'].keys())))
-    return Mv(mv_detail['id'], mv_detail['name'], mv_detail['brs'][max_key],
-              mv_detail['artistName'], mv_detail['duration'] / 1000, quality=max_key)
 
 
 def generate_music_obj(detail, url):
@@ -22,17 +19,24 @@ def generate_music_obj(detail, url):
             ars.append(Artist(arid=x['id'], name=x['name']))
     al = Album(detail['al']['name'], int(detail['al']['id']))
 
-    music_obj = Music(mid=detail['id'], name=detail['name'], url=url['url'],
-                      scheme='{0} {1:.0f}kbps'.format(url['type'], url['br'] / 1000),
+    music_obj = Music(mid=detail['id'], name=detail['name'], url=url['url'], suffix=url['type'],
+                      scheme='{0:.0f}kbps'.format(url['br'] / 1000),
                       artists=ars, duration=detail['dt'] / 1000, album=al
                       )
     if detail['mv'] != 0:
-        mv = generate_mv(detail['mv'])
+        mv = generate_mv_obj(detail['mv'])
         music_obj.mv = mv
     return music_obj
 
 
-def produce_music_list_selector(kw, pagecode, search_musics_result):
+def generate_mv_obj(mvid):
+    mv_detail = netease_api.get_mv_detail_by_mvid(mvid)['data']
+    max_key = str(max(map(lambda x: int(x), mv_detail['brs'].keys())))
+    return Mv(mv_detail['id'], mv_detail['name'], mv_detail['brs'][max_key],
+              mv_detail['artistName'], mv_detail['duration'] / 1000, quality=max_key)
+
+
+def produce_single_music_selector(kw, pagecode, search_musics_result):
     """
     generate music_list_selector by netease apis
     :param kw: search keyword
@@ -54,7 +58,7 @@ def produce_music_list_selector(kw, pagecode, search_musics_result):
     return MusicListSelector(kw, pagecode, total_page_num, musics)
 
 
-def transfer_music_list_selector_to_panel(music_list_selector):
+def transfer_single_music_selector_to_panel(music_list_selector):
     list_text = '163 ️🎵关键字「{0}」p: {1}/{2}'.format(
         music_list_selector.keyword,
         music_list_selector.cur_page_code,
@@ -175,3 +179,69 @@ def transfer_playlist_selector_to_panel(playlist_selector, cur_pagecode=1):
     ])
 
     return {'text': list_text, 'reply_markup': InlineKeyboardMarkup(button_list)}
+
+
+def selector_page_turning(bot, query, kw, page_code):
+    logger.info('selector_page_turning: keyword: {0}; page_code={1}'.format(kw, page_code))
+    search_musics_dict = netease_api.search_musics_by_keyword_and_pagecode(kw, pagecode=page_code)
+    music_list_selector = produce_single_music_selector(kw, page_code, search_musics_dict['result'])
+    panel = transfer_single_music_selector_to_panel(music_list_selector)
+    query.message.edit_text(text=panel['text'], reply_markup=panel['reply_markup'], timeout=application.TIMEOUT)
+
+
+def selector_playlist_turning(bot, update, playlist_id, cur_pagecode=1):
+    playlist_dict = netease_api.get_playlist_by_playlist_id(playlist_id)
+    playlist_selector = produce_playlist_selector(playlist_dict['playlist'])
+    panel = transfer_playlist_selector_to_panel(playlist_selector, cur_pagecode)
+    bot.edit_message_text(chat_id=update.message.chat.id,
+                          message_id=update.message.message_id,
+                          text=panel['text'], quote=True, reply_markup=panel['reply_markup'],
+                          disable_web_page_preview=True,
+                          parse_mode=telegram.ParseMode.MARKDOWN)
+
+
+def download_continuous(bot, query, music_obj, music_file, edited_msg, tool_proxies):
+    logger.info('{} ..下载中'.format(music_obj.name))
+    try:
+        if tool_proxies:
+            # 代理使用国内服务器转发接口
+            r = requests.get(music_obj.url, stream=True, timeout=application.TIMEOUT, proxies=tool_proxies)
+        else:
+            r = requests.get(music_obj.url, stream=True, timeout=application.TIMEOUT)
+
+        start = time.time()
+        total_length = int(r.headers.get('content-length'))
+        dl = 0
+        for chunk in r.iter_content(application.CHUNK_SIZE):
+            dl += len(chunk)
+            music_file.write(chunk)
+
+            network_speed = dl / (time.time() - start)
+            if network_speed > 1024 * 1024:
+                network_speed_status = '{:.2f} MB/s'.format(network_speed / (1024 * 1024))
+            else:
+                network_speed_status = '{:.2f} KB/s'.format(network_speed / 1024)
+
+            if dl > 1024 * 1024:
+                dl_status = '{:.2f} MB'.format(dl / (1024 * 1024))
+            else:
+                dl_status = '{:.0f} KB'.format(dl / 1024)
+
+            # 已下载大小，总大小，已下载的百分比，网速
+            progress = '{0} / {1:.2f} MB ({2:.0f}%) - {3}'.format(dl_status,
+                                                                  total_length / (1024 * 1024),
+                                                                  dl / total_length * 100,
+                                                                  network_speed_status)
+            progress_status = '163 ️🎵  \n[{0}]({1})\n正在飞速下载\n{2}'.format(music_obj.name, music_obj.falseurl, progress)
+
+            bot.edit_message_text(
+                chat_id=query.message.chat.id,
+                message_id=edited_msg.message_id,
+                text=progress_status,
+                disable_web_page_preview=True,
+                parse_mode=telegram.ParseMode.MARKDOWN,
+                timeout=application.TIMEOUT
+            )
+
+    except:
+        logger.error('download_continuous failed', exc_info=True)

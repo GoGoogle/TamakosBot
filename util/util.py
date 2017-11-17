@@ -18,5 +18,9 @@ def restricted(func):
     return wrapped
 
 
-def tail(file, n):
-    pass
+def selector_cancel(bot, query):
+    bot.answerCallbackQuery(query.id,
+                            text="叮~",
+                            show_alert=False,
+                            timeout=application.TIMEOUT)
+    query.message.delete()

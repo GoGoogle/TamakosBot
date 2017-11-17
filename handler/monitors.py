@@ -3,7 +3,7 @@ import re
 
 from telegram.ext import CallbackQueryHandler, run_async, RegexHandler, MessageHandler, Filters
 
-from service.dispatcher import netease, upfile, sing5, admin
+from service import netease, admin, sing5, upload_file
 from util.util import restricted
 
 logger = logging.getLogger(__name__)
@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 
 @run_async
 def netease_music_selector_callback(bot, update):
-    netease.listen_selector_reply(bot, update)
+    netease.response_single_music(bot, update)
 
 
 @run_async
@@ -21,16 +21,16 @@ def response_netease_playlist(bot, update):
 
 
 def upload_file(bot, update):
-    upfile.upload_file(bot, update)
+    upload_file.upload_file(bot, update)
 
 
 def response_upfile(bot, update):
-    upfile.response_upfile(bot, update)
+    upload_file.response_upfile(bot, update)
 
 
 @run_async
 def sing5_music_selector_callback(bot, update):
-    sing5.listen_selector_reply(bot, update)
+    sing5.response_single_music(bot, update)
 
 
 @run_async

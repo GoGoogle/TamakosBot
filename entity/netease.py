@@ -8,23 +8,27 @@ class Music(object):
                  mid,
                  name,
                  url='',
+                 suffix='mp3',
                  scheme='',
                  artists=None,
                  duration=0,
                  album=None,
                  mv=None,
-                 quality=''
+                 quality='',
+                 falseurl=''
                  ):
         self.logger = logging.getLogger(__name__)
         self.mid = mid
         self.name = name
         self.url = url
+        self.suffix = suffix
         self.scheme = scheme
         self.artists = artists
         self.duration = duration
         self.album = album
         self.mv = mv
         self.quality = quality
+        self.falseurl = 'http://music.163.com/song?id={}'.format(self.mid)
 
 
 class MusicListSelector(object):
