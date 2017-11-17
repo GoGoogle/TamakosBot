@@ -1,7 +1,6 @@
 import logging
 import os
 import time
-from io import BytesIO
 
 import requests
 import telegram
@@ -110,17 +109,18 @@ def selector_send_music(bot, query, music_id, delete):
     music_obj = netease_util.generate_music_obj(detail,
                                                 netease_api.get_music_url_by_musicid(music_id)['data'][0])
 
-    music_file = BytesIO()
+    # music_caption = "曲目: {0}\n演唱: {1}\n格式: {3}\n专辑: {2}".format(
+    #     music_obj.name, ' / '.join(v.name for v in music_obj.artists),
+    #     music_obj.album.name, music_obj.scheme
+    # )
+    music_caption = ""
+
+    full_file_name = r'{0} - {1}.{2}'.format(
+        music_obj.name, ' & '.join(v.name for v in music_obj.artists), music_obj.suffix)
+    music_file_path = os.path.join(application.TMP_Folder, full_file_name)
+    music_file = open(music_file_path, 'wb+')
+
     try:
-        # music_caption = "曲目: {0}\n演唱: {1}\n格式: {3}\n专辑: {2}".format(
-        #     music_obj.name, ' / '.join(v.name for v in music_obj.artists),
-        #     music_obj.album.name, music_obj.scheme
-        # )
-
-        music_caption = ""
-        full_file_name = r'{0} - {1}.{2}'.format(
-            music_obj.name, ' & '.join(v.name for v in music_obj.artists), music_obj.suffix)
-
         # 查询数据库 compare the files with the database ,and find the file_Id
         file_id = db_audio.DBAudio().compare_file(music_id, full_file_name,
                                                   music_obj.duration,
@@ -133,7 +133,10 @@ def selector_send_music(bot, query, music_id, delete):
 
             netease_util.download_continuous(bot, query, music_obj, music_file, edited_msg, tool_proxies)
 
-            music_file.name = full_file_name
+            # 填写 id3tags
+            util.write_id3tags(music_file_path, music_obj.name, ' / '.join(v.name for v in music_obj.artists),
+                               music_obj.album.artist, music_obj.album.name)
+
             music_file.seek(0, os.SEEK_SET)  # 从开始位置开始读
 
             send_music_file(bot, query, music_file, music_obj, music_caption, edited_msg)
@@ -161,6 +164,8 @@ def selector_send_music(bot, query, music_id, delete):
     finally:
         if not music_file.closed:
             music_file.close()
+        if os.path.exists(music_file_path):
+            os.remove(music_file_path)
         if edited_msg:
             edited_msg.delete()
 
@@ -191,7 +196,7 @@ def send_music_file(bot, query, file, music_obj, music_caption, edited_msg):
         db_audio.DBAudio().store_file(file_msg.audio.file_id, music_obj.mid, music_obj.name, music_obj.duration,
                                       music_obj.scheme,
                                       time.time())
-        logger.info("文件: {}/mp4 发送成功.".format(music_obj.name))
+        logger.info("文件: {} 发送成功.".format(music_obj.name))
     except:
         # 清除数据库内容
         # TODO
@@ -201,8 +206,7 @@ def send_music_file(bot, query, file, music_obj, music_caption, edited_msg):
 
 
 @run_async
-def send_movie_file(bot, query, mv_true_url, mv_id, mv_name, mv_duration, mv_quality, file_caption,
-                    false_download_url=''):
+def send_movie_file(bot, query, mv_true_url, mv_id, mv_name, mv_duration, mv_quality, file_caption):
     logger.info("文件: {0}， ..准备下载中\n地址为: {1}".format(mv_name, mv_true_url))
     bot.send_chat_action(query.message.chat.id, action=telegram.ChatAction.UPLOAD_VIDEO)
 
