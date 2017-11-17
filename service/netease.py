@@ -122,7 +122,7 @@ def selector_send_music(bot, query, music_id, delete):
 
     try:
         # 查询数据库 compare the files with the database ,and find the file_Id
-        file_id = db_audio.DBAudio().compare_file(music_id, full_file_name,
+        file_id = db_audio.DBAudio().compare_file(music_id, music_obj.name,
                                                   music_obj.duration,
                                                   music_obj.scheme,
                                                   time.time())

@@ -30,10 +30,11 @@ def selector_cancel(bot, query):
 
 def write_id3tags(file_path, song_title, song_artist, album_artist='', song_album='', track_num=2):
     audiofile = eyed3.load(file_path)
-    audiofile.tag.artist = song_artist
-    audiofile.tag.album = song_album
-    audiofile.tag.album_artist = album_artist
-    audiofile.tag.title = song_title
-    audiofile.tag.track_num = track_num
+    if audiofile:
+        audiofile.tag.artist = song_artist
+        audiofile.tag.album = song_album
+        audiofile.tag.album_artist = album_artist
+        audiofile.tag.title = song_title
+        audiofile.tag.track_num = track_num
 
-    audiofile.tag.save()
+        audiofile.tag.save()
