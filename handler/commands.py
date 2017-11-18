@@ -2,7 +2,7 @@ import logging
 
 import telegram
 from telegram import Chat
-from telegram.ext import CommandHandler, MessageHandler, Filters, run_async
+from telegram.ext import CommandHandler, MessageHandler, Filters
 
 from service import netease
 
@@ -21,7 +21,6 @@ def help_command(bot, update):
     bot.send_message(chat_id=update.message.chat_id, text=text, parse_mode=telegram.ParseMode.HTML)
 
 
-@run_async
 def netease_command(bot, update, args):
     netease.search_music(bot, update, args)
 

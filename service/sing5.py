@@ -110,7 +110,8 @@ def selector_send_music(bot, query, music_id, mtype, delete):
             sing5_util.download_continuous(bot, query, music_obj, music_file, edited_msg)
 
             # 填写 id3tags
-            util.write_id3tags(music_file_path, song_title=music_obj.name, song_artist=music_obj.singer.name)
+            util.write_id3tags(music_file_path, song_title=music_obj.name,
+                               song_artist_list=[].append(music_obj.singer.name))
 
             music_file.seek(0, os.SEEK_SET)  # 从开始位置开始读
 

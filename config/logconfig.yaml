@@ -11,7 +11,7 @@ handlers:
     stream: ext://sys.stdout
   logfile:
     class: logging.handlers.RotatingFileHandler
-    level: DEBUG
+    level: INFO
     formatter: simple
     filename: info.log
     maxBytes: 10485760
@@ -22,5 +22,5 @@ handlers:
 #    handlers: [console, logfile]
 #    propagate: 0
 root:
-  level: DEBUG
+  level: INFO
   handlers: [console, logfile]

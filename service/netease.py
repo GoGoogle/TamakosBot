@@ -134,8 +134,8 @@ def selector_send_music(bot, query, music_id, delete):
             netease_util.download_continuous(bot, query, music_obj, music_file, edited_msg, tool_proxies)
 
             # 填写 id3tags
-            util.write_id3tags(music_file_path, music_obj.name, ' / '.join(v.name for v in music_obj.artists),
-                               music_obj.album.artist, music_obj.album.name)
+            util.write_id3tags(music_file_path, music_obj.name, list(v.name for v in music_obj.artists),
+                               music_obj.album.name)
 
             music_file.seek(0, os.SEEK_SET)  # 从开始位置开始读
 

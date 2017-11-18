@@ -66,7 +66,7 @@ class Mv(object):
 class Artist(object):
     def __init__(self,
                  arid=0,
-                 name=None
+                 name=''
                  ):
         self.logger = logging.getLogger(__name__)
         self.arid = arid
@@ -80,12 +80,12 @@ class Album(object):
     def __init__(self,
                  name,
                  alid,
-                 artist=None
+                 artists=None
                  ):
         self.logger = logging.getLogger(__name__)
         self.alid = alid
         self.name = name
-        self.artist = artist
+        self.artists = artists
 
 
 class PlayListSelector(object):

@@ -1,7 +1,6 @@
 import logging
+import taglib
 from functools import wraps
-
-import eyed3
 
 from config import application
 
@@ -28,13 +27,11 @@ def selector_cancel(bot, query):
     query.message.delete()
 
 
-def write_id3tags(file_path, song_title, song_artist, album_artist='', song_album='', track_num=2):
-    audiofile = eyed3.load(file_path)
-    if audiofile:
-        audiofile.tag.artist = song_artist
-        audiofile.tag.album = song_album
-        audiofile.tag.album_artist = album_artist
-        audiofile.tag.title = song_title
-        audiofile.tag.track_num = track_num
-
-        audiofile.tag.save()
+def write_id3tags(file_path, song_title, song_artist_list, song_album='', track_num=2):
+    song = taglib.File(file_path)
+    if song and song.tags:
+        song.tags["ARTIST"] = song_artist_list
+        song.tags["ALBUM"] = [].append(song_album)
+        song.tags["TITLE"] = [].append(song_title)
+        song.tags["TRACKNUMBER"] = [].append(track_num)
+        song.save()
