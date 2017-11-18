@@ -143,6 +143,7 @@ def send_music_file(bot, query, music_file, music_obj, file_caption, edited_msg)
     file_msg = None
     try:
         file_msg = bot.send_audio(chat_id=query.message.chat.id, audio=music_file, caption=file_caption,
+                                  duration=music_obj.duration,
                                   title=music_obj.name,
                                   performer=music_obj.singer.name,
                                   disable_notification=True,

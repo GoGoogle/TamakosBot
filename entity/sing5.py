@@ -11,6 +11,7 @@ class Song(object):
                  singer=None,
                  mtype='fc',
                  size=0,
+                 duration='264',
                  popularity=0,
                  falseurl=''
                  ):
@@ -21,6 +22,7 @@ class Song(object):
         self.singer = singer
         self.mtype = mtype
         self.size = size
+        self.duration = duration
         self.popularity = popularity
         self.falseurl = falseurl
 
