@@ -35,7 +35,11 @@ def sing5_music_selector_callback(bot, update):
 
 @run_async
 def response_sing5_toplist(bot, update):
-    sing5.response_toplist(bot, update)
+    payload = re.search(r'^5sing\s?(\w*)\s?top$', update.message.text).group(1)
+    if payload:
+        sing5.response_toplist(bot, update, payload)
+    else:
+        sing5.response_toplist(bot, update)
 
 
 @restricted
@@ -54,6 +58,6 @@ def handler_monitors(dispatcher):
         RegexHandler(r'^show up$', response_upfile))
     dispatcher.add_handler(CallbackQueryHandler(sing5_music_selector_callback, pattern='sing5'))
     dispatcher.add_handler(
-        RegexHandler(r'^5sing top$', response_sing5_toplist))
+        RegexHandler(r'^5sing\s?\w*\s?top$', response_sing5_toplist))
     dispatcher.add_handler(
         RegexHandler(r'^admin:.*', manage_bot))

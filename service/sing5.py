@@ -57,15 +57,15 @@ def response_single_music(bot, update):
         selector_send_music(bot, query, music_id, mtype, False)
 
 
-def response_toplist(bot, update):
+def response_toplist(bot, update, payload='yc'):
     try:
         edited_msg = bot.send_message(chat_id=update.message.chat.id,
                                       text="..排行榜导入中",
                                       timeout=application.TIMEOUT)
         update.message.message_id = edited_msg.message_id
 
-        musics_result = sing5_api.get_music_top_by_type_pagecode_and_date(mtype='fc', pagecode=1)
-        top_selector = sing5_util.produce_music_top_selector('fc', 1, musics_result)
+        musics_result = sing5_api.get_music_top_by_type_pagecode_and_date(mtype=payload, pagecode=1)
+        top_selector = sing5_util.produce_music_top_selector('yc', 1, musics_result)
         panel = sing5_util.transfer_music_top_selector_to_panel(top_selector)
         bot.edit_message_text(chat_id=update.message.chat.id,
                               message_id=update.message.message_id,

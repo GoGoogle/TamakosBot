@@ -17,14 +17,13 @@ tool_proxies = application.TOOL_PROXY
 
 
 def search_music(bot, update, args):
-    netease_api.init_login()
     try:
         key_word = ' '.join(args[:])
         logger.info('get_music: {}'.format(key_word))
         search_musics_dict = netease_api.search_musics_by_keyword_and_pagecode(key_word, pagecode=1)
 
         if search_musics_dict['code'] == 400:
-            text = "请提供要查询的音乐标题，输入 `/help` 命令查看说明"
+            text = "请提供要查询的音乐标题，输入 `/help` 命令查看说明。"
             update.message.reply_text(text=text, parse_mode=telegram.ParseMode.MARKDOWN)
 
         elif search_musics_dict['result']['songCount'] == 0:
@@ -83,7 +82,6 @@ def response_single_music(bot, update):
 
 
 def response_playlist(bot, update, playlist_id):
-    netease_api.init_login()
     try:
         logger.info('response_playlist: playlist_id={}'.format(playlist_id))
         edited_msg = bot.send_message(chat_id=update.message.chat.id,

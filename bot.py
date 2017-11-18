@@ -8,6 +8,7 @@ from telegram.ext import Updater
 from config import application
 from database import db_audio, db_mv, db_file
 from handler import commands, messages, monitors
+from service import netease_api
 
 
 def main():
@@ -33,6 +34,8 @@ def setup_logging(path="config/logconfig.yaml"):
     with open(path, "r") as f:
         config = yaml.load(f)
         logging.config.dictConfig(config)
+    # 开始登录 api
+    netease_api.init_login()
 
 
 def db_init():

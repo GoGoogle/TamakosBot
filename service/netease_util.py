@@ -23,9 +23,10 @@ def generate_music_obj(detail, url):
                       scheme='{0:.0f}kbps'.format(url['br'] / 1000),
                       artists=ars, duration=detail['dt'] / 1000, album=al
                       )
-    if detail['mv'] != 0:
-        mv = generate_mv_obj(detail['mv'])
-        music_obj.mv = mv
+    #  有问题
+    # if detail['mv'] != 0:
+    #     mv = generate_mv_obj(detail['mv'])
+    #     music_obj.mv = mv
     return music_obj
 
 
