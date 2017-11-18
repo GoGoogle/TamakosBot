@@ -60,7 +60,7 @@ def response_single_music(bot, update):
 def response_toplist(bot, update, payload='yc'):
     try:
         edited_msg = bot.send_message(chat_id=update.message.chat.id,
-                                      text="..排行榜导入中",
+                                      text="ちょっとお待ちください..",
                                       timeout=application.TIMEOUT)
         update.message.message_id = edited_msg.message_id
 
