@@ -24,8 +24,7 @@ def search_music(bot, update, args):
         search_musics_dict = netease_api.search_musics_by_keyword_and_pagecode(key_word, pagecode=1)
 
         if search_musics_dict['code'] == 400:
-            text = "请在该命令后提供要搜索的音乐的名字，如 " \
-                   "\"/music 李香兰\" "
+            text = "请提供要查询的音乐标题，输入 `/help` 命令查看说明"
             update.message.reply_text(text=text, parse_mode=telegram.ParseMode.MARKDOWN)
 
         elif search_musics_dict['result']['songCount'] == 0:
@@ -187,8 +186,8 @@ def send_music_file(bot, query, file, music_obj, music_caption, edited_msg):
     try:
         file_msg = bot.send_audio(chat_id=query.message.chat.id, audio=file, caption=music_caption,
                                   duration=music_obj.duration,
-                                  performer=' / '.join(v.name for v in music_obj.artists),
                                   title=music_obj.name,
+                                  performer=' / '.join(v.name for v in music_obj.artists),
                                   disable_notification=True,
                                   timeout=application.TIMEOUT)
 

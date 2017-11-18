@@ -95,7 +95,7 @@ def selector_send_music(bot, query, music_id, mtype, delete):
     # )
     music_caption = ''
     full_file_name = '{0} - {1}.mp3'.format(
-        music_obj.singer.name, music_obj.name)
+        music_obj.name, music_obj.singer.name)
 
     music_file_path = os.path.join(application.TMP_Folder, full_file_name)
     music_file = open(music_file_path, 'wb+')
@@ -111,7 +111,7 @@ def selector_send_music(bot, query, music_id, mtype, delete):
 
             # 填写 id3tags
             util.write_id3tags(music_file_path, song_title=music_obj.name,
-                               song_artist_list=[].append(music_obj.singer.name))
+                               song_artist_list=[music_obj.singer.name])
 
             music_file.seek(0, os.SEEK_SET)  # 从开始位置开始读
 

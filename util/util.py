@@ -27,11 +27,11 @@ def selector_cancel(bot, query):
     query.message.delete()
 
 
-def write_id3tags(file_path, song_title, song_artist_list, song_album='', track_num=2):
+def write_id3tags(file_path, song_title, song_artist_list, song_album='', track_num='01/10'):
     song = taglib.File(file_path)
-    if song and song.tags:
+    if song:
         song.tags["ARTIST"] = song_artist_list
-        song.tags["ALBUM"] = [].append(song_album)
-        song.tags["TITLE"] = [].append(song_title)
-        song.tags["TRACKNUMBER"] = [].append(track_num)
+        song.tags["ALBUM"] = [song_album]
+        song.tags["TITLE"] = [song_title]
+        song.tags["TRACKNUMBER"] = [track_num]
         song.save()
