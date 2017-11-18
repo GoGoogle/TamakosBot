@@ -60,7 +60,7 @@ def response_single_music(bot, update):
 def response_toplist(bot, update, payload='yc'):
     try:
         edited_msg = bot.send_message(chat_id=update.message.chat.id,
-                                      text="ちょっとお待ちください..",
+                                      text="ちょっとお待ちください.",
                                       timeout=application.TIMEOUT)
         update.message.message_id = edited_msg.message_id
 
@@ -111,7 +111,7 @@ def selector_send_music(bot, query, music_id, mtype, delete):
 
             # 填写 id3tags
             util.write_id3tags(music_file_path, song_title=music_obj.name,
-                               song_artist_list=[music_obj.singer.name])
+                               song_artist_list=[music_obj.singer.name], song_album='5sing 音乐')
 
             music_file.seek(0, os.SEEK_SET)  # 从开始位置开始读
 
