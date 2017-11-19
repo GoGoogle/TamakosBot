@@ -53,7 +53,7 @@ def produce_music_top_selector(mtype, pagecode, musics_result):
     return MusicTopSelector(musics_result['data']['id'],
                             musics_result['data']['name'],
                             pagecode,
-                            100,
+                            musics_result['data']['count'],
                             musics
                             )
 
@@ -74,7 +74,10 @@ def transfer_music_top_selector_to_panel(top_selector):
                 callback_data='sing5:{0}:t{1}'.format(top_selector.mtype, x.mid)
             )
         ])
-    if top_selector.cur_page_code == 1:
+    every_page_size = 5
+    if top_selector.total_songs_num == 50:
+        every_page_size = 50
+    if top_selector.cur_page_code == 1 and top_selector.total_songs_num > every_page_size:
         button_list.append([
             InlineKeyboardButton(
                 text='下一页',
@@ -111,7 +114,7 @@ def transfer_music_top_selector_to_panel(top_selector):
 
 def selector_page_turning(bot, query, mtype, page_code):
     logger.info('selector_page_turning: mtype: {0}; page_code={1}'.format(mtype, page_code))
-    musics_result = sing5_api.get_music_top_by_type_pagecode_and_date(mtype='fc', pagecode=page_code)
+    musics_result = sing5_api.get_music_top_by_type_pagecode_and_date(mtype=mtype, pagecode=page_code)
     top_selector = produce_music_top_selector(mtype, page_code, musics_result)
     panel = transfer_music_top_selector_to_panel(top_selector)
     query.message.edit_text(text=panel['text'], reply_markup=panel['reply_markup'], timeout=application.TIMEOUT)

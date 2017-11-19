@@ -53,12 +53,12 @@ class MusicTopSelector(object):
                  mtype,
                  title,
                  cur_page_code,
-                 total_page_num,
+                 total_songs_num,
                  musics
                  ):
         self.logger = logging.getLogger(__name__)
         self.mtype = mtype
         self.title = title
         self.cur_page_code = cur_page_code
-        self.total_page_num = total_page_num
+        self.total_songs_num = total_songs_num
         self.musics = musics

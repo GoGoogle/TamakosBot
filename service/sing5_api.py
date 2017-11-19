@@ -19,7 +19,7 @@ def search_musics_by_keyword_pagecode_and_filter(kw, pagecode=1, filter_type=2):
     return response.json()
 
 
-def get_music_url_by_id_and_type(music_id, song_type='fc'):
+def get_music_url_by_id_and_type(music_id, song_type='yc'):
     payload = {
         'songid': music_id,
         'songtype': song_type
@@ -29,7 +29,7 @@ def get_music_url_by_id_and_type(music_id, song_type='fc'):
     return response.json()
 
 
-def get_music_detail_by_id_and_type(music_id, song_type='fc'):
+def get_music_detail_by_id_and_type(music_id, song_type='yc'):
     payload = {
         'songid': music_id,
         'songtype': song_type
@@ -45,7 +45,7 @@ def get_music_top_date():
     return response.json()
 
 
-def get_music_top_by_type_pagecode_and_date(mtype='fc', pagecode=1, date=0):
+def get_music_top_by_type_pagecode_and_date(mtype='yc', pagecode=1, date=0):
     payload = {
         'id': mtype,
         'pageindex': pagecode,

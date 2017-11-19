@@ -65,7 +65,7 @@ def response_toplist(bot, update, payload='yc'):
         update.message.message_id = edited_msg.message_id
 
         musics_result = sing5_api.get_music_top_by_type_pagecode_and_date(mtype=payload, pagecode=1)
-        top_selector = sing5_util.produce_music_top_selector('yc', 1, musics_result)
+        top_selector = sing5_util.produce_music_top_selector(payload, 1, musics_result)
         panel = sing5_util.transfer_music_top_selector_to_panel(top_selector)
         bot.edit_message_text(chat_id=update.message.chat.id,
                               message_id=update.message.message_id,

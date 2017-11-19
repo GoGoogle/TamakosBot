@@ -77,7 +77,7 @@ def transfer_single_music_selector_to_panel(music_list_selector):
                 callback_data='netease:' + str(x.mid)
             )
         ])
-    if music_list_selector.cur_page_code == 1:
+    if music_list_selector.cur_page_code == 1 and music_list_selector.total_page_num > 1:
         button_list.append([
             InlineKeyboardButton(
                 text='下一页',
@@ -146,7 +146,7 @@ def transfer_playlist_selector_to_panel(playlist_selector, cur_pagecode=1):
             )
         ])
 
-    if cur_pagecode == 1:
+    if cur_pagecode == 1 and playlist_selector.total_page_num > 1:
         button_list.append([
             InlineKeyboardButton(
                 text='下一页',
