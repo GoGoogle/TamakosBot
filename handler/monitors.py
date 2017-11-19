@@ -36,7 +36,7 @@ def response_sing5_toplist(bot, update):
 
 @restricted
 def manage_bot(bot, update):
-    payload = re.search(r'^admin:(\w+)\s?(\w*)', update.message.text).groups()
+    payload = re.search(r'^cc:(\w+)\s?(\w*)', update.message.text).groups()
     admin.manage_bot(bot, update, payload)
 
 
@@ -50,4 +50,4 @@ def handler_monitors(dispatcher):
     dispatcher.add_handler(
         RegexHandler(r'^5sing\s?\w*\s?top$', response_sing5_toplist))
     dispatcher.add_handler(
-        RegexHandler(r'^admin:.*', manage_bot))
+        RegexHandler(r'^cc:.*', manage_bot))

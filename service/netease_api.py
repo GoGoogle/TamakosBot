@@ -16,7 +16,7 @@ def init_login():
     res = s.get('http://localhost/login/cellphone', params=payload, proxies=proxies)
     content = res.json()
     if content['code'] == 200:
-        logger.info('{} 登录成功！'.format(content['account']['userName']))
+        logger.info('{} 登录成功！'.format(content['account']['userName'][:7]))
 
 
 def search_musics_by_keyword_and_pagecode(kw, pagecode=1):
