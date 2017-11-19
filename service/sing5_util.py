@@ -62,7 +62,7 @@ def transfer_music_top_selector_to_panel(top_selector):
     caption_text = '️5sing 🎵「{0}」p: {1}/{2}'.format(
         top_selector.title,
         top_selector.cur_page_code,
-        top_selector.total_page_num
+        top_selector.total_songs_num
     )
 
     button_list = []
@@ -77,14 +77,18 @@ def transfer_music_top_selector_to_panel(top_selector):
     every_page_size = 5
     if top_selector.total_songs_num == 50:
         every_page_size = 50
-    if top_selector.cur_page_code == 1 and top_selector.total_songs_num > every_page_size:
+
+    if top_selector.total_songs_num <= every_page_size:
+        # 什么都不做
+        pass
+    elif top_selector.cur_page_code == 1:
         button_list.append([
             InlineKeyboardButton(
                 text='下一页',
                 callback_data='sing5:{0}:+{1}'.format(top_selector.mtype, top_selector.cur_page_code)
             )
         ])
-    elif top_selector.cur_page_code == top_selector.total_page_num:
+    elif top_selector.cur_page_code == top_selector.total_songs_num:
         button_list.append([
             InlineKeyboardButton(
                 text='上一页',
