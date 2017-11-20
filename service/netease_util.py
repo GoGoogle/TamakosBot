@@ -81,7 +81,7 @@ def transfer_single_music_selector_to_panel(music_list_selector):
     if music_list_selector.total_page_num == 1:
         # 什么都不做
         pass
-    if music_list_selector.cur_page_code == 1:
+    elif music_list_selector.cur_page_code == 1:
         button_list.append([
             InlineKeyboardButton(
                 text='下一页',
@@ -153,7 +153,7 @@ def transfer_playlist_selector_to_panel(playlist_selector, cur_pagecode=1):
     if playlist_selector.total_page_num == 1:
         # 什么都不做
         pass
-    if cur_pagecode == 1:
+    elif cur_pagecode == 1:
         button_list.append([
             InlineKeyboardButton(
                 text='下一页',
