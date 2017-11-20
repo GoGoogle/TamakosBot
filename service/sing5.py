@@ -94,7 +94,7 @@ def selector_send_music(bot, query, music_id, mtype, delete):
     #     music_obj.name, music_obj.singer.name
     # )
     music_caption = ''
-    full_file_name = '{0} - {1}.mp3'.format(
+    full_file_name = r'{0} - {1}.mp3'.format(
         music_obj.name, music_obj.singer.name)
 
     music_file_path = os.path.join(application.TMP_Folder, full_file_name)
@@ -153,7 +153,7 @@ def send_music_file(bot, query, music_file, music_obj, file_caption, edited_msg)
         db_audio.DBAudio().store_file(file_msg.audio.file_id, music_obj.mid, music_obj.name, 0,
                                       '',
                                       time.time())
-        logger.info("文件: {}/mp4 发送成功.".format(music_obj.name))
+        logger.info("文件: {} 发送成功.".format(music_obj.name))
     except:
         # 清除数据库内容
         # TODO
