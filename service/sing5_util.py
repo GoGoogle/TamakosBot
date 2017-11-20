@@ -8,9 +8,9 @@ from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 from config import application
 from entity.sing5 import MusicTopSelector, Song, Singer
 from service import sing5_api
-from service.sing5 import tool_proxies
 
 logger = logging.getLogger(__name__)
+tool_proxies = application.TOOL_PROXY
 
 
 def generate_music_obj(detail, url_detail):
