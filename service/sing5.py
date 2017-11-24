@@ -96,7 +96,8 @@ def selector_send_music(bot, query, music_id, mtype, delete):
     music_caption = ''
     full_file_name = r'{0} - {1}.mp3'.format(
         music_obj.name, music_obj.singer.name)
-
+    # 字符串进行处理
+    full_file_name = full_file_name.replace("/", ":")
     music_file_path = os.path.join(application.TMP_Folder, full_file_name)
     music_file = open(music_file_path, 'wb+')
 

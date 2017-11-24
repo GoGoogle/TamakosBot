@@ -114,7 +114,8 @@ def selector_send_music(bot, query, music_id, delete):
 
     full_file_name = r'{0} - {1}.{2}'.format(
         music_obj.name, ' & '.join(v.name for v in music_obj.artists), music_obj.suffix)
-
+    # 字符串进行处理
+    full_file_name = full_file_name.replace("/", ":")
     music_file_path = os.path.join(application.TMP_Folder, full_file_name)
     music_file = open(music_file_path, 'wb+')
 

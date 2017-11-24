@@ -19,10 +19,7 @@ def generate_music_obj(detail, url):
             ars.append(Artist(arid=x['id'], name=x['name']))
     al = Album(detail['al']['name'], int(detail['al']['id']))
 
-    # 字符串进行处理
-    filename = detail['name'].replace('/', ':')
-
-    music_obj = Music(mid=detail['id'], name=filename, url=url['url'], suffix=url['type'],
+    music_obj = Music(mid=detail['id'], name=detail['name'], url=url['url'], suffix=url['type'],
                       scheme='{0:.0f}kbps'.format(url['br'] / 1000),
                       artists=ars, duration=detail['dt'] / 1000, album=al
                       )
