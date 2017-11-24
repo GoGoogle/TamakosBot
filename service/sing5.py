@@ -19,7 +19,7 @@ def search_music(bot, update, args):
         logger.info('get_music: {}'.format(key_word))
         musics_dict = sing5_api.search_musics_by_keyword_pagecode_and_filter(key_word, pagecode=1, filter_type=2)
         if len(musics_dict['data']['songArray']) == 0:
-            text = "没有搜索到~"
+            text = "無結果值！"
             update.message.reply_text(text=text)
         else:
             music_list_selector = sing5_util.produce_single_music_selector(key_word, 1,
@@ -28,7 +28,7 @@ def search_music(bot, update, args):
             update.message.reply_text(text=panel['text'], quote=True, reply_markup=panel['reply_markup'])
 
     except IndexError:
-        text = "请提供要搜索的音乐的名字"
+        text = "該命令項錯誤！"
         update.message.reply_text(text=text)
     except Exception as e:
         logger.error('search music error', exc_info=True)
@@ -132,7 +132,7 @@ def send_music_file(bot, query, music_file, music_obj, file_caption, edited_msg)
     bot.edit_message_text(
         chat_id=query.message.chat.id,
         message_id=edited_msg.message_id,
-        text='5sing 🎵 \n[{0}]({1})\nsending..'.format(music_obj.name, music_obj.falseurl),
+        text='5sing {0} 媒體開始傳送'.format(music_obj.name),
         parse_mode=telegram.ParseMode.MARKDOWN,
         disable_web_page_preview=True,
         timeout=application.TIMEOUT
