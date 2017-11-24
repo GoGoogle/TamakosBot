@@ -10,14 +10,11 @@ logger = logging.getLogger(__name__)
 
 
 def start_command(bot, update):
-    bot.send_message(chat_id=update.message.chat_id, text='こんにちは')
+    bot.send_message(chat_id=update.message.chat_id, text='你好呀')
 
 
 def help_command(bot, update):
-    text = '**使用示例**: ' \
-           '查询 => 输入 `音乐 <歌曲名字>` / ' \
-           '歌单 => 複製你的歌單鏈接 / ' \
-           '排行榜 => 比如 5sing 原创排行榜，输入 `5SING YC TOP`\n'
+    text = '暂时无帮助信息。'
     bot.send_message(chat_id=update.message.chat_id, text=text, parse_mode=telegram.ParseMode.MARKDOWN)
 
 
