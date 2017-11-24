@@ -52,6 +52,10 @@ def end_login(bot, update):
     pass
 
 
+def cancel_conv(bot, update):
+    pass
+
+
 conv_handler = ConversationHandler(
     entry_points=[CommandHandler('login', start_login)],
     states={
@@ -59,7 +63,8 @@ conv_handler = ConversationHandler(
         INPUT_PASSWORD: [],
         # 判断用户密码是否正确？
         CHECK_LOGIN_INFO: []
-    }
+    },
+    fallbacks=[RegexHandler('^cancel$', cancel_conv, pass_user_data=True)]
 )
 
 
