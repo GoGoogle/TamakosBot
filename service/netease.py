@@ -97,7 +97,7 @@ def selector_send_music(bot, query, music_id, delete):
     if delete:
         util.selector_cancel(bot, query)
 
-    edited_msg = bot.send_message(chat_id=query.message.chat.id, text="待って",
+    edited_msg = bot.send_message(chat_id=query.message.chat.id, text="開始搜索",
                                   timeout=application.TIMEOUT)
     detail = netease_api.get_music_detail_by_musicid(music_id)['songs'][0]
 

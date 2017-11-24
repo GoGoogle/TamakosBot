@@ -30,7 +30,7 @@ def generate_music_obj(detail, url_detail):
         url = index3
         size = detail['lqsize']
 
-    music_obj = Song(detail['ID'], filename, url, Singer(detail['user']['ID'], detail['user']['NN']),
+    music_obj = Song(detail['ID'], detail['SN'], url, Singer(detail['user']['ID'], detail['user']['NN']),
                      mtype=detail['SK'], size=size, falseurl=false_url)
     return music_obj
 

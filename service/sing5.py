@@ -60,7 +60,7 @@ def response_single_music(bot, update):
 def response_toplist(bot, update, payload='yc'):
     try:
         edited_msg = bot.send_message(chat_id=update.message.chat.id,
-                                      text="待って",
+                                      text="喵~",
                                       timeout=application.TIMEOUT)
         update.message.message_id = edited_msg.message_id
 
@@ -81,7 +81,7 @@ def selector_send_music(bot, query, music_id, mtype, delete):
     if delete:
         util.selector_cancel(bot, query)
 
-    edited_msg = bot.send_message(chat_id=query.message.chat.id, text="Please wait a minute.",
+    edited_msg = bot.send_message(chat_id=query.message.chat.id, text="開始索引",
                                   timeout=application.TIMEOUT)
     #
     detail = sing5_api.get_music_detail_by_id_and_type(music_id, song_type=mtype)['data']
