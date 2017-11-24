@@ -16,21 +16,20 @@ logger = logging.getLogger(__name__)
 tool_proxies = application.TOOL_PROXY
 
 
-def search_music(bot, update, args):
+def search_music(bot, update, kw):
     try:
-        key_word = ' '.join(args[:])
-        logger.info('get_music: {}'.format(key_word))
-        search_musics_dict = netease_api.search_musics_by_keyword_and_pagecode(key_word, pagecode=1)
+        logger.info('get_music: {}'.format(kw))
+        search_musics_dict = netease_api.search_musics_by_keyword_and_pagecode(kw, pagecode=1)
 
         if search_musics_dict['code'] == 400:
-            text = "请提供要查询的音乐标题，输入 `/help` 命令查看说明。"
+            text = "該命令項錯誤~"
             update.message.reply_text(text=text, parse_mode=telegram.ParseMode.MARKDOWN)
 
         elif search_musics_dict['result']['songCount'] == 0:
-            text = "没有搜索到~"
+            text = "無法搜索到~"
             update.message.reply_text(text=text)
         else:
-            music_list_selector = netease_util.produce_single_music_selector(key_word, 1,
+            music_list_selector = netease_util.produce_single_music_selector(kw, 1,
                                                                              search_musics_dict['result'])
             panel = netease_util.transfer_single_music_selector_to_panel(music_list_selector)
             update.message.reply_text(text=panel['text'], quote=True, reply_markup=panel['reply_markup'])
@@ -85,12 +84,12 @@ def response_playlist(bot, update, playlist_id):
     try:
         logger.info('response_playlist: playlist_id={}'.format(playlist_id))
         edited_msg = bot.send_message(chat_id=update.message.chat.id,
-                                      text="..歌单导入中",
+                                      text="喵~",
                                       timeout=application.TIMEOUT)
         update.message.message_id = edited_msg.message_id
         netease_util.selector_playlist_turning(bot, update, playlist_id, cur_pagecode=1)
     except IndexError:
-        logger.warning('获取歌单失败', exc_info=True)
+        logger.warning('無法獲取該歌曲單目', exc_info=True)
 
 
 def selector_send_music(bot, query, music_id, delete):
@@ -98,7 +97,7 @@ def selector_send_music(bot, query, music_id, delete):
     if delete:
         util.selector_cancel(bot, query)
 
-    edited_msg = bot.send_message(chat_id=query.message.chat.id, text="正在加载，请稍后~",
+    edited_msg = bot.send_message(chat_id=query.message.chat.id, text="待って",
                                   timeout=application.TIMEOUT)
     detail = netease_api.get_music_detail_by_musicid(music_id)['songs'][0]
 
@@ -173,7 +172,7 @@ def send_music_file(bot, query, file, music_obj, music_caption, edited_msg):
     bot.edit_message_text(
         chat_id=query.message.chat.id,
         message_id=edited_msg.message_id,
-        text='163 🎵 \n[{0}]({1})\n在发送的路上~'.format(music_obj.name, music_obj.falseurl),
+        text='163 🎵 \n[{0}]({1})\nsending..'.format(music_obj.name, music_obj.falseurl),
         parse_mode=telegram.ParseMode.MARKDOWN,
         disable_web_page_preview=True,
         timeout=application.TIMEOUT

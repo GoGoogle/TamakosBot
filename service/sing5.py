@@ -60,7 +60,7 @@ def response_single_music(bot, update):
 def response_toplist(bot, update, payload='yc'):
     try:
         edited_msg = bot.send_message(chat_id=update.message.chat.id,
-                                      text="ちょっとお待ちください.",
+                                      text="待って",
                                       timeout=application.TIMEOUT)
         update.message.message_id = edited_msg.message_id
 
@@ -81,7 +81,7 @@ def selector_send_music(bot, query, music_id, mtype, delete):
     if delete:
         util.selector_cancel(bot, query)
 
-    edited_msg = bot.send_message(chat_id=query.message.chat.id, text="正在加载，请稍后~",
+    edited_msg = bot.send_message(chat_id=query.message.chat.id, text="Please wait a minute.",
                                   timeout=application.TIMEOUT)
     #
     detail = sing5_api.get_music_detail_by_id_and_type(music_id, song_type=mtype)['data']
@@ -132,7 +132,7 @@ def send_music_file(bot, query, music_file, music_obj, file_caption, edited_msg)
     bot.edit_message_text(
         chat_id=query.message.chat.id,
         message_id=edited_msg.message_id,
-        text='5sing 🎵 \n[{0}]({1})\n在发送的路上~'.format(music_obj.name, music_obj.falseurl),
+        text='5sing 🎵 \n[{0}]({1})\nsending..'.format(music_obj.name, music_obj.falseurl),
         parse_mode=telegram.ParseMode.MARKDOWN,
         disable_web_page_preview=True,
         timeout=application.TIMEOUT

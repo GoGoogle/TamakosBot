@@ -9,6 +9,11 @@ from util.util import restricted
 logger = logging.getLogger(__name__)
 
 
+def netease_regex(bot, update):
+    key_word = re.search(r'^音乐\s+(.+)$', update.message.text).group(1)
+    netease.search_music(bot, update, key_word)
+
+
 @run_async
 def netease_music_selector_callback(bot, update):
     netease.response_single_music(bot, update)
@@ -27,7 +32,7 @@ def sing5_music_selector_callback(bot, update):
 
 @run_async
 def response_sing5_toplist(bot, update):
-    payload = re.search(r'^5sing\s?(\w*)\s?top$', update.message.text).group(1)
+    payload = re.search(r'^5SING\s?(\w*)\s?TOP$', update.message.text).group(1).lower()
     if payload:
         sing5.response_toplist(bot, update, payload)
     else:
@@ -41,6 +46,7 @@ def manage_bot(bot, update):
 
 
 def handler_monitors(dispatcher):
+    dispatcher.add_handler(RegexHandler(r'^音乐\s+(.+)$', netease_regex))
     dispatcher.add_handler(CallbackQueryHandler(netease_music_selector_callback, pattern='netease'))
     dispatcher.add_handler(
         RegexHandler(r'.*https?://music.163.com/?#?/?m?/playlist((/)|(\?id=))(\d*).*', response_netease_playlist))
@@ -48,6 +54,6 @@ def handler_monitors(dispatcher):
     #     MessageHandler(Filters.audio | Filters.video | Filters.document & (~ Filters.forwarded), upload_file))
     dispatcher.add_handler(CallbackQueryHandler(sing5_music_selector_callback, pattern='sing5'))
     dispatcher.add_handler(
-        RegexHandler(r'^5sing\s?\w*\s?top$', response_sing5_toplist))
+        RegexHandler(r'^5SING\s?\w*\s?TOP$', response_sing5_toplist))
     dispatcher.add_handler(
         RegexHandler(r'^cc:.*', manage_bot))
