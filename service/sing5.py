@@ -19,7 +19,7 @@ def search_music(bot, update, args):
         logger.info('get_music: {}'.format(key_word))
         musics_dict = sing5_api.search_musics_by_keyword_pagecode_and_filter(key_word, pagecode=1, filter_type=2)
         if len(musics_dict['data']['songArray']) == 0:
-            text = "無結果值！"
+            text = "此歌曲找不到~"
             update.message.reply_text(text=text)
         else:
             music_list_selector = sing5_util.produce_single_music_selector(key_word, 1,
@@ -28,7 +28,7 @@ def search_music(bot, update, args):
             update.message.reply_text(text=panel['text'], quote=True, reply_markup=panel['reply_markup'])
 
     except IndexError:
-        text = "該命令項錯誤！"
+        text = "缺少歌曲名称"
         update.message.reply_text(text=text)
     except Exception as e:
         logger.error('search music error', exc_info=True)
@@ -81,7 +81,7 @@ def selector_send_music(bot, query, music_id, mtype, delete):
     if delete:
         util.selector_cancel(bot, query)
 
-    edited_msg = bot.send_message(chat_id=query.message.chat.id, text="開始索引",
+    edited_msg = bot.send_message(chat_id=query.message.chat.id, text="开始查询",
                                   timeout=application.TIMEOUT)
     #
     detail = sing5_api.get_music_detail_by_id_and_type(music_id, song_type=mtype)['data']
@@ -132,7 +132,7 @@ def send_music_file(bot, query, music_file, music_obj, file_caption, edited_msg)
     bot.edit_message_text(
         chat_id=query.message.chat.id,
         message_id=edited_msg.message_id,
-        text='5sing {0} 媒體開始傳送'.format(music_obj.name),
+        text='5sing {0} 媒体开始传送'.format(music_obj.name),
         parse_mode=telegram.ParseMode.MARKDOWN,
         disable_web_page_preview=True,
         timeout=application.TIMEOUT

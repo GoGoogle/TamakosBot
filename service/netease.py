@@ -22,11 +22,11 @@ def search_music(bot, update, kw):
         search_musics_dict = netease_api.search_musics_by_keyword_and_pagecode(kw, pagecode=1)
 
         if search_musics_dict['code'] == 400:
-            text = "該命令項錯誤！"
+            text = "缺少歌曲名称"
             update.message.reply_text(text=text, parse_mode=telegram.ParseMode.MARKDOWN)
 
         elif search_musics_dict['result']['songCount'] == 0:
-            text = "無結果值！"
+            text = "此歌曲找不到~"
             update.message.reply_text(text=text)
         else:
             music_list_selector = netease_util.produce_single_music_selector(kw, 1,
@@ -97,7 +97,7 @@ def selector_send_music(bot, query, music_id, delete):
     if delete:
         util.selector_cancel(bot, query)
 
-    edited_msg = bot.send_message(chat_id=query.message.chat.id, text="開始搜索",
+    edited_msg = bot.send_message(chat_id=query.message.chat.id, text="开始搜索",
                                   timeout=application.TIMEOUT)
     detail = netease_api.get_music_detail_by_musicid(music_id)['songs'][0]
 
@@ -172,7 +172,7 @@ def send_music_file(bot, query, file, music_obj, music_caption, edited_msg):
     bot.edit_message_text(
         chat_id=query.message.chat.id,
         message_id=edited_msg.message_id,
-        text='163 🎵{0} 媒體開始傳送'.format(music_obj.name),
+        text='163 🎵{0} 媒体开始传送'.format(music_obj.name),
         parse_mode=telegram.ParseMode.MARKDOWN,
         disable_web_page_preview=True,
         timeout=application.TIMEOUT
