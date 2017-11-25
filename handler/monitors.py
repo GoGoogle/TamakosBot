@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 
 def netease_regex(bot, update):
-    key_word = re.search(r'^音乐\s+(.+)$', update.message.text).group(1)
+    key_word = re.search(r'^.+\s+(.+)$', update.message.text).group(1)
     netease.search_music(bot, update, key_word)
 
 
@@ -46,7 +46,7 @@ def manage_bot(bot, update):
 
 
 def handler_monitors(dispatcher):
-    dispatcher.add_handler(RegexHandler(r'^音乐\s+(.+)$', netease_regex))
+    dispatcher.add_handler(RegexHandler(r'^(音乐|m)\s+(.+)$', netease_regex))
     dispatcher.add_handler(CallbackQueryHandler(netease_music_selector_callback, pattern='netease'))
     dispatcher.add_handler(
         RegexHandler(r'.*https?://music.163.com/?#?/?m?/playlist((/)|(\?id=))(\d*).*', response_netease_playlist))
