@@ -14,21 +14,21 @@ class DBAudio(object):
         self.logger = logging.getLogger(__name__)
         self.conn = pymysql.connect(*application.SQLITE_DB)
 
-    def setup_db(self):
-        self.conn = pymysql.connect(*application.SQLITE_DB, charset='utf8')
-        cursor = self.conn.cursor()
-        try:
-            create_tb = 'CREATE TABLE IF NOT EXISTS audio (file_id VARCHAR(15) PRIMARY KEY ,' \
-                        'platform_id VARCHAR(15), title VARCHAR(20),duration FLOAT(10), ' \
-                        'scheme VARCHAR(15), create_time TIMESTAMP )'
-            cursor.execute(create_tb)
-            # cursor.execute('DELETE FROM audio')
-        except:
-            self.logger.error('setup audio table', exc_info=True)
-        finally:
-            cursor.close()
-            self.conn.commit()
-            self.conn.close()
+    # def setup_db(self):
+    #     self.conn = pymysql.connect(*application.SQLITE_DB, charset='utf8')
+    #     cursor = self.conn.cursor()
+    #     try:
+    #         create_tb = 'CREATE TABLE IF NOT EXISTS audio (file_id VARCHAR(15) PRIMARY KEY ,' \
+    #                     'platform_id VARCHAR(15), title VARCHAR(20),duration FLOAT(10), ' \
+    #                     'scheme VARCHAR(15), create_time TIMESTAMP )'
+    #         cursor.execute(create_tb)
+    #         # cursor.execute('DELETE FROM audio')
+    #     except:
+    #         self.logger.error('setup audio table', exc_info=True)
+    #     finally:
+    #         cursor.close()
+    #         self.conn.commit()
+    #         self.conn.close()
 
     def check_file(self, conn, f_id):
         cursor = conn.cursor()

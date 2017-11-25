@@ -15,21 +15,22 @@ class DBFile(object):
         self.logger = logging.getLogger(__name__)
         self.conn = pymysql.connect(*application.SQLITE_DB)
 
-    def setup_db(self):
-        self.conn = pymysql.connect(*application.SQLITE_DB)
-        cursor = self.conn.cursor()
-        try:
-            create_tb = 'CREATE TABLE IF NOT EXISTS file (file_id VARCHAR(15) PRIMARY KEY ,' \
-                        'name VARCHAR(20), size INT(11), ' \
-                        'mime_type VARCHAR(10), author VARCHAR(20), create_time TIMESTAMP )'
-            cursor.execute(create_tb)
-            # cursor.execute('DELETE FROM file')
-        except:
-            self.logger.error('setup file table failed', exc_info=True)
-        finally:
-            cursor.close()
-            self.conn.commit()
-            self.conn.close()
+    #
+    # def setup_db(self):
+    #     self.conn = pymysql.connect(*application.SQLITE_DB)
+    #     cursor = self.conn.cursor()
+    #     try:
+    #         create_tb = 'CREATE TABLE IF NOT EXISTS file (file_id VARCHAR(15) PRIMARY KEY ,' \
+    #                     'name VARCHAR(20), size INT(11), ' \
+    #                     'mime_type VARCHAR(10), author VARCHAR(20), create_time TIMESTAMP )'
+    #         cursor.execute(create_tb)
+    #         # cursor.execute('DELETE FROM file')
+    #     except:
+    #         self.logger.error('setup file table failed', exc_info=True)
+    #     finally:
+    #         cursor.close()
+    #         self.conn.commit()
+    #         self.conn.close()
 
     def check_file(self, conn, f_id):
         cursor = conn.cursor()

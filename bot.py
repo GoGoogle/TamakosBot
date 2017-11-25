@@ -6,7 +6,6 @@ import yaml
 from telegram.ext import Updater
 
 from config import application
-from database import db_audio, db_mv, db_file
 from handler import commands, messages, monitors
 from service import netease_api
 
@@ -38,10 +37,10 @@ def setup_logging(path="config/logconfig.yaml"):
     netease_api.init_login()
 
 
-def db_init():
-    db_audio.DBAudio().setup_db()
-    db_mv.DBMv().setup_db()
-    db_file.DBFile().setup_db()
+# def db_init():
+#     db_audio.DBAudio().setup_db()
+#     db_mv.DBMv().setup_db()
+#     db_file.DBFile().setup_db()
 
 
 def error(bot, update, err):
@@ -56,7 +55,7 @@ def mk_tmp_dir(tmp):
 if __name__ == '__main__':
     setup_logging()
     mk_tmp_dir(application.TMP_Folder)
-    db_init()
+    # db_init()
     logger = logging.getLogger("__name__")
     logger.info('bot start..')
     main()
