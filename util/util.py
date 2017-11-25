@@ -2,8 +2,6 @@ import logging
 import taglib
 from functools import wraps
 
-import pymysql
-
 from config import application
 
 logger = logging.getLogger(__name__)
@@ -37,9 +35,3 @@ def write_id3tags(file_path, song_title, song_artist_list, song_album='', track_
         song.tags["TITLE"] = [song_title]
         song.tags["TRACKNUMBER"] = [track_num]
         song.save()
-
-
-def get_database_session():
-    conn = pymysql.connect(*application.SQLITE_DB, use_unicode=True, charset='utf8')
-    conn.autocommit(True)
-    return conn
