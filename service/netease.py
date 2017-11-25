@@ -118,7 +118,7 @@ def selector_send_music(bot, query, music_id, delete):
 
         music_file.seek(0, os.SEEK_SET)  # 从开始位置开始读
 
-        send_music_file(bot, query, music_file, music_obj, edited_msg)
+        send_music_file(bot, query, music_file, music_obj, music_caption='', edited_msg=edited_msg)
 
     except:
         logger.error('send file failed', exc_info=True)
