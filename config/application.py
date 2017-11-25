@@ -5,7 +5,7 @@ ADMINS = [423453012]
 
 TIMEOUT = 800
 
-CHUNK_SIZE = 1024 * 1024
+CHUNK_SIZE = 1024 * 2024
 
 API_PROXY = {
     'http': 'http://127.0.0.1:3000'
