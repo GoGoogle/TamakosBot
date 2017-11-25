@@ -1,5 +1,6 @@
 import logging
-import sqlite3
+
+import pymysql
 
 from config import application
 
@@ -11,10 +12,10 @@ class DBMv(object):
 
     def __init__(self):
         self.logger = logging.getLogger(__name__)
-        self.conn = sqlite3.connect(application.SQLITE_DB)
+        self.conn = pymysql.connect(*application.SQLITE_DB)
 
     def setup_db(self):
-        self.conn = sqlite3.connect(application.SQLITE_DB)
+        self.conn = pymysql.connect(application.SQLITE_DB)
         cursor = self.conn.cursor()
         try:
             create_tb = 'CREATE TABLE IF NOT EXISTS mv (file_id VARCHAR(15) PRIMARY KEY ,' \
@@ -47,7 +48,7 @@ class DBMv(object):
             cursor.close()
 
     def store_file(self, file_id, platform_id, title, duration, quality, timestamp):
-        self.conn = sqlite3.connect(application.SQLITE_DB)
+        self.conn = pymysql.connect(application.SQLITE_DB)
         cursor = self.conn.cursor()
         flag = self.check_file(self.conn, file_id)
         try:
@@ -64,7 +65,7 @@ class DBMv(object):
             self.conn.commit()
 
     def compare_file(self, platform_id, title, duration, quality, fetch_time):
-        self.conn = sqlite3.connect(application.SQLITE_DB)
+        self.conn = pymysql.connect(application.SQLITE_DB)
         cursor = self.conn.cursor()
         try:
             search_fl = 'SELECT * FROM mv WHERE' \
@@ -90,7 +91,7 @@ class DBMv(object):
         pass
 
     def select_file(self, date):
-        self.conn = sqlite3.connect(application.SQLITE_DB)
+        self.conn = pymysql.connect(application.SQLITE_DB)
         cursor = self.conn.cursor()
         try:
             select_fl = 'SELECT * FROM mv'

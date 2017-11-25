@@ -3,9 +3,9 @@ BOT_TOKEN = "334635714:AAFglddZSt7oROLLRLL9JuzMdLvx-uW-09A"
 
 ADMINS = [423453012]
 
-TIMEOUT = 1000
+TIMEOUT = 800
 
-CHUNK_SIZE = 1024 * 512
+CHUNK_SIZE = 1024 * 1024
 
 API_PROXY = {
     'http': 'http://127.0.0.1:3000'
@@ -13,11 +13,11 @@ API_PROXY = {
 
 TOOL_PROXY = {}
 
-SQLITE_DB = 'mbot.sqlite'
+SQLITE_DB = ('localhost', 'root', 'root', 'mbot')
 
 TMP_Folder = 'tmp'
 
-LOG_FILE = 'info.log'
+LOG_FILE = 'server.log'
 
 LOGIN_PAYLOAD = {
     'phone': '136xxxxxx',
