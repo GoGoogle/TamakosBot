@@ -88,7 +88,7 @@ def selector_send_music(bot, query, music_id, mtype, delete):
                                               url_detail)
 
     edited_msg = bot.send_message(chat_id=query.message.chat.id,
-                                  text="{0} dump: {1}".format(music_obj.name, music_obj.url),
+                                  text="找到歌曲: [{0}]({1})".format(music_obj.name, music_obj.url),
                                   timeout=application.TIMEOUT)
 
     # music_caption = "曲目: {0}\n演唱: {1}".format(

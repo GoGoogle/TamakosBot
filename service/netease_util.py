@@ -240,7 +240,7 @@ def download_continuous(bot, query, music_obj, music_file, edited_msg, tool_prox
                                                                   total_length / (1024 * 1024),
                                                                   dl / total_length * 100,
                                                                   network_speed_status)
-            progress_status = '163 {0} 伺服器緩存\n{1}'.format(music_obj.name, progress)
+            progress_status = '{1}'.format(music_obj.name, progress)
 
             bot.edit_message_text(
                 chat_id=query.message.chat.id,

@@ -79,10 +79,6 @@ def response_single_music(bot, update):
 def response_playlist(bot, update, playlist_id):
     try:
         logger.info('response_playlist: playlist_id={}'.format(playlist_id))
-        edited_msg = bot.send_message(chat_id=update.message.chat.id,
-                                      text="喵~",
-                                      timeout=application.TIMEOUT)
-        update.message.message_id = edited_msg.message_id
         netease_util.selector_playlist_turning(bot, update, playlist_id, cur_pagecode=1)
     except IndexError:
         logger.warning('無法獲取該歌曲單目', exc_info=True)
@@ -100,7 +96,8 @@ def selector_send_music(bot, query, music_id, delete):
                                                 netease_api.get_music_url_by_musicid(music_id)['data'][0])
 
     edited_msg = bot.send_message(chat_id=query.message.chat.id,
-                                  text="{0} dump: {1} ".format(music_obj.name, music_obj.url),
+                                  text="找到歌曲: [{0}]({1})".format(music_obj.name, music_obj.url),
+                                  parse_mode=telegram.ParseMode.MARKDOWN,
                                   timeout=application.TIMEOUT)
 
     full_file_name = r'{0} - {1}.{2}'.format(
@@ -121,7 +118,7 @@ def selector_send_music(bot, query, music_id, delete):
 
         music_file.seek(0, os.SEEK_SET)  # 从开始位置开始读
 
-        send_music_file(bot, query, music_file, music_obj, '', edited_msg)
+        send_music_file(bot, query, music_file, music_obj, '')
 
     except:
         logger.error('send file failed', exc_info=True)
@@ -134,16 +131,7 @@ def selector_send_music(bot, query, music_id, delete):
             edited_msg.delete()
 
 
-def send_music_file(bot, query, file, music_obj, music_caption, edited_msg):
-    bot.edit_message_text(
-        chat_id=query.message.chat.id,
-        message_id=edited_msg.message_id,
-        text='163 🎵{0} 媒体开始传送'.format(music_obj.name),
-        parse_mode=telegram.ParseMode.MARKDOWN,
-        disable_web_page_preview=True,
-        timeout=application.TIMEOUT
-    )
-
+def send_music_file(bot, query, file, music_obj, music_caption):
     logger.info("文件: {} >> 正在发送中".format(music_obj.name))
     bot.send_chat_action(query.message.chat.id, action=telegram.ChatAction.UPLOAD_AUDIO)
 
