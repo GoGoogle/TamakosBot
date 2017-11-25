@@ -13,7 +13,7 @@ class DBFile(object):
 
     def __init__(self):
         self.logger = logging.getLogger(__name__)
-        self.conn = pymysql.connect(application.SQLITE_DB)
+        self.conn = pymysql.connect(*application.SQLITE_DB)
 
     def setup_db(self):
         self.conn = pymysql.connect(*application.SQLITE_DB)
@@ -49,7 +49,7 @@ class DBFile(object):
             cursor.close()
 
     def store_file(self, file_id, name, size, mime_type, author, timestamp):
-        self.conn = pymysql.connect(application.SQLITE_DB)
+        self.conn = pymysql.connect(*application.SQLITE_DB)
         cursor = self.conn.cursor()
         flag = self.check_file(self.conn, file_id)
         try:
@@ -69,7 +69,7 @@ class DBFile(object):
         pass
 
     def select_file(self, date=time.time()):
-        self.conn = pymysql.connect(application.SQLITE_DB)
+        self.conn = pymysql.connect(*application.SQLITE_DB)
         cursor = self.conn.cursor()
         try:
             select_fl = 'SELECT * FROM file WHERE create_time < ?'
