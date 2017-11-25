@@ -209,12 +209,13 @@ def selector_playlist_turning(bot, update, playlist_id, cur_pagecode=1):
 
 
 def download_continuous(bot, query, music_obj, music_file, edited_msg, tool_proxies):
-    logger.info('{} ..下载中'.format(music_obj.name))
     try:
         if tool_proxies:
             r = requests.get(music_obj.url, stream=True, timeout=application.TIMEOUT, proxies=tool_proxies)
         else:
             r = requests.get(music_obj.url, stream=True, timeout=application.TIMEOUT)
+
+        logger.info('{} ..持续下载'.format(music_obj.name))
 
         start = time.time()
         total_length = int(r.headers.get('content-length'))

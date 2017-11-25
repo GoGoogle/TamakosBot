@@ -12,4 +12,4 @@ crashlytics-build.properties
 fabric.properties
 
 tmp/
-info.log
+*.log

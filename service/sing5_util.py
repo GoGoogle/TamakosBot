@@ -126,13 +126,14 @@ def selector_page_turning(bot, query, mtype, page_code):
 
 
 def download_continuous(bot, query, music_obj, music_file, edited_msg):
-    logger.info('{0} 下载中,url={1}'.format(music_obj.name, music_obj.url))
     try:
         if tool_proxies:
             # 代理使用国内服务器转发接口
             r = requests.get(music_obj.url, stream=True, timeout=application.TIMEOUT, proxies=tool_proxies)
         else:
             r = requests.get(music_obj.url, stream=True, timeout=application.TIMEOUT)
+
+        logger.info('{0} 下载中,url={1}'.format(music_obj.name, music_obj.url))
 
         start = time.time()
         total_length = int(r.headers.get('content-length'))
