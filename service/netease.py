@@ -118,7 +118,7 @@ def selector_send_music(bot, query, music_id, delete):
 
         music_file.seek(0, os.SEEK_SET)  # 从开始位置开始读
 
-        send_music_file(bot, query, music_file, music_obj, '')
+        send_music_file(bot, query, music_file, music_obj, edited_msg)
 
     except:
         logger.error('send file failed', exc_info=True)
@@ -131,9 +131,17 @@ def selector_send_music(bot, query, music_id, delete):
             edited_msg.delete()
 
 
-def send_music_file(bot, query, file, music_obj, music_caption):
+def send_music_file(bot, query, file, music_obj, music_caption, edited_msg):
     logger.info("文件: {} >> 正在发送中".format(music_obj.name))
     bot.send_chat_action(query.message.chat.id, action=telegram.ChatAction.UPLOAD_AUDIO)
+    bot.edit_message_text(
+        chat_id=query.message.chat.id,
+        message_id=edited_msg.message_id,
+        text='163 {0} 等待发送'.format(music_obj.name),
+        parse_mode=telegram.ParseMode.MARKDOWN,
+        disable_web_page_preview=True,
+        timeout=application.TIMEOUT
+    )
 
     file_msg = None
     try:

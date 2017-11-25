@@ -89,6 +89,7 @@ def selector_send_music(bot, query, music_id, mtype, delete):
 
     edited_msg = bot.send_message(chat_id=query.message.chat.id,
                                   text="找到歌曲: [{0}]({1})".format(music_obj.name, music_obj.url),
+                                  parse_mode=telegram.ParseMode.MARKDOWN,
                                   timeout=application.TIMEOUT)
 
     # music_caption = "曲目: {0}\n演唱: {1}".format(
@@ -127,7 +128,7 @@ def send_music_file(bot, query, music_file, music_obj, file_caption, edited_msg)
     bot.edit_message_text(
         chat_id=query.message.chat.id,
         message_id=edited_msg.message_id,
-        text='5sing {0} 媒体开始传送'.format(music_obj.name),
+        text='5sing {0} 等待发送'.format(music_obj.name),
         parse_mode=telegram.ParseMode.MARKDOWN,
         disable_web_page_preview=True,
         timeout=application.TIMEOUT
