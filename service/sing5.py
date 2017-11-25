@@ -13,9 +13,15 @@ tool_proxies = application.TOOL_PROXY
 
 def search_music(bot, update, args):
     try:
+        f_type = 2
         key_word = args[0]
+
+        if len(args) == 2:
+            f_type = args[0]
+            key_word = args[1]
+
         logger.info('get_music: {}'.format(key_word))
-        musics_dict = sing5_api.search_musics_by_keyword_pagecode_and_filter(key_word, pagecode=1, filter_type=2)
+        musics_dict = sing5_api.search_musics_by_keyword_pagecode_and_filter(key_word, pagecode=1, filter_type=f_type)
         if len(musics_dict['data']['songArray']) == 0:
             text = "此歌曲找不到~"
             update.message.reply_text(text=text)
