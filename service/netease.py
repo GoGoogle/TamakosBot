@@ -93,13 +93,15 @@ def selector_send_music(bot, query, music_id, delete):
     if delete:
         util.selector_cancel(bot, query)
 
-    edited_msg = bot.send_message(chat_id=query.message.chat.id, text="{} dump".format(music_id),
-                                  timeout=application.TIMEOUT)
     detail = netease_api.get_music_detail_by_musicid(music_id)['songs'][0]
 
     # 转为对象好处理
     music_obj = netease_util.generate_music_obj(detail,
                                                 netease_api.get_music_url_by_musicid(music_id)['data'][0])
+
+    edited_msg = bot.send_message(chat_id=query.message.chat.id,
+                                  text="{0} dump: {1} ".format(music_obj.name, music_obj.url),
+                                  timeout=application.TIMEOUT)
 
     full_file_name = r'{0} - {1}.{2}'.format(
         music_obj.name, ' & '.join(v.name for v in music_obj.artists), music_obj.suffix)

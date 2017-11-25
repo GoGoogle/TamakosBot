@@ -79,8 +79,6 @@ def selector_send_music(bot, query, music_id, mtype, delete):
     if delete:
         util.selector_cancel(bot, query)
 
-    edited_msg = bot.send_message(chat_id=query.message.chat.id, text="{} dump".format(music_id),
-                                  timeout=application.TIMEOUT)
     #
     detail = sing5_api.get_music_detail_by_id_and_type(music_id, song_type=mtype)['data']
     url_detail = sing5_api.get_music_url_by_id_and_type(music_id, mtype)['data']
@@ -88,6 +86,11 @@ def selector_send_music(bot, query, music_id, mtype, delete):
     # 转为对象好处理
     music_obj = sing5_util.generate_music_obj(detail,
                                               url_detail)
+
+    edited_msg = bot.send_message(chat_id=query.message.chat.id,
+                                  text="{0} dump: {1}".format(music_obj.name, music_obj.url),
+                                  timeout=application.TIMEOUT)
+
     # music_caption = "曲目: {0}\n演唱: {1}".format(
     #     music_obj.name, music_obj.singer.name
     # )
