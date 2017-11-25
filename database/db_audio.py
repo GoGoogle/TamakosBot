@@ -1,8 +1,6 @@
 import logging
 
-import pymysql
-
-from config import application
+from util import util
 
 
 class DBAudio(object):
@@ -12,11 +10,10 @@ class DBAudio(object):
 
     def __init__(self):
         self.logger = logging.getLogger(__name__)
-        self.conn = pymysql.connect(*application.SQLITE_DB)
 
     # def setup_db(self):
-    #     self.conn = pymysql.connect(*application.SQLITE_DB, charset='utf8')
-    #     cursor = self.conn.cursor()
+    #     conn = util.get_database_session()
+    #     cursor = conn.cursor()
     #     try:
     #         create_tb = 'CREATE TABLE IF NOT EXISTS audio (file_id VARCHAR(15) PRIMARY KEY ,' \
     #                     'platform_id VARCHAR(15), title VARCHAR(20),duration FLOAT(10), ' \
@@ -27,13 +24,11 @@ class DBAudio(object):
     #         self.logger.error('setup audio table', exc_info=True)
     #     finally:
     #         cursor.close()
-    #         self.conn.commit()
-    #         self.conn.close()
 
     def check_file(self, conn, f_id):
         cursor = conn.cursor()
         try:
-            check_fl = "SELECT * FROM audio WHERE file_id=?"
+            check_fl = "SELECT * FROM audio WHERE file_id=%s"
 
             cursor.execute(check_fl, (f_id,))
 
@@ -48,30 +43,27 @@ class DBAudio(object):
             cursor.close()
 
     def store_file(self, file_id, platform_id, title, duration, scheme, timestamp):
-        self.conn = pymysql.connect(*application.SQLITE_DB)
-        cursor = self.conn.cursor()
-        flag = self.check_file(self.conn, file_id)
+        conn = util.get_database_session()
+        cursor = conn.cursor()
+        flag = self.check_file(conn, file_id)
         try:
             if not flag:
-                store_fl = 'INSERT INTO audio VALUES (?, ?, ?, ?, ?, ?)'
-
-                cursor.execute(store_fl, (file_id, platform_id, title, duration, scheme,
-                                          timestamp))
+                store_fl = "INSERT INTO audio VALUES (%s, %s, %s, %s, %s, %s)"
+                params = (file_id, platform_id, title, duration, scheme, timestamp)
+                cursor.execute(store_fl, params)
         except:
             self.logger.error('store audio failed', exc_info=True)
-            self.conn.rollback()
+            conn.rollback()
         finally:
             cursor.close()
-            self.conn.commit()
 
     def compare_file(self, platform_id, title, duration, scheme, fetch_time):
-        self.conn = pymysql.connect(*application.SQLITE_DB)
-        cursor = self.conn.cursor()
+        conn = util.get_database_session()
+        cursor = conn.cursor()
         try:
-            search_fl = 'SELECT * FROM audio WHERE' \
-                        ' platform_id = ? AND title=? AND duration=? AND scheme=? AND create_time>?'
-
-            cursor.execute(search_fl, (platform_id, title, duration, scheme, fetch_time - 5284000000))
+            search_fl = """SELECT * FROM audio WHERE platform_id=%s AND title=%s AND duration=%s AND scheme=%s"""
+            params = (platform_id, title, duration, scheme)
+            cursor.execute(search_fl, params)
 
             file_tuple = cursor.fetchall()
 
@@ -84,17 +76,16 @@ class DBAudio(object):
             self.logger.error('audio compare_file failed', exc_info=True)
         finally:
             cursor.close()
-            self.conn.commit()
 
     def delete_file(self):
         # TODO
         pass
 
     def select_file(self, date):
-        self.conn = pymysql.connect(*application.SQLITE_DB)
-        cursor = self.conn.cursor()
+        conn = util.get_database_session()
+        cursor = conn.cursor()
         try:
-            select_fl = 'SELECT * FROM audio'
+            select_fl = """SELECT * FROM audio"""
             cursor.execute(select_fl)
             file_tuple = cursor.fetchall()
             return file_tuple
@@ -102,4 +93,4 @@ class DBAudio(object):
             self.logger.error('audio select_file failed', exc_info=True)
         finally:
             cursor.close()
-            self.conn.commit()
+            conn.close()
