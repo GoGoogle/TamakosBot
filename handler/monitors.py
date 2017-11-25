@@ -50,8 +50,6 @@ def handler_monitors(dispatcher):
     dispatcher.add_handler(CallbackQueryHandler(netease_music_selector_callback, pattern='netease'))
     dispatcher.add_handler(
         RegexHandler(r'.*https?://music.163.com/?#?/?m?/playlist((/)|(\?id=))(\d*).*', response_netease_playlist))
-    # dispatcher.add_handler(
-    #     MessageHandler(Filters.audio | Filters.video | Filters.document & (~ Filters.forwarded), upload_file))
     dispatcher.add_handler(CallbackQueryHandler(sing5_music_selector_callback, pattern='sing5'))
     dispatcher.add_handler(
         RegexHandler(r'^5SING\s?\w*\s?TOP$', response_sing5_toplist))

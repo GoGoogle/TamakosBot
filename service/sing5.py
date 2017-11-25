@@ -1,11 +1,9 @@
 import logging
 import os
-import time
 
 import telegram
 
 from config import application
-from database import db_audio
 from service import sing5_util, sing5_api
 from util import util
 
@@ -102,21 +100,15 @@ def selector_send_music(bot, query, music_id, mtype, delete):
     music_file = open(music_file_path, 'wb+')
 
     try:
-        # 查询数据库 compare the files with the database ,and find the file_Id
-        file_id = db_audio.DBAudio().compare_file(music_id, music_obj.name, 0, '', time.time())
-        if file_id:
-            send_music_file(bot, query, file_id, music_obj, music_caption,
-                            edited_msg)
-        else:
-            sing5_util.download_continuous(bot, query, music_obj, music_file, edited_msg)
+        sing5_util.download_continuous(bot, query, music_obj, music_file, edited_msg)
 
-            # 填写 id3tags
-            util.write_id3tags(music_file_path, song_title=music_obj.name,
-                               song_artist_list=[music_obj.singer.name], song_album='5sing 音乐')
+        # 填写 id3tags
+        util.write_id3tags(music_file_path, song_title=music_obj.name,
+                           song_artist_list=[music_obj.singer.name], song_album='5sing 音乐')
 
-            music_file.seek(0, os.SEEK_SET)  # 从开始位置开始读
+        music_file.seek(0, os.SEEK_SET)  # 从开始位置开始读
 
-            send_music_file(bot, query, music_file, music_obj, music_caption, edited_msg)
+        send_music_file(bot, query, music_file, music_obj, music_caption, edited_msg)
     except:
         logger.error('send file failed', exc_info=True)
     finally:
@@ -150,14 +142,8 @@ def send_music_file(bot, query, music_file, music_obj, file_caption, edited_msg)
                                   disable_notification=True,
                                   timeout=application.TIMEOUT)
 
-        # 存储 database store file_id, title, duration, file_scheme and timestamp which is in 3 minutes
-        db_audio.DBAudio().store_file(file_msg.audio.file_id, music_obj.mid, music_obj.name, 0,
-                                      '',
-                                      time.time())
         logger.info("文件: {} 发送成功.".format(music_obj.name))
     except:
-        # 清除数据库内容
-        # TODO
         if file_msg:
             file_msg.delete()
         logger.error('send audio file failed', exc_info=True)

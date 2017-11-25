@@ -13,8 +13,6 @@ API_PROXY = {
 
 TOOL_PROXY = {}
 
-SQLITE_DB = ('localhost', 'root', 'root', 'mbot')
-
 TMP_Folder = 'tmp'
 
 LOG_FILE = 'server.log'
