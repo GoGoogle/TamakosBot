@@ -78,6 +78,11 @@ def response_single_music(bot, update):
 
 def response_playlist(bot, update, playlist_id):
     try:
+        edited_msg = bot.send_message(chat_id=update.message.chat.id,
+                                      text="喵~",
+                                      timeout=application.TIMEOUT)
+        update.message.message_id = edited_msg.message_id
+
         logger.info('response_playlist: playlist_id={}'.format(playlist_id))
         netease_util.selector_playlist_turning(bot, update, playlist_id, cur_pagecode=1)
     except IndexError:

@@ -39,7 +39,7 @@ def sing5_music_selector_callback(bot, update):
 
 @run_async
 def response_sing5_toplist(bot, update):
-    payload = re.search(r'^5SING\s?(\w*)\s?TOP$', update.message.text).group(1).lower()
+    payload = re.search(r'^TOP\s?(\w*)?$', update.message.text).group(1).lower()
     if payload:
         sing5.response_toplist(bot, update, payload)
     else:
@@ -71,7 +71,7 @@ def handler_monitors(dispatcher):
         RegexHandler(r'.*https?://music.163.com/?#?/?m?/playlist((/)|(\?id=))(\d*).*', response_netease_playlist))
     dispatcher.add_handler(CallbackQueryHandler(sing5_music_selector_callback, pattern='sing5'))
     dispatcher.add_handler(
-        RegexHandler(r'^5SING\s?\w*\s?TOP$', response_sing5_toplist))
+        RegexHandler(r'^TOP(\s\w*)?$', response_sing5_toplist))
     dispatcher.add_handler(
         RegexHandler(r'^(酷狗|k)\s(\w+)$', kugou_regex))
     dispatcher.add_handler(CallbackQueryHandler(kugou_music_selector_callback, pattern='kg'))

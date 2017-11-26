@@ -113,7 +113,7 @@ def send_music_file(bot, query, file, music_obj, music_caption, edited_msg):
     bot.edit_message_text(
         chat_id=query.message.chat.id,
         message_id=edited_msg.message_id,
-        text='163 {0} 等待发送'.format(music_obj.name),
+        text='kg {0} 等待发送'.format(music_obj.name),
         parse_mode=telegram.ParseMode.MARKDOWN,
         disable_web_page_preview=True,
         timeout=application.TIMEOUT
