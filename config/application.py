@@ -5,9 +5,9 @@ ADMINS = [423453012]
 
 TIMEOUT = 400
 
-CHUNK_SIZE = 1024 * 2024
+CHUNK_SIZE = 1024 * 1024
 
-API_PROXY = {
+NETEASE_API_PROXY = {
     'http': 'http://127.0.0.1:3000'
 }
 
@@ -17,7 +17,7 @@ TMP_Folder = 'tmp'
 
 LOG_FILE = 'server.log'
 
-LOGIN_PAYLOAD = {
+NETEASE_LOGIN_PAYLOAD = {
     'phone': '136xxxxxx',
     'password': 'xxxxx'
 }

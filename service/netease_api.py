@@ -6,13 +6,13 @@ from config import application
 
 logger = logging.getLogger(__name__)
 
-proxies = application.API_PROXY
+proxies = application.NETEASE_API_PROXY
 
 s = requests.session()
 
 
 def init_login():
-    payload = application.LOGIN_PAYLOAD
+    payload = application.NETEASE_LOGIN_PAYLOAD
     res = s.get('http://localhost/login/cellphone', params=payload, proxies=proxies)
     content = res.json()
     if content['code'] == 200:

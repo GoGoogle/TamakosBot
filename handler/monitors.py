@@ -52,6 +52,11 @@ def kugou_regex(bot, update):
     kugou.search_music(bot, update, key_word)
 
 
+@run_async
+def kugou_music_selector_callback(bot, update):
+    kugou.response_single_music(bot, update)
+
+
 @restricted
 def manage_bot(bot, update):
     payload = re.search(r'^cc:(\w+)\s?(\w*)', update.message.text).groups()
@@ -69,5 +74,6 @@ def handler_monitors(dispatcher):
         RegexHandler(r'^5SING\s?\w*\s?TOP$', response_sing5_toplist))
     dispatcher.add_handler(
         RegexHandler(r'^(酷狗|k)\s(\w+)$', kugou_regex))
+    dispatcher.add_handler(CallbackQueryHandler(kugou_music_selector_callback, pattern='kg'))
     dispatcher.add_handler(
         RegexHandler(r'^cc:.*', manage_bot))

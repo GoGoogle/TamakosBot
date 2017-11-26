@@ -129,9 +129,9 @@ def download_continuous(bot, query, music_obj, music_file, edited_msg):
     try:
         if tool_proxies:
             # 代理使用国内服务器转发接口
-            r = requests.get(music_obj.url, stream=True, timeout=application.TIMEOUT, proxies=tool_proxies)
+            r = requests.get(music_obj.url, stream=True, proxies=tool_proxies)
         else:
-            r = requests.get(music_obj.url, stream=True, timeout=application.TIMEOUT)
+            r = requests.get(music_obj.url, stream=True)
 
         logger.info('{0} 下载中,url={1}'.format(music_obj.name, music_obj.url))
 
