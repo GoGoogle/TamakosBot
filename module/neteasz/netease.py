@@ -3,17 +3,15 @@ import os
 
 import telegram
 from telegram import TelegramError
-
 from config import application
-from entity.bot_telegram import ProgressHandle
 from module.neteasz import netease_crawler, netease_util
-from util import music_util
+from util import song_util
 
 
 class Neteasz(object):
     def __init__(self):
         self.logger = logging.getLogger(__name__)
-        self.crawler = netease_crawler.Crawler()
+        self.crawler = netease_crawler.Crawler(timeout=application.FILE_TRANSFER_TIMEOUT)
         self.init_login(application.NETEASE_LOGIN_PAYLOAD)
 
     def init_login(self, config):
@@ -46,7 +44,7 @@ class Neteasz(object):
         index5 = query.data.find('U')
         index6 = query.data.find('P')
         if index1 != -1:
-            music_util.selector_cancel(bot, query)
+            song_util.selector_cancel(bot, query)
         elif index2 != -1:
             page = int(query.data[index2 + 1:]) + 1
             kw = query.data[8:index2 - 1]
@@ -104,7 +102,7 @@ class Neteasz(object):
 
     def deliver_music(self, bot, query, song_id, delete):
         if delete:
-            music_util.selector_cancel(bot, query)
+            song_util.selector_cancel(bot, query)
 
         bot_result = self.crawler.get_song_detail(song_id)
         if bot_result.get_status() == 400:
@@ -122,7 +120,7 @@ class Neteasz(object):
     def download_backend(self, bot, query, songfile, edited_msg):
         self.logger.info('download_backend..')
         try:
-            handle = ProgressHandle(bot, query, edited_msg.message_id)
+            handle = song_util.ProgressHandle(bot, query, edited_msg.message_id)
             self.crawler.write_file(songfile, handle=handle)
             songfile.set_id3tags(songfile.song.song_name, list(v.artist_name for v in songfile.song.artists),
                                  song_album=songfile.song.album.album_name)

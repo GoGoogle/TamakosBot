@@ -4,7 +4,7 @@ import telegram
 
 from config import application
 from module.kugouz import kugou_api, kugou_util
-from util import music_util
+from util import song_util
 
 logger = logging.getLogger(__name__)
 
@@ -43,7 +43,7 @@ def response_single_music(bot, update):
     index2 = query.data.find('+')
     index3 = query.data.find('-')
     if index1 != -1:
-        music_util.selector_cancel(bot, query)
+        song_util.selector_cancel(bot, query)
     elif index2 != -1:
         page_code = int(query.data[index2 + 1:]) + 1
         kw = query.data[3:index2 - 1]
@@ -60,7 +60,7 @@ def response_single_music(bot, update):
 def selector_send_music(bot, query, hash, delete):
     logger.info('selector_download_music: music_id={0}'.format(hash))
     if delete:
-        music_util.selector_cancel(bot, query)
+        song_util.selector_cancel(bot, query)
 
     detail = kugou_api.get_music_detail_by_musicid(hash)
     hq_detail = kugou_api.get_hqmusic_detail_by_musicid(hash)
@@ -85,8 +85,8 @@ def selector_send_music(bot, query, hash, delete):
         kugou_util.download_continuous(bot, query, music_obj, music_file, edited_msg)
 
         # 填写 id3tags
-        music_util.write_id3tags(music_file_path, music_obj.name, list(music_obj.singer_name),
-                                 music_obj.album_name)
+        song_util.write_id3tags(music_file_path, music_obj.name, list(music_obj.singer_name),
+                                music_obj.album_name)
 
         music_file.seek(0, os.SEEK_SET)  # 从开始位置开始读
 
@@ -120,7 +120,8 @@ def send_music_file(bot, query, file, music_obj, music_caption, edited_msg):
                                   duration=music_obj.duration,
                                   title=music_obj.name,
                                   performer=music_obj.singer_name,
-                                  disable_notification=True)
+                                  disable_notification=True,
+                                  timeout=application.FILE_TRANSFER_TIMEOUT)
 
         logger.info("文件: {} 发送成功.".format(music_obj.name))
     except:

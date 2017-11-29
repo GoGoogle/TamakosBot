@@ -41,12 +41,12 @@ def dump_songs(songs):
 
 
 class Crawler(object):
-    def __new__(cls, timeout=60, proxy=None):
+    def __new__(cls, timeout=120, proxy=None):
         if not hasattr(cls, 'instance'):
             cls.instance = super(Crawler, cls).__new__(cls)
         return cls.instance
 
-    def __init__(self, timeout=60, proxy=None):
+    def __init__(self, timeout=120, proxy=None):
         self.session = requests.Session()
         self.session.headers.update(HEADERS)
         self.session.cookies = cookiejar.LWPCookieJar(COOKIE_PATH)

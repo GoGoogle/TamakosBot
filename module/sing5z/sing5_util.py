@@ -126,7 +126,7 @@ def selector_page_turning(bot, query, mtype, page_code):
 
 def download_continuous(bot, query, music_obj, music_file, edited_msg):
     try:
-        r = requests.get(music_obj.url, stream=True)
+        r = requests.get(music_obj.url, stream=True, timeout=application.FILE_TRANSFER_TIMEOUT)
 
         logger.info('{0} 下载中,url={1}'.format(music_obj.name, music_obj.url))
 
@@ -160,7 +160,8 @@ def download_continuous(bot, query, music_obj, music_file, edited_msg):
                 message_id=edited_msg.message_id,
                 text=progress_status,
                 disable_web_page_preview=True,
-                parse_mode=telegram.ParseMode.MARKDOWN
+                parse_mode=telegram.ParseMode.MARKDOWN,
+                timeout= application.FILE_TRANSFER_TIMEOUT
             )
 
     except:
