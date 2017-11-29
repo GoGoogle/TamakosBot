@@ -97,15 +97,12 @@ def selector_page_turning(bot, query, kw, page_code):
     search_musics_dict = kugou_api.search_music_by_keyword_and_pagecode(kw, pagecode=page_code)
     music_list_selector = produce_single_music_selector(kw, page_code, search_musics_dict['data'])
     panel = transfer_single_music_selector_to_panel(music_list_selector)
-    query.message.edit_text(text=panel['text'], reply_markup=panel['reply_markup'], timeout=application.TIMEOUT)
+    query.message.edit_text(text=panel['text'], reply_markup=panel['reply_markup'])
 
 
-def download_continuous(bot, query, music_obj, music_file, edited_msg, tool_proxies):
+def download_continuous(bot, query, music_obj, music_file, edited_msg):
     try:
-        if tool_proxies:
-            r = requests.get(music_obj.url, stream=True, proxies=tool_proxies)
-        else:
-            r = requests.get(music_obj.url, stream=True)
+        r = requests.get(music_obj.url, stream=True)
 
         logger.info('{} ..持续下载'.format(music_obj.name))
 
@@ -139,8 +136,7 @@ def download_continuous(bot, query, music_obj, music_file, edited_msg, tool_prox
                 message_id=edited_msg.message_id,
                 text=progress_status,
                 disable_web_page_preview=True,
-                parse_mode=telegram.ParseMode.MARKDOWN,
-                timeout=application.TIMEOUT
+                parse_mode=telegram.ParseMode.MARKDOWN
             )
 
     except:

@@ -10,7 +10,6 @@ from entity.sing5 import MusicTopSelector, Song, Singer
 from service import sing5_api
 
 logger = logging.getLogger(__name__)
-tool_proxies = application.TOOL_PROXY
 
 
 def generate_music_obj(detail, url_detail):
@@ -122,16 +121,12 @@ def selector_page_turning(bot, query, mtype, page_code):
     musics_result = sing5_api.get_music_top_by_type_pagecode_and_date(mtype=mtype, pagecode=page_code)
     top_selector = produce_music_top_selector(mtype, page_code, musics_result)
     panel = transfer_music_top_selector_to_panel(top_selector)
-    query.message.edit_text(text=panel['text'], reply_markup=panel['reply_markup'], timeout=application.TIMEOUT)
+    query.message.edit_text(text=panel['text'], reply_markup=panel['reply_markup'])
 
 
 def download_continuous(bot, query, music_obj, music_file, edited_msg):
     try:
-        if tool_proxies:
-            # 代理使用国内服务器转发接口
-            r = requests.get(music_obj.url, stream=True, proxies=tool_proxies)
-        else:
-            r = requests.get(music_obj.url, stream=True)
+        r = requests.get(music_obj.url, stream=True)
 
         logger.info('{0} 下载中,url={1}'.format(music_obj.name, music_obj.url))
 
@@ -165,8 +160,7 @@ def download_continuous(bot, query, music_obj, music_file, edited_msg):
                 message_id=edited_msg.message_id,
                 text=progress_status,
                 disable_web_page_preview=True,
-                parse_mode=telegram.ParseMode.MARKDOWN,
-                timeout=application.TIMEOUT
+                parse_mode=telegram.ParseMode.MARKDOWN
             )
 
     except:

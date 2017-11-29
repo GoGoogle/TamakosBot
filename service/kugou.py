@@ -5,12 +5,9 @@ import telegram
 
 from config import application
 from service import kugou_api, kugou_util
-from util import util
+from util import mtil
 
 logger = logging.getLogger(__name__)
-
-tool_proxies = application.TOOL_PROXY
-
 
 def search_music(bot, update, kw):
     try:
@@ -46,7 +43,7 @@ def response_single_music(bot, update):
     index2 = query.data.find('+')
     index3 = query.data.find('-')
     if index1 != -1:
-        util.selector_cancel(bot, query)
+        mtil.selector_cancel(bot, query)
     elif index2 != -1:
         page_code = int(query.data[index2 + 1:]) + 1
         kw = query.data[3:index2 - 1]
@@ -63,7 +60,7 @@ def response_single_music(bot, update):
 def selector_send_music(bot, query, hash, delete):
     logger.info('selector_download_music: music_id={0}'.format(hash))
     if delete:
-        util.selector_cancel(bot, query)
+        mtil.selector_cancel(bot, query)
 
     detail = kugou_api.get_music_detail_by_musicid(hash)
     hq_detail = kugou_api.get_hqmusic_detail_by_musicid(hash)
@@ -73,8 +70,7 @@ def selector_send_music(bot, query, hash, delete):
 
     edited_msg = bot.send_message(chat_id=query.message.chat.id,
                                   text="找到歌曲: [{0}]({1})".format(music_obj.name, music_obj.url),
-                                  parse_mode=telegram.ParseMode.MARKDOWN,
-                                  timeout=application.TIMEOUT)
+                                  parse_mode=telegram.ParseMode.MARKDOWN)
 
     full_file_name = r'{0} - {1}.{2}'.format(
         music_obj.name, music_obj.singer_name, music_obj.suffix)
@@ -86,10 +82,10 @@ def selector_send_music(bot, query, hash, delete):
     try:
         logger.info('kugou song url is {}'.format(music_obj.url))
 
-        kugou_util.download_continuous(bot, query, music_obj, music_file, edited_msg, tool_proxies)
+        kugou_util.download_continuous(bot, query, music_obj, music_file, edited_msg)
 
         # 填写 id3tags
-        util.write_id3tags(music_file_path, music_obj.name, list(music_obj.singer_name),
+        mtil.write_id3tags(music_file_path, music_obj.name, list(music_obj.singer_name),
                            music_obj.album_name)
 
         music_file.seek(0, os.SEEK_SET)  # 从开始位置开始读
@@ -116,7 +112,6 @@ def send_music_file(bot, query, file, music_obj, music_caption, edited_msg):
         text='kg {0} 等待发送'.format(music_obj.name),
         parse_mode=telegram.ParseMode.MARKDOWN,
         disable_web_page_preview=True,
-        timeout=application.TIMEOUT
     )
 
     file_msg = None
@@ -125,8 +120,7 @@ def send_music_file(bot, query, file, music_obj, music_caption, edited_msg):
                                   duration=music_obj.duration,
                                   title=music_obj.name,
                                   performer=music_obj.singer_name,
-                                  disable_notification=True,
-                                  timeout=application.TIMEOUT)
+                                  disable_notification=True)
 
         logger.info("文件: {} 发送成功.".format(music_obj.name))
     except:
