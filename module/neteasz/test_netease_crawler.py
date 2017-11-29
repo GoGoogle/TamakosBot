@@ -2,7 +2,7 @@ import unittest
 from unittest import TestCase
 
 from entity.bot_telegram import SongFile
-from service.netease_crawler import Crawler
+from module.neteasz.netease_crawler import Crawler
 
 crawler = Crawler()
 

@@ -14,7 +14,7 @@ CHUNK_SIZE = 1024 * 1024
 
 TMP_Folder = 'tmp'
 
-LOG_FILE = 'server.log'
+LOG_FILE = 'LOG'
 
 # NETEASE CONFIG
 

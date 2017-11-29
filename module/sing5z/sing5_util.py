@@ -7,7 +7,7 @@ from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 
 from config import application
 from entity.sing5 import MusicTopSelector, Song, Singer
-from service import sing5_api
+from module.sing5z import sing5_api
 
 logger = logging.getLogger(__name__)
 

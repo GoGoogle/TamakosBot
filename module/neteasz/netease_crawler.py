@@ -12,10 +12,9 @@ from config import application
 from config.application import HEADERS, COOKIE_PATH
 from entity.bot_music import Song, Album, Artist, Playlist, User, SongList
 from util.encrypt import encrypted_request
-from util.exceptions import (
-    SongNotAvailable, GetRequestIllegal, PostRequestIllegal)
-from util.mtil import exception_handle
-from util.webtil import BotResult
+from util.exception import (
+    SongNotAvailable, GetRequestIllegal, PostRequestIllegal, exception_handle)
+from util.bot_result import BotResult
 
 
 def dump_single_song(song):

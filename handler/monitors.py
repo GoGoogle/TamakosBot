@@ -3,8 +3,11 @@ import re
 
 from telegram.ext import CallbackQueryHandler, run_async, RegexHandler
 
-from service import netease, admin, sing5, kugou
-from util.teletil import restricted
+from module.kugouz import kugou
+from module.managez import admin
+from module.neteasz import netease
+from module.sing5z import sing5
+from util.manager_util import restricted
 
 
 class Monitors(object):

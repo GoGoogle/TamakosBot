@@ -4,7 +4,7 @@ import telegram
 from telegram import Chat
 from telegram.ext import CommandHandler, MessageHandler, Filters
 
-from service import netease
+from module.neteasz import netease
 
 logger = logging.getLogger(__name__)
 

@@ -6,8 +6,8 @@ from telegram import TelegramError
 
 from config import application
 from entity.bot_telegram import ProgressHandle
-from service import netease_util, netease_crawler
-from util import mtil
+from module.neteasz import netease_crawler, netease_util
+from util import music_util
 
 
 class Neteasz(object):
@@ -46,7 +46,7 @@ class Neteasz(object):
         index5 = query.data.find('U')
         index6 = query.data.find('P')
         if index1 != -1:
-            mtil.selector_cancel(bot, query)
+            music_util.selector_cancel(bot, query)
         elif index2 != -1:
             page = int(query.data[index2 + 1:]) + 1
             kw = query.data[8:index2 - 1]
@@ -104,7 +104,7 @@ class Neteasz(object):
 
     def deliver_music(self, bot, query, song_id, delete):
         if delete:
-            mtil.selector_cancel(bot, query)
+            music_util.selector_cancel(bot, query)
 
         bot_result = self.crawler.get_song_detail(song_id)
         if bot_result.get_status() == 400:

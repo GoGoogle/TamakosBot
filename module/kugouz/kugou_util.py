@@ -1,13 +1,12 @@
 import logging
 import time
-
 import requests
 import telegram
-from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 from config import application
 from entity.kugou import Music, MusicListSelector
-from service import kugou_api
+from module.kugouz import kugou_api
 
 logger = logging.getLogger(__name__)
 

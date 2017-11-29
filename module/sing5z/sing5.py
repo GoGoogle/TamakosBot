@@ -1,11 +1,10 @@
 import logging
 import os
-
 import telegram
 
 from config import application
-from service import sing5_util, sing5_api
-from util import mtil
+from module.sing5z import sing5_util, sing5_api
+from util import music_util
 
 logger = logging.getLogger(__name__)
 
@@ -45,7 +44,7 @@ def response_single_music(bot, update):
     index3 = query.data.find('-')
     index4 = query.data.find('t')
     if index1 != -1:
-        mtil.selector_cancel(bot, query)
+        music_util.selector_cancel(bot, query)
     elif index2 != -1:
         page_code = int(query.data[index2 + 1:]) + 1
         mtype = query.data[6:index2 - 1]
@@ -81,7 +80,7 @@ def response_toplist(bot, update, payload='yc'):
 def selector_send_music(bot, query, music_id, mtype, delete):
     logger.info('selector_download_music: music_id={0}'.format(music_id))
     if delete:
-        mtil.selector_cancel(bot, query)
+        music_util.selector_cancel(bot, query)
 
     #
     detail = sing5_api.get_music_detail_by_id_and_type(music_id, song_type=mtype)['data']
@@ -110,8 +109,8 @@ def selector_send_music(bot, query, music_id, mtype, delete):
         sing5_util.download_continuous(bot, query, music_obj, music_file, edited_msg)
 
         # 填写 id3tags
-        mtil.write_id3tags(music_file_path, song_title=music_obj.name,
-                           song_artist_list=[music_obj.singer.name], song_album='5sing 音乐')
+        music_util.write_id3tags(music_file_path, song_title=music_obj.name,
+                                 song_artist_list=[music_obj.singer.name], song_album='5sing 音乐')
 
         music_file.seek(0, os.SEEK_SET)  # 从开始位置开始读
 

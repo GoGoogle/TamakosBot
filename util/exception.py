@@ -1,26 +1,23 @@
 import logging
-import taglib
-
 from requests.exceptions import ConnectionError as ConnectionException, RequestException, Timeout, ProxyError
 
 logger = logging.getLogger(__name__)
 
 
-def selector_cancel(bot, query):
-    bot.answerCallbackQuery(query.id,
-                            text="加载中",
-                            show_alert=False)
-    query.message.delete()
+class SearchNotFound(RequestException):
+    """Search api return None."""
 
 
-def write_id3tags(file_path, song_title, song_artist_list, song_album=None, track_num='01/10'):
-    song = taglib.File(file_path)
-    if song:
-        song.tags["ARTIST"] = song_artist_list
-        song.tags["ALBUM"] = [song_album]
-        song.tags["TITLE"] = [song_title]
-        song.tags["TRACKNUMBER"] = [track_num]
-        song.save()
+class SongNotAvailable(RequestException):
+    """Some songs are not available, for example Taylor Swift's songs."""
+
+
+class GetRequestIllegal(RequestException):
+    """Status code is not 200."""
+
+
+class PostRequestIllegal(RequestException):
+    """Status code is not 200."""
 
 
 def exception_handle(method):
