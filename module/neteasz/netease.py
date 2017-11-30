@@ -138,7 +138,7 @@ class Neteasz(object):
         bot.edit_message_text(
             chat_id=query.message.chat.id,
             message_id=edited_msg.message_id,
-            text='163 {0} 等待发送'.format(songfile.song.song_name),
+            text='163 🎵 「{0}」 等待发送'.format(songfile.song.song_name),
             parse_mode=telegram.ParseMode.MARKDOWN,
             disable_web_page_preview=True
         )
@@ -146,14 +146,14 @@ class Neteasz(object):
         send_msg = None
         try:
             send_msg = bot.send_audio(chat_id=query.message.chat.id, audio=open(songfile.file_path, 'rb'), caption='',
-                                      duration=songfile.song.song_duration,
+                                      duration=songfile.song.song_duration / 60,
                                       title=songfile.song.song_name,
                                       performer=' / '.join(v.artist_name for v in songfile.song.artists),
                                       timeout=application.FILE_TRANSFER_TIMEOUT,
                                       disable_notification=True)
 
-            self.logger.info("文件: {} 发送成功.".format(songfile.song.song_name))
+            self.logger.info("文件: 「{}」 发送成功.".format(songfile.song.song_name))
         except TelegramError as err:
             if send_msg:
                 send_msg.delete()
-            self.logger.error("文件: {} 发送失败.".format(songfile.song.song_name), exc_info=err)
+            self.logger.error("文件: 「{}」 发送失败.".format(songfile.song.song_name), exc_info=err)

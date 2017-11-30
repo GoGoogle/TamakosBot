@@ -13,7 +13,7 @@ def get_songlist_selector(curpage, songlist):
     """
     生成可供选择的歌曲选择器
     :param curpage: 当前页数
-    :param songlist: 歌曲列表
+    :param songlist: 歌曲列表🎵
     :return: 歌曲列表选择器
     """
     logger.info('get_songlist_selector: keyword={0}, pagecode={1}'.format(songlist.keyword, curpage))
@@ -81,7 +81,7 @@ def get_playlist_selector(curpage, playlist):
     logger.info('get_playlist_selector: keyword={0}, pagecode={1}'.format(playlist.playlist_name, curpage))
 
     total_page = (playlist.track_count + 4) // 5
-    title = '163 🎵歌单 「{0}」\n创建者 {1}\n歌曲数目 {2} 首歌'.format(
+    title = '163 🎵歌单 「{0}」\n创建者 {1} ({2} 首歌)'.format(
         playlist.playlist_name, playlist.creator.user_name, playlist.track_count)
 
     # 分页处理
