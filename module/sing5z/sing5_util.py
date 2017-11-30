@@ -1,15 +1,19 @@
 import logging
 import time
-
 import requests
 import telegram
-from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 from config import application
 from entity.sing5 import MusicTopSelector, Song, Singer
+from interface.util import UtilZ
 from module.sing5z import sing5_api
 
 logger = logging.getLogger(__name__)
+
+
+class Util(UtilZ):
+    pass
 
 
 def generate_music_obj(detail, url_detail):
@@ -161,7 +165,7 @@ def download_continuous(bot, query, music_obj, music_file, edited_msg):
                 text=progress_status,
                 disable_web_page_preview=True,
                 parse_mode=telegram.ParseMode.MARKDOWN,
-                timeout= application.FILE_TRANSFER_TIMEOUT
+                timeout=application.FILE_TRANSFER_TIMEOUT
             )
 
     except:

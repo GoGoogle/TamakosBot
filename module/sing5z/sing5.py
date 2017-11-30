@@ -3,41 +3,83 @@ import os
 import telegram
 
 from config import application
-from module.sing5z import sing5_util, sing5_api
+from interface.main import MainZ
+from module.sing5z import sing5_util, sing5_api, sing5_crawler
 from util import song_util
 
 logger = logging.getLogger(__name__)
 
 
-class Sing5z(object):
-    pass
+class Sing5z(MainZ):
+    def __init__(self):
+        super().__init__()
+        self.crawler = sing5_crawler.Crawler(timeout=application.FILE_TRANSFER_TIMEOUT)
+        self.utilz = sing5_util.Util()
 
-
-def search_music(bot, update, args):
-    try:
-        f_type = 2
-        key_word = args[1]
-
+    def search_music(self, bot, update, args):
         if len(args) == 2:
-            f_type = args[1]
-            key_word = args[2]
-
-        logger.info('get_music: {}'.format(key_word))
-        musics_dict = sing5_api.search_musics_by_keyword_pagecode_and_filter(key_word, pagecode=1, filter_type=f_type)
-        if len(musics_dict['data']['songArray']) == 0:
-            text = "此歌曲找不到~"
-            update.message.reply_text(text=text)
+            search_type, search_content = args[1], args[2]
         else:
-            music_list_selector = sing5_util.produce_single_music_selector(key_word, 1,
-                                                                           musics_dict['data']['songArray'])
-            panel = sing5_util.transfer_single_music_selector_to_panel(music_list_selector)
-            update.message.reply_text(text=panel['text'], quote=True, reply_markup=panel['reply_markup'])
+            search_type, search_content = 2, args[1]
 
-    except IndexError:
-        text = "缺少歌曲名称"
-        update.message.reply_text(text=text)
-    except Exception as e:
-        logger.error('search music error', exc_info=True)
+        logger.info('search_music: {}'.format(search_content))
+        bot_result = self.crawler.search(search_content, search_type)
+        if bot_result.get_status() == 400:
+            text = "缺少歌曲名称"
+            update.message.reply_text(text=text)
+        elif bot_result.get_status() == 200:
+            pass
+
+    def response_single_music(self, bot, update):
+        """
+        *: cancel J: down K: up T: music_id
+        :param bot:
+        :param update:
+        :return:
+        """
+        query = update.callback_query
+        index1 = query.data.find('*')
+        index2 = query.data.find('J')
+        index3 = query.data.find('K')
+        index4 = query.data.find('T')
+        if index1 != -1:
+            song_util.selector_cancel(bot, query)
+        elif index2 != -1:
+            page_code = int(query.data[index2 + 1:]) + 1
+            mtype = query.data[6:index2 - 1]
+            sing5_util.selector_page_turning(bot, query, mtype, page_code)
+        elif index3 != -1:
+            page_code = int(query.data[index3 + 1:]) - 1
+            mtype = query.data[6:index3 - 1]
+            sing5_util.selector_page_turning(bot, query, mtype, page_code)
+        else:
+            music_id = int(query.data[index4 + 1:])
+            mtype = query.data[6:index4 - 1]
+            selector_send_music(bot, query, music_id, mtype, False)
+
+    def response_playlist(self, bot, update, playlist_id):
+        pass
+
+    def response_toplist(self, bot, update, search_type):
+        pass
+
+    def songlist_turning(self, bot, query, kw, page):
+        pass
+
+    def playlist_turning(self, bot, query, playlist_id, page):
+        pass
+
+    def top_turning(self, bot, query, search_type, page):
+        pass
+
+    def deliver_music(self, bot, query, song_id, delete):
+        pass
+
+    def download_backend(self, bot, query, songfile, edited_msg):
+        pass
+
+    def send__file(self, bot, query, songfile, edited_msg):
+        pass
 
 
 def response_single_music(bot, update):

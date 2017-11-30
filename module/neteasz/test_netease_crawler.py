@@ -24,7 +24,7 @@ class TestCrawler(TestCase):
     #     print(crawler.get_song_url(27808044))
 
     # def test_get_song_detail(self):
-    #     bot_result = Crawler().get_song_detail(27808044)
+    #     bot_result = crawler.get_song_detail(27808044)
     #     pprint(bot_result.get_body().to_json())
 
     def test_write_file(self):

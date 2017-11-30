@@ -64,8 +64,9 @@ class Monitors(object):
 
     def handler_monitors(self, dispatcher):
         dispatcher.add_handler(RegexHandler(r'^(音乐|m)\s(.+)$', self.netease_regex))
-        dispatcher.add_handler(RegexHandler(r'^(5SING|5)\s(1|2|3)?\s?(.+)$', self.sing5_regex))
-        dispatcher.add_handler(CallbackQueryHandler(self.netease_music_selector_callback, pattern='netease'))
+        dispatcher.add_handler(RegexHandler(r'^(五婶|5)\s(1|2|3)?\s?(.+)$', self.sing5_regex))
+        dispatcher.add_handler(CallbackQueryHandler(self.netease_music_selector_callback,
+                                                    pattern=r"{\"p\":\"" + self.netease.m_name))
         dispatcher.add_handler(
             RegexHandler(r'.*https?://music.163.com/?#?/?m?/playlist((/)|(\?id=))(\d*).*',
                          self.response_netease_playlist))

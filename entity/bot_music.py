@@ -84,6 +84,18 @@ class Playlist(object):
                           sort_keys=True, indent=4)
 
 
+class Toplist(object):
+    def __init__(self, top_id, top_name, track_count, songs=None):
+        self.top_id = top_id
+        self.top_name = top_name
+        self.track_count = track_count
+        self.songs = [] if songs is None else songs
+
+    def to_json(self):
+        return json.dumps(self, default=lambda o: o.__dict__, ensure_ascii=False,
+                          sort_keys=True, indent=4)
+
+
 class User(object):
     def __init__(self, user_id, user_name, songs=None, hot_comments=None):
         self.user_id = user_id
@@ -93,4 +105,3 @@ class User(object):
 
     def add_song(self, song):
         self.songs.append(song)
-

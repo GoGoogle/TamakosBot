@@ -3,8 +3,8 @@ from random import choice
 
 # COMMON CONFIG
 
-BOT_TOKEN = "334635714:AAFglddZSt7oROLLRLL9JuzMdLvx-uW-09A"
-# BOT_TOKEN = "425909661:AAHC_a9-htfYsjaZuKfP6jjcl8n2sjizctg"
+# BOT_TOKEN = "334635714:AAFglddZSt7oROLLRLL9JuzMdLvx-uW-09A"
+BOT_TOKEN = "425909661:AAHC_a9-htfYsjaZuKfP6jjcl8n2sjizctg"
 
 ADMINS = [423453012]
 

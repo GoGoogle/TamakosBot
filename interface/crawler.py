@@ -13,6 +13,22 @@ class CrawlerZ(object):
         self.proxies = {'http': proxy, 'https': proxy}
         self.logger = logging.getLogger(__name__)
 
+    @staticmethod
+    def dump_single_song(song):
+        pass
+
+    @staticmethod
+    def dump_songs(songs):
+        pass
+
+    @abstractmethod
+    def get_request(self, url, params=None, custom_session=None):
+        pass
+
+    @abstractmethod
+    def post_request(self, url, params, custom_session=None):
+        pass
+
     def search(self, search_content, search_type, page):
         pass
 
@@ -29,7 +45,9 @@ class CrawlerZ(object):
     def get_song_url(self, song_id):
         pass
 
-    @abstractmethod
+    def get_songtop(self, search_type, page=1):
+        pass
+
     def write_file(self, songfile, handle=None):
         pass
 

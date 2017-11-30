@@ -17,29 +17,6 @@ from util.exception import (
     SongNotAvailable, GetRequestIllegal, PostRequestIllegal, exception_handle)
 
 
-def dump_single_song(song):
-    artist_list = []
-    for ar in song['ar']:
-        artist_id, artist_name = ar['id'], ar['name']
-        artist_list.append(Artist(artist_id, artist_name))
-
-    album_id, album_name, album_pic_id = song['al']['id'], song['al']['name'], song['al'][
-        'pic']
-
-    album = Album(album_id, album_name, album_pic_id)
-    song_id, song_name, song_duration, artists, album = song['id'], song['name'], song['dt'], artist_list, album
-    song = Song(song_id, song_name, song_duration, artists, album)
-    return song
-
-
-def dump_songs(songs):
-    song_list = []
-    for song in songs:
-        song = dump_single_song(song)
-        song_list.append(song)
-    return song_list
-
-
 class Crawler(CrawlerZ):
     def __new__(cls, timeout=120, proxy=None):
         if not hasattr(cls, 'instance'):
@@ -52,19 +29,43 @@ class Crawler(CrawlerZ):
         self.session.headers.update(HEADERS)
         self.session.cookies = cookiejar.LWPCookieJar(COOKIE_PATH)
         self.login_session = requests.Session()
+        # self.download_session = requests.Session()
+
+    @staticmethod
+    def dump_single_song(song):
+        artist_list = []
+        for ar in song['ar']:
+            artist_id, artist_name = ar['id'], ar['name']
+            artist_list.append(Artist(artist_id, artist_name))
+
+        album_id, album_name, album_pic_id = song['al']['id'], song['al']['name'], song['al'][
+            'pic']
+
+        album = Album(album_id, album_name, album_pic_id)
+        song_id, song_name, song_duration, artists, album = song['id'], song['name'], song['dt'], artist_list, album
+        song = Song(song_id, song_name, song_duration, artists, album)
+        return song
+
+    @staticmethod
+    def dump_songs(songs):
+        song_list = []
+        for song in songs:
+            song = Crawler.dump_single_song(song)
+            song_list.append(song)
+        return song_list
 
     @exception_handle
-    def get_request(self, url, custom_session=None):
+    def get_request(self, url, params=None, custom_session=None):
         """Send a get request.
 
         warning: old api.
         :return: a dict or raise Exception.
         """
         if not custom_session:
-            resp = self.session.get(url, timeout=self.timeout,
+            resp = self.session.get(url, params=params, timeout=self.timeout,
                                     proxies=self.proxies)
         else:
-            resp = custom_session.get(url, timeout=self.timeout,
+            resp = custom_session.get(url, params=params, timeout=self.timeout,
                                       proxies=self.proxies)
         result = resp.json()
         if result['code'] != 200:
@@ -126,7 +127,7 @@ class Crawler(CrawlerZ):
             return BotResult(404, 'Song {} not existed.'.format(song_name))
         else:
             keyword, song_count, songs = song_name, result['result']['songCount'], result['result']['songs']
-            songlist = SongList(keyword, song_count, dump_songs(songs))
+            songlist = SongList(keyword, song_count, Crawler.dump_songs(songs))
             return BotResult(200, body=songlist)
 
     # def search_album(self, album_name, quiet=False, page=1):
@@ -255,7 +256,7 @@ class Crawler(CrawlerZ):
         playlist_id, playlist_name, track_count, creator, songs = \
             result['playlist']['id'], result['playlist']['name'], result['playlist']['trackCount'], creator, \
             result['playlist']['tracks']
-        playlist = Playlist(playlist_id, playlist_name, track_count, creator, dump_songs(songs))
+        playlist = Playlist(playlist_id, playlist_name, track_count, creator, Crawler.dump_songs(songs))
         return BotResult(200, body=playlist)
 
     # def get_album_songs(self, album_id):
@@ -293,7 +294,7 @@ class Crawler(CrawlerZ):
         try:
             result = self.post_request(url, params)
             song = result['songs'][0]
-            single_song = dump_single_song(song)
+            single_song = Crawler.dump_single_song(song)
             # 获取 song_url
             url = self.get_song_url(song_id)
             single_song.song_url = url

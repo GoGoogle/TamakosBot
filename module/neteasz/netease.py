@@ -1,10 +1,9 @@
 import os
-
 import telegram
 from telegram import TelegramError
-
 from config import application
-from interface import MainZ
+from entity.bot_telegram import ButtonItem
+from interface.main import MainZ
 from module.neteasz import netease_crawler, netease_util
 from util import song_util
 
@@ -12,6 +11,7 @@ from util import song_util
 class Netease(MainZ):
     def __init__(self):
         super().__init__()
+        self.m_name = 'netease'
         self.crawler = netease_crawler.Crawler(timeout=application.FILE_TRANSFER_TIMEOUT)
         self.utilz = netease_util.Util()
         self.init_login(application.NETEASE_LOGIN_PAYLOAD)
@@ -39,36 +39,9 @@ class Netease(MainZ):
         """
         self.logger.info('netease listen_selector_reply: data={}'.format(update.callback_query.data))
         query = update.callback_query
-        index1 = query.data.find('*')
-        index2 = query.data.find('+')
-        index3 = query.data.find('-')
-        index4 = query.data.find('D')
-        index5 = query.data.find('U')
-        index6 = query.data.find('P')
-        if index1 != -1:
-            song_util.selector_cancel(bot, query)
-        elif index2 != -1:
-            page = int(query.data[index2 + 1:]) + 1
-            kw = query.data[8:index2 - 1]
-            self.songlist_turning(bot, query, kw, page)
-        elif index3 != -1:
-            page = int(query.data[index3 + 1:]) - 1
-            kw = query.data[8:index3 - 1]
-            self.songlist_turning(bot, query, kw, page)
-        elif index4 != -1:
-            page = int(query.data[index4 + 1:]) + 1
-            playlist_id = query.data[8:index4 - 1]
-            self.playlist_turning(bot, query, playlist_id, page)
-        elif index5 != -1:
-            page = int(query.data[index5 + 1:]) - 1
-            playlist_id = query.data[8:index5 - 1]
-            self.playlist_turning(bot, query, playlist_id, page)
-        elif index6 != -1:
-            music_id = query.data[index6 + 1:]
-            self.deliver_music(bot, query, music_id, False)
-        else:
-            music_id = query.data[8:]
-            self.deliver_music(bot, query, music_id, True)
+
+        button_item = ButtonItem.parse_json(query.data)
+        self.handle_callback(bot, query, button_item)
 
     def response_playlist(self, bot, update, playlist_id):
         try:
@@ -89,7 +62,7 @@ class Netease(MainZ):
             query.message.reply_text(text=text)
         elif bot_result.get_status() == 200:
             selector = self.utilz.get_songlist_selector(page, bot_result.get_body())
-            panel = self.utilz.produce_songlist_panel(selector)
+            panel = self.utilz.produce_songlist_panel(self.m_name, selector)
             query.message.edit_text(text=panel['text'], reply_markup=panel['reply_markup'])
 
     def playlist_turning(self, bot, query, playlist_id, page):
@@ -99,7 +72,7 @@ class Netease(MainZ):
             query.message.reply_text(text=text)
         elif bot_result.get_status() == 200:
             selector = self.utilz.get_playlist_selector(page, bot_result.get_body())
-            panel = self.utilz.produce_playlist_panel(selector)
+            panel = self.utilz.produce_playlist_panel(self.m_name, selector)
             query.message.edit_text(text=panel['text'], reply_markup=panel['reply_markup'])
 
     def deliver_music(self, bot, query, song_id, delete):
@@ -108,7 +81,7 @@ class Netease(MainZ):
 
         bot_result = self.crawler.get_song_detail(song_id)
         if bot_result.get_status() == 400:
-            text = "版权问题，暂不提供下载~"
+            text = "版权问题，无法下载。"
             bot.send_message(chat_id=query.message.chat.id, text=text)
         elif bot_result.get_status() == 200:
             song = bot_result.get_body()
@@ -118,6 +91,25 @@ class Netease(MainZ):
 
             songfile = self.utilz.get_songfile(song)
             self.download_backend(bot, query, songfile, edited_msg)
+
+    def handle_callback(self, bot, query, button_item):
+        button_type, button_operate, item_id, page = button_item.t, button_item.o, button_item.i, button_item.c
+        if button_operate == ButtonItem.OPERATE_CANCEL:
+            song_util.selector_cancel(bot, query)
+        if button_type == ButtonItem.TYPE_SONGLIST:
+            if button_operate == ButtonItem.OPERATE_PAGE_DOWN:
+                self.songlist_turning(bot, query, item_id, page + 1)
+            if button_operate == ButtonItem.OPERATE_PAGE_UP:
+                self.songlist_turning(bot, query, item_id, page - 1)
+            if button_operate == ButtonItem.OPERATE_SEND:
+                self.deliver_music(bot, query, item_id, True)
+        if button_type == ButtonItem.TYPE_PLAYLIST:
+            if button_operate == ButtonItem.OPERATE_PAGE_DOWN:
+                self.playlist_turning(bot, query, item_id, page + 1)
+            if button_operate == ButtonItem.OPERATE_PAGE_UP:
+                self.playlist_turning(bot, query, item_id, page - 1)
+            if button_operate == ButtonItem.OPERATE_SEND:
+                self.deliver_music(bot, query, item_id, False)
 
     def download_backend(self, bot, query, songfile, edited_msg):
         self.logger.info('download_backend..')
@@ -148,7 +140,7 @@ class Netease(MainZ):
         send_msg = None
         try:
             send_msg = bot.send_audio(chat_id=query.message.chat.id, audio=open(songfile.file_path, 'rb'), caption='',
-                                      duration=songfile.song.song_duration / 60,
+                                      duration=songfile.song.song_duration / 1000,
                                       title=songfile.song.song_name,
                                       performer=' / '.join(v.artist_name for v in songfile.song.artists),
                                       timeout=application.FILE_TRANSFER_TIMEOUT,

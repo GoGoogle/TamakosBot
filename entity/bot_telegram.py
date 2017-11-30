@@ -52,3 +52,41 @@ class SongFile(object):
             song.tags["TITLE"] = [song_name]
             song.tags["TRACKNUMBER"] = [track_num]
             song.save()
+
+
+class ButtonItem(object):
+    TYPE_SONGLIST = 0
+    TYPE_PLAYLIST = 1
+    TYPE_TOPLIST = 2
+
+    OPERATE_PAGE_DOWN = '+'
+    OPERATE_PAGE_UP = '-'
+    OPERATE_CANCEL = '*'
+    OPERATE_SEND = '#'
+
+    def __init__(self, pattern, button_type, button_operate, item_id=None, page=None):
+        """
+        由于 64 字节限制。故采用变量缩写。
+        :param pattern: query_data 匹配的模块
+        :param button_type: 按钮的类型，TYPE_SONGLIST， TYPE_PLAYLIST， TYPE_TOPLIST
+        :param button_operate: 按钮的操作， OPERATE_PAGE_DOWN， OPERATE_PAGE_UP， OPERATE_CANCEL
+        :param item_id: 项目 id
+        :param page: 项目当前页数
+        """
+        self.p = pattern
+        self.t = button_type
+        self.o = button_operate
+        self.i = item_id
+        self.c = page
+
+    def dump_json(self):
+        """ the most compact JSON"""
+        return json.dumps(self, default=lambda o: o.__dict__, separators=(',', ':'))
+
+    @classmethod
+    def parse_json(cls, json_data):
+        obj = json.loads(json_data)
+        pattern, button_type, operate, item_id, page = \
+            obj['p'], obj['t'], obj['o'], obj['i'], obj['c']
+        button_item = cls(pattern, button_type, operate, item_id, page)
+        return button_item
