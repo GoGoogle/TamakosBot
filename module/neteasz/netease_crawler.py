@@ -10,7 +10,7 @@ from requests import RequestException
 from config import application
 from config.application import HEADERS, COOKIE_PATH
 from entity.bot_music import Song, Album, Artist, Playlist, User, SongList
-from module.entrance.crawler import CrawlerZ
+from interface.crawler import CrawlerZ
 from util.bot_result import BotResult
 from util.encrypt import encrypted_request
 from util.exception import (
@@ -96,7 +96,7 @@ class Crawler(CrawlerZ):
             return result
 
     def search(self, search_content, search_type, page):
-        """Search entrance.
+        """Search interface.
 
         :params search_content: search content.
         :params search_type: search type.
@@ -347,7 +347,7 @@ class Crawler(CrawlerZ):
     #     return lyric_info
 
     def login(self, username, password):
-        """Login entrance."""
+        """Login interface."""
 
         pattern = re.compile(r'^0\d{2,3}\d{7,8}$|^1[34578]\d{9}$')
         if pattern.match(username):  # use phone number to login

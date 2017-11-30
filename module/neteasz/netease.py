@@ -1,10 +1,10 @@
-import logging
 import os
-import telegram
 
+import telegram
 from telegram import TelegramError
+
 from config import application
-from module.entrance.main import MainZ
+from interface import MainZ
 from module.neteasz import netease_crawler, netease_util
 from util import song_util
 

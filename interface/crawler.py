@@ -16,7 +16,6 @@ class CrawlerZ(object):
     def search(self, search_content, search_type, page):
         pass
 
-    @abstractmethod
     def search_song(self, song_name, page=1):
         pass
 

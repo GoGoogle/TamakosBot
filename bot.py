@@ -45,5 +45,5 @@ def error(bot, update, err):
 if __name__ == '__main__':
     setup_build()
     logger = logging.getLogger("__name__")
-    logger.info('bot entrance..')
+    logger.info('bot interface..')
     main()

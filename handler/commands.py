@@ -32,7 +32,7 @@ class Commands(object):
             update.message.reply_text(text="肥腸抱歉..暫時不支持該口令")
 
     def handler_commands(self, dispatcher):
-        dispatcher.add_handler(CommandHandler('entrance', self.start_command))
+        dispatcher.add_handler(CommandHandler('interface', self.start_command))
         dispatcher.add_handler(CommandHandler('help', self.help_command))
         dispatcher.add_handler(CommandHandler('music', self.netease_command, pass_args=True))
 
