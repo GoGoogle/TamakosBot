@@ -1,17 +1,19 @@
 import logging
 import os
-
 import telegram
+
 from telegram import TelegramError
 from config import application
+from module.entrance.main import MainZ
 from module.neteasz import netease_crawler, netease_util
 from util import song_util
 
 
-class Neteasz(object):
+class Netease(MainZ):
     def __init__(self):
-        self.logger = logging.getLogger(__name__)
+        super().__init__()
         self.crawler = netease_crawler.Crawler(timeout=application.FILE_TRANSFER_TIMEOUT)
+        self.utilz = netease_util.Util()
         self.init_login(application.NETEASE_LOGIN_PAYLOAD)
 
     def init_login(self, config):
@@ -86,8 +88,8 @@ class Neteasz(object):
             text = "此歌曲找不到~"
             query.message.reply_text(text=text)
         elif bot_result.get_status() == 200:
-            selector = netease_util.get_songlist_selector(page, bot_result.get_body())
-            panel = netease_util.produce_songlist_panel(selector)
+            selector = self.utilz.get_songlist_selector(page, bot_result.get_body())
+            panel = self.utilz.produce_songlist_panel(selector)
             query.message.edit_text(text=panel['text'], reply_markup=panel['reply_markup'])
 
     def playlist_turning(self, bot, query, playlist_id, page):
@@ -96,8 +98,8 @@ class Neteasz(object):
             text = "此歌单找不到~"
             query.message.reply_text(text=text)
         elif bot_result.get_status() == 200:
-            selector = netease_util.get_playlist_selector(page, bot_result.get_body())
-            panel = netease_util.produce_playlist_panel(selector)
+            selector = self.utilz.get_playlist_selector(page, bot_result.get_body())
+            panel = self.utilz.produce_playlist_panel(selector)
             query.message.edit_text(text=panel['text'], reply_markup=panel['reply_markup'])
 
     def deliver_music(self, bot, query, song_id, delete):
@@ -106,7 +108,7 @@ class Neteasz(object):
 
         bot_result = self.crawler.get_song_detail(song_id)
         if bot_result.get_status() == 400:
-            text = "由于版权问题，此歌曲不可得"
+            text = "版权问题，暂不提供下载~"
             bot.send_message(chat_id=query.message.chat.id, text=text)
         elif bot_result.get_status() == 200:
             song = bot_result.get_body()
@@ -114,7 +116,7 @@ class Neteasz(object):
                                           text="找到歌曲: [{0}]({1})".format(song.song_name, song.song_url),
                                           parse_mode=telegram.ParseMode.MARKDOWN)
 
-            songfile = netease_util.get_songfile(song)
+            songfile = self.utilz.get_songfile(song)
             self.download_backend(bot, query, songfile, edited_msg)
 
     def download_backend(self, bot, query, songfile, edited_msg):

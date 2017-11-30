@@ -1,6 +1,5 @@
 import hashlib
 import json
-import logging
 import re
 import time
 from http import cookiejar
@@ -11,11 +10,11 @@ from requests import RequestException
 from config import application
 from config.application import HEADERS, COOKIE_PATH
 from entity.bot_music import Song, Album, Artist, Playlist, User, SongList
+from module.entrance.crawler import CrawlerZ
+from util.bot_result import BotResult
 from util.encrypt import encrypted_request
 from util.exception import (
     SongNotAvailable, GetRequestIllegal, PostRequestIllegal, exception_handle)
-from util.bot_result import BotResult
-from util.song_util import Crawlerz
 
 
 def dump_single_song(song):
@@ -41,7 +40,7 @@ def dump_songs(songs):
     return song_list
 
 
-class Crawler(Crawlerz):
+class Crawler(CrawlerZ):
     def __new__(cls, timeout=120, proxy=None):
         if not hasattr(cls, 'instance'):
             cls.instance = super(Crawler, cls).__new__(cls)
@@ -49,6 +48,7 @@ class Crawler(Crawlerz):
 
     def __init__(self, timeout=120, proxy=None):
         super().__init__(timeout, proxy)
+        self.session = requests.Session()
         self.session.headers.update(HEADERS)
         self.session.cookies = cookiejar.LWPCookieJar(COOKIE_PATH)
         self.login_session = requests.Session()

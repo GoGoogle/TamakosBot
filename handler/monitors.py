@@ -2,7 +2,6 @@ import logging
 import re
 
 from telegram.ext import CallbackQueryHandler, run_async, RegexHandler
-
 from module.kugouz import kugou
 from module.managez import admin
 from module.neteasz import netease
@@ -12,7 +11,7 @@ from util.manager_util import restricted
 
 class Monitors(object):
     def __init__(self):
-        self.netease = netease.Neteasz()
+        self.netease = netease.Netease()
         self.kugou = kugou
         self.sing5 = sing5
         self.logger = logging.getLogger(__name__)
