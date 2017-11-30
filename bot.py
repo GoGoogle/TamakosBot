@@ -15,10 +15,10 @@ def main():
 
     router(dp)  # route the handler
 
-    updater.start_polling(timeout=20)  # 开始轮询
-    updater.idle()
-    # updater.start_webhook(listen='127.0.0.1', port=5000, url_path='bottoken')
-    # updater.bot.set_webhook(url='https://telegram.lemo.site/bottoken')
+    # updater.start_polling(timeout=20)  # 开始轮询
+    # updater.idle()
+    updater.start_webhook(listen='127.0.0.1', port=5000, url_path='bottoken')
+    updater.bot.set_webhook(url='https://telegram.lemo.site/bottoken')
 
 
 def router(dp):
