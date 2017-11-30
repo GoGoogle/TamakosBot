@@ -287,17 +287,19 @@ class Crawler(Crawlerz):
     #     songs = [Song(song['id'], song['name']) for song in hot_songs]
     #     return songs
 
-    @exception_handle
     def get_song_detail(self, song_id):
         url = 'http://music.163.com/weapi/v3/song/detail?csrf_token='
         params = {'c': [json.dumps({'id': song_id})], 'ids': [song_id]}
-        result = self.post_request(url, params)
-        song = result['songs'][0]
-        single_song = dump_single_song(song)
-        # 获取 song_url
-        url = self.get_song_url(song_id)
-        single_song.song_url = url
-        return BotResult(200, body=single_song)
+        try:
+            result = self.post_request(url, params)
+            song = result['songs'][0]
+            single_song = dump_single_song(song)
+            # 获取 song_url
+            url = self.get_song_url(song_id)
+            single_song.song_url = url
+            return BotResult(200, body=single_song)
+        except (SongNotAvailable, RequestException) as e:
+            return BotResult(400, 'Return {0} when try to post {1} => {2}'.format(e, url, params))
 
     @exception_handle
     def get_song_url(self, song_id, bit_rate=999000):

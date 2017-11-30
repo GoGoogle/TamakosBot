@@ -106,7 +106,7 @@ class Neteasz(object):
 
         bot_result = self.crawler.get_song_detail(song_id)
         if bot_result.get_status() == 400:
-            text = "无法获取歌曲详情~"
+            text = "由于版权问题，此歌曲不可得"
             bot.send_message(chat_id=query.message.chat.id, text=text)
         elif bot_result.get_status() == 200:
             song = bot_result.get_body()
@@ -138,7 +138,7 @@ class Neteasz(object):
         bot.edit_message_text(
             chat_id=query.message.chat.id,
             message_id=edited_msg.message_id,
-            text='163 🎵 「{0}」 等待发送'.format(songfile.song.song_name),
+            text='163 「{0}」 等待发送'.format(songfile.song.song_name),
             parse_mode=telegram.ParseMode.MARKDOWN,
             disable_web_page_preview=True
         )
