@@ -22,7 +22,7 @@ def main():
 
 
 def router(dp):
-    commands.handler_commands(dp)
+    commands.Commands().handler_commands(dp)
     messages.handler_messages(dp)
     monitors.Monitors().handler_monitors(dp)
     dp.add_error_handler(error)

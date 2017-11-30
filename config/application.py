@@ -60,6 +60,6 @@ NONCE = '0CoJUm6Qyw8W8jud'
 PUB_KEY = '010001'
 
 NETEASE_LOGIN_PAYLOAD = {
-    'username': '13625xxxx',
+    'username': 'xxxxxx',
     'password': 'xxxxxx'
 }

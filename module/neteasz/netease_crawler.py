@@ -15,6 +15,7 @@ from util.encrypt import encrypted_request
 from util.exception import (
     SongNotAvailable, GetRequestIllegal, PostRequestIllegal, exception_handle)
 from util.bot_result import BotResult
+from util.song_util import Crawlerz
 
 
 def dump_single_song(song):
@@ -40,20 +41,17 @@ def dump_songs(songs):
     return song_list
 
 
-class Crawler(object):
+class Crawler(Crawlerz):
     def __new__(cls, timeout=120, proxy=None):
         if not hasattr(cls, 'instance'):
             cls.instance = super(Crawler, cls).__new__(cls)
         return cls.instance
 
     def __init__(self, timeout=120, proxy=None):
-        self.session = requests.Session()
+        super().__init__(timeout, proxy)
         self.session.headers.update(HEADERS)
         self.session.cookies = cookiejar.LWPCookieJar(COOKIE_PATH)
         self.login_session = requests.Session()
-        self.timeout = timeout
-        self.proxies = {'http': proxy, 'https': proxy}
-        self.logger = logging.getLogger(__name__)
 
     @exception_handle
     def get_request(self, url, custom_session=None):

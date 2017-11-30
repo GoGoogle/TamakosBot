@@ -9,6 +9,10 @@ from util import song_util
 logger = logging.getLogger(__name__)
 
 
+class Sing5z(object):
+    pass
+
+
 def search_music(bot, update, args):
     try:
         f_type = 2
