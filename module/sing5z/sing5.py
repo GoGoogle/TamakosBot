@@ -98,7 +98,7 @@ class Sing5z(MainZ):
                 self.songlist_turning(bot, query, item_id, page - 1)
             if button_operate == ButtonItem.OPERATE_SEND:
                 # 这里的 page 指 search_type
-                self.deliver_music(bot, query, item_id, page, True)
+                self.deliver_music(bot, query, item_id, page, delete=True)
         if button_type == ButtonItem.TYPE_TOPLIST:
             if button_operate == ButtonItem.OPERATE_PAGE_DOWN:
                 self.toplist_turning(bot, query, item_id, page + 1)
@@ -106,7 +106,7 @@ class Sing5z(MainZ):
                 self.toplist_turning(bot, query, item_id, page - 1)
             if button_operate == ButtonItem.OPERATE_SEND:
                 # 这里的 page 指 search_type
-                self.deliver_music(bot, query, item_id, page, False)
+                self.deliver_music(bot, query, item_id, page, delete=False)
 
     def download_backend(self, bot, query, songfile, edited_msg):
         self.logger.info('download_backend..')

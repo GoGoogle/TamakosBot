@@ -102,14 +102,14 @@ class Netease(MainZ):
             if button_operate == ButtonItem.OPERATE_PAGE_UP:
                 self.songlist_turning(bot, query, item_id, page - 1)
             if button_operate == ButtonItem.OPERATE_SEND:
-                self.deliver_music(bot, query, item_id, True)
+                self.deliver_music(bot, query, item_id, delete=True)
         if button_type == ButtonItem.TYPE_PLAYLIST:
             if button_operate == ButtonItem.OPERATE_PAGE_DOWN:
                 self.playlist_turning(bot, query, item_id, page + 1)
             if button_operate == ButtonItem.OPERATE_PAGE_UP:
                 self.playlist_turning(bot, query, item_id, page - 1)
             if button_operate == ButtonItem.OPERATE_SEND:
-                self.deliver_music(bot, query, item_id, False)
+                self.deliver_music(bot, query, item_id, delete=False)
 
     def download_backend(self, bot, query, songfile, edited_msg):
         self.logger.info('download_backend..')
