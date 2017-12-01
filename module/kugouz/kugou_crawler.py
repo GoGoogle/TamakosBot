@@ -127,11 +127,11 @@ class Crawler(CrawlerZ):
             'acceptMp3': 1,
             'cmd': 4,
             'pid': 6,
-            'hash': hash,
+            'hash': song_id,
             'key': md5_encrypt(song_id + 'kgcloud')
         }
         result = self.get_request(url, payload)
-        if result['error']:
+        if result.get('error'):
             self.logger.warning(
                 'Song %s is not available due to copyright issue. => %s',
                 song_id, result)

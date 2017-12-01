@@ -19,7 +19,7 @@ pycryptodome
 
 > 酷狗音乐 模块
 
-基本完成(有 bug，callback_data > 64 bytes.)
+基本完成(bug 不完全修复.)
 
 > 待完成
 

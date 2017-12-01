@@ -1,5 +1,6 @@
 import json
 import taglib
+import uuid
 
 
 class SongListSelector(object):
@@ -100,6 +101,18 @@ class ButtonItem(object):
         """ the most compact JSON"""
         return json.dumps(self, default=lambda o: o.__dict__, separators=(',', ':'))
 
+    def dump_userdata(self, user_data):
+        """
+        imitate a json object which contains two properties: 'p' and 'u' means pattern and uuid
+        :param user_data: the tg's callback_func params: 'user_data'
+        :return: uuid_json
+        """
+        seq_uuid = str(uuid.uuid4())
+        val = self.dump_json()
+        user_data[seq_uuid] = val
+        callback_uuid = json.dumps({'p': self.p, 'u': seq_uuid}, separators=(',', ':'))
+        return callback_uuid
+
     @classmethod
     def parse_json(cls, json_data):
         obj = json.loads(json_data)
@@ -107,3 +120,20 @@ class ButtonItem(object):
             obj['p'], obj['t'], obj['o'], obj['i'], obj['g']
         button_item = cls(pattern, button_type, operate, item_id, page)
         return button_item
+
+    @staticmethod
+    def parse_userdata(query_data, user_data):
+        """
+        判断 user_data dict 是否是否有值，如果该值为 callback_uuid 则取出该 uuid 对应的值, 否则取出一般值.
+        :param query_data: callback_uuid over
+        :param user_data: a dict where to store the key(such as the uuid above)  and original value
+        :return: button_item
+        """""
+        obj = json.loads(query_data)
+        if obj.get('u'):
+            dump_json = user_data[obj.get('u')]
+            button_item = ButtonItem.parse_json(dump_json)
+            return button_item
+        elif obj.get('o'):
+            button_item = ButtonItem.parse_json(query_data)
+            return button_item

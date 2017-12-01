@@ -16,7 +16,7 @@ class Netease(MainZ):
         self.m_name = 'netease'
         self.crawler = netease_crawler.Crawler(timeout=self.timeout)
         self.utilz = netease_util.Util()
-        self.init_login(application.NETEASE_LOGIN_PAYLOAD)
+        # self.init_login(application.NETEASE_LOGIN_PAYLOAD)
 
     def init_login(self, config):
         bot_result = self.crawler.login(config['username'], config['password'])

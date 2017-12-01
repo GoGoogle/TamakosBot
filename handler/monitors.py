@@ -48,14 +48,14 @@ class Monitors(object):
         else:
             self.sing5.response_toplist(bot, update)
 
-    def kugou_regex(self, bot, update):
+    def kugou_regex(self, bot, update, user_data):
         """酷狗命令入口"""
         key_word = re.search(r'^\w*\s(\w+)$', update.message.text).group(1)
-        self.kugou.search_music(bot, update, key_word)
+        self.kugou.search_music(bot, update, key_word, user_data)
 
     @run_async
-    def kugou_music_selector_callback(self, bot, update):
-        self.kugou.response_single_music(bot, update)
+    def kugou_music_selector_callback(self, bot, update, user_data):
+        self.kugou.response_single_music(bot, update, user_data)
 
     @restricted
     def manage_bot(self, bot, update):
@@ -70,11 +70,14 @@ class Monitors(object):
         dispatcher.add_handler(
             RegexHandler(r'.*https?://music.163.com/?#?/?m?/playlist((/)|(\?id=))(\d*).*',
                          self.response_netease_playlist))
-        dispatcher.add_handler(CallbackQueryHandler(self.sing5_music_selector_callback, pattern=r"{\"p\":\"" + self.sing5.m_name))
+        dispatcher.add_handler(
+            CallbackQueryHandler(self.sing5_music_selector_callback, pattern=r"{\"p\":\"" + self.sing5.m_name))
         dispatcher.add_handler(
             RegexHandler(r'^TOP(\s\w*)?\s(五婶|5)$', self.response_sing5_toplist))
         dispatcher.add_handler(
-            RegexHandler(r'^(酷狗|k)\s(\w+)$', self.kugou_regex))
-        dispatcher.add_handler(CallbackQueryHandler(self.kugou_music_selector_callback, pattern=r"{\"p\":\"" + self.kugou.m_name))
+            RegexHandler(r'^(酷狗|k)\s(\w+)$', self.kugou_regex, pass_user_data=True))
+        dispatcher.add_handler(
+            CallbackQueryHandler(self.kugou_music_selector_callback, pattern=r"{\"p\":\"" + self.kugou.m_name,
+                                 pass_user_data=True))
         dispatcher.add_handler(
             RegexHandler(r'^cc:.*', self.manage_bot))

@@ -27,10 +27,12 @@ def command_analyzing(bot, update, command, params):
                           document=open(log_path, 'rb'))
     elif command == 'leaveChat':
         payload = params[0]
+        result = None
         try:
             result = bot.leave_chat(chat_id=payload)
             bot.send_message(chat_id=update.message.chat.id, text="退出该群成功")
-        except:
+        except TelegramError:
+            logger.error('levaeChat failed, error is %s', result)
             bot.send_message(chat_id=update.message.chat.id, text="退出该群失败")
 
     else:
