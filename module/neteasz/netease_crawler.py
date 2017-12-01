@@ -366,7 +366,7 @@ class Crawler(CrawlerZ):
             result = self.post_request(url, params, custom_session=self.login_session)
             # self.session.cookies.save()
             uid = result['account']['id']
-            msg = '{0} login success! Uid is {1}'.format(username[:7], uid)
+            msg = '{0}xxxx{1} login success! Uid is {2}'.format(username[:3], username[7:11], uid)
             return BotResult(200, msg)
         except (PostRequestIllegal, RequestException) as e:
             return BotResult(400, 'Return {0} when try to post {1} => {2}'.format(e, url, params))
