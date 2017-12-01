@@ -30,7 +30,7 @@ class MainZ(object):
     def toplist_turning(self, bot, query, search_type, page):
         pass
 
-    def deliver_music(self, bot, query, song_id, search_type=None, delete=False):
+    def deliver_music(self, bot, query, song_id, delete=False):
         pass
 
     def handle_callback(self, bot, query, button_item):

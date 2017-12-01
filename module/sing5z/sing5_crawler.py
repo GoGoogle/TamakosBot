@@ -24,6 +24,8 @@ class Crawler(CrawlerZ):
     @staticmethod
     def dump_single_song(song, mode=0):
         song_id, song_name, artist_id, artist_name = song['ID'], song['SN'], song['user']['ID'], song['user']['NN']
+        if mode == 1:
+            return Song(song_id, song_name, 264, artists=[Artist(artist_id, artist_name)])
         if mode == 0:
             song_url = song['squrl'] or song['hqurl'] or song['lqurl']
             if os.path.splitext(song_url)[1] == '.m4a':
@@ -31,8 +33,6 @@ class Crawler(CrawlerZ):
                     'Song {0} id={1} is not available due to copyright issue.'.format(song_name, song_id))
             return Song(song_id, song_name, 264, artists=[Artist(artist_id, artist_name)],
                         album=Album(10010, "5sing 音乐"), song_url=song_url)
-        if mode == 1:
-            return Song(song_id, song_name, 264, artists=[Artist(artist_id, artist_name)])
 
     @staticmethod
     def dump_songs(songs, mode=0):
@@ -102,7 +102,7 @@ class Crawler(CrawlerZ):
         try:
             result = self.get_request(url, payload)
             # 判断是否能下载?
-            single_song = Crawler.dump_single_song(result['data'], mode=0)
+            single_song = Crawler.dump_single_song(result['data'], mode=1)
             return BotResult(200, body=single_song)
         except (GetRequestIllegal, SongNotAvailable) as e:
             return BotResult(400, 'Return {0} when try to get {1} => {2}'.format(e, url, payload))
@@ -121,7 +121,7 @@ class Crawler(CrawlerZ):
         else:
             top_id, top_name, track_count, songs = search_type, result['data']['name'], result['data']['count'], \
                                                    result['data']['songs']
-            toplist = Toplist(top_id, top_name, track_count, Crawler.dump_songs(songs, mode=1))
+            toplist = Toplist(top_id, top_name, track_count, Crawler.dump_songs(songs, mode=0))
             return BotResult(200, body=toplist)
 
     @exception_handle

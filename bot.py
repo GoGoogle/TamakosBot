@@ -39,7 +39,7 @@ def setup_build(path="config/logconfig.yaml"):
 
 
 def error(bot, update, err):
-    logger.warning('Update "%s" caused error "%s"' % (update, err))
+    logger.warning('Update "%s" caused error "%s"', update, err)
 
 
 if __name__ == '__main__':

@@ -1,6 +1,8 @@
 import os
+
 import telegram
 from telegram import TelegramError
+
 from config import application
 from entity.bot_telegram import ButtonItem
 from interface.main import MainZ
@@ -24,7 +26,7 @@ class Netease(MainZ):
             self.logger.error(bot_result.get_msg())
 
     def search_music(self, bot, update, kw):
-        self.logger.info('get_music: {}'.format(kw))
+        self.logger.info('get_music: %s', kw)
         edited_msg = bot.send_message(chat_id=update.message.chat.id,
                                       text="喵~")
         update.message.message_id = edited_msg.message_id
@@ -34,10 +36,10 @@ class Netease(MainZ):
         """监听响应的内容，取消、翻页或者下载
         如果为取消，则直接删除选择列表
         如果为翻页，则修改选择列表并进行翻页
-        如果为下载，则获取 music_id 并生成 NeteaseMusic。然后，加载-获取歌曲url，发送音乐文件，删除上一条信息
+        如果为发送，则获取 music_id 并生成 NeteaseMusic。然后，加载-获取歌曲url，发送音乐文件，删除上一条信息
         :return:
         """
-        self.logger.info('{0} response_single_music: data={1}'.format(self.m_name, update.callback_query.data))
+        self.logger.info('%s response_single_music: data=%s', self.m_name, update.callback_query.data)
         query = update.callback_query
 
         button_item = ButtonItem.parse_json(query.data)
@@ -75,7 +77,7 @@ class Netease(MainZ):
             panel = self.utilz.produce_playlist_panel(self.m_name, selector)
             query.message.edit_text(text=panel['text'], reply_markup=panel['reply_markup'])
 
-    def deliver_music(self, bot, query, song_id, search_type=None, delete=False):
+    def deliver_music(self, bot, query, song_id, delete=False):
         if delete:
             song_util.selector_cancel(bot, query)
 
@@ -146,8 +148,8 @@ class Netease(MainZ):
                                       timeout=self.timeout,
                                       disable_notification=True)
 
-            self.logger.info("文件: 「{}」 发送成功.".format(songfile.song.song_name))
+            self.logger.info("文件: 「%s」 发送成功.", songfile.song.song_name)
         except TelegramError as err:
             if send_msg:
                 send_msg.delete()
-            self.logger.error("文件: 「{}」 发送失败.".format(songfile.song.song_name), exc_info=err)
+            self.logger.error("文件: 「%s」 发送失败.", songfile.song.song_name, exc_info=err)

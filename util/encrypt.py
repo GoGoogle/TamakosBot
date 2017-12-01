@@ -1,5 +1,6 @@
 import base64
 import binascii
+import hashlib
 import json
 import os
 
@@ -12,7 +13,7 @@ def encrypted_request(text):
     text = json.dumps(text)
     sec_key = create_secret_key(16)
     enc_text = aes_encrypt(aes_encrypt(text, NONCE), sec_key.decode('utf-8'))
-    enc_sec_key = rsa_encrpt(sec_key, PUB_KEY, MODULUS)
+    enc_sec_key = rsa_encrypt(sec_key, PUB_KEY, MODULUS)
     data = {'params': enc_text, 'encSecKey': enc_sec_key}
     return data
 
@@ -26,7 +27,7 @@ def aes_encrypt(text, secKey):
     return ciphertext
 
 
-def rsa_encrpt(text, pubKey, modulus):
+def rsa_encrypt(text, pubKey, modulus):
     text = text[::-1]
     rs = pow(int(binascii.hexlify(text), 16), int(pubKey, 16), int(modulus, 16))
     return format(rs, 'x').zfill(256)
@@ -34,3 +35,9 @@ def rsa_encrpt(text, pubKey, modulus):
 
 def create_secret_key(size):
     return binascii.hexlify(os.urandom(size))[:16]
+
+
+def md5_encrypt(sh):
+    md5 = hashlib.md5()
+    md5.update(sh.encode())
+    return md5.hexdigest()

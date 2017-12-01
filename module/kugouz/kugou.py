@@ -1,130 +1,130 @@
-import logging
 import os
-import telegram
 
-from config import application
-from module.kugouz import kugou_api, kugou_util
+import telegram
+from telegram import TelegramError
+
+from entity.bot_telegram import ButtonItem
+from interface.main import MainZ
+from module.kugouz import kugou_util, kugou_crawler
 from util import song_util
 
-logger = logging.getLogger(__name__)
 
+class Kugou(MainZ):
+    def __init__(self, timeout=120):
+        super().__init__(timeout)
+        self.m_name = 'kugou'
+        self.crawler = kugou_crawler.Crawler(timeout=self.timeout)
+        self.utilz = kugou_util.Util()
 
-def search_music(bot, update, kw):
-    try:
-        logger.info('get_music: {}'.format(kw))
-        search_musics_dict = kugou_api.search_music_by_keyword_and_pagecode(kw, pagecode=1)
+    def init_login(self, config):
+        pass
 
-        if search_musics_dict['errcode'] != 0:
+    def search_music(self, bot, update, kw):
+        self.logger.info('get_music: %s', kw)
+        edited_msg = bot.send_message(chat_id=update.message.chat.id,
+                                      text="喵~")
+        update.message.message_id = edited_msg.message_id
+        self.songlist_turning(bot, update, kw, 1)
+
+    def response_single_music(self, bot, update):
+        """监听响应的内容，取消、翻页或者下载
+        如果为取消，则直接删除选择列表
+        如果为翻页，则修改选择列表并进行翻页
+        如果为发送，则获取 music_id 并生成 NeteaseMusic。然后，加载-获取歌曲url，发送音乐文件，删除上一条信息
+        :return:
+        """
+        self.logger.info('%s response_single_music: data=%s', self.m_name, update.callback_query.data)
+        query = update.callback_query
+
+        button_item = ButtonItem.parse_json(query.data)
+        self.handle_callback(bot, query, button_item)
+
+    def songlist_turning(self, bot, query, kw, page):
+        bot_result = self.crawler.search_song(kw, page)
+        if bot_result.get_status() == 400:
             text = "缺少歌曲名称"
-            update.message.reply_text(text=text, parse_mode=telegram.ParseMode.MARKDOWN)
-
-        elif search_musics_dict['data']['total'] == 0:
+            query.message.reply_text(text=text)
+        elif bot_result.get_status() == 404:
             text = "此歌曲找不到~"
-            update.message.reply_text(text=text)
-        else:
-            music_list_selector = kugou_util.produce_single_music_selector(kw, 1,
-                                                                           search_musics_dict['data'])
-            panel = kugou_util.transfer_single_music_selector_to_panel(music_list_selector)
-            update.message.reply_text(text=panel['text'], quote=True, reply_markup=panel['reply_markup'])
-    except Exception as e:
-        logger.error('search music error', exc_info=True)
+            query.message.reply_text(text=text)
+        elif bot_result.get_status() == 200:
+            selector = self.utilz.get_songlist_selector(page, bot_result.get_body())
+            panel = self.utilz.produce_songlist_panel(self.m_name, selector)
+            query.message.edit_text(text=panel['text'], reply_markup=panel['reply_markup'])
 
+    def deliver_music(self, bot, query, song_id, delete=False):
+        if delete:
+            song_util.selector_cancel(bot, query)
 
-def response_single_music(bot, update):
-    """监听响应的内容，取消、翻页或者下载
-    如果为取消，则直接删除选择列表
-    如果为翻页，则修改选择列表并进行翻页
-    如果为下载，则获取 music_id 并生成 NeteaseMusic。然后，加载-获取歌曲url，发送音乐文件，删除上一条信息
-    :return:
-    """
-    logger.info('netease listen_selector_reply: data={}'.format(update.callback_query.data))
-    query = update.callback_query
-    index1 = query.data.find('*')
-    index2 = query.data.find('+')
-    index3 = query.data.find('-')
-    if index1 != -1:
-        song_util.selector_cancel(bot, query)
-    elif index2 != -1:
-        page_code = int(query.data[index2 + 1:]) + 1
-        kw = query.data[3:index2 - 1]
-        kugou_util.selector_page_turning(bot, query, kw, page_code)
-    elif index3 != -1:
-        page_code = int(query.data[index3 + 1:]) - 1
-        kw = query.data[3:index3 - 1]
-        kugou_util.selector_page_turning(bot, query, kw, page_code)
-    else:
-        music_id = query.data[3:]
-        selector_send_music(bot, query, music_id, True)
+        bot_result = self.crawler.get_song_detail(song_id)
+        if bot_result.get_status() == 400:
+            text = "警告：版权问题，无法下载"
+            bot.send_message(chat_id=query.message.chat.id, text=text)
+        elif bot_result.get_status() == 200:
+            song = bot_result.get_body()
+            edited_msg = bot.send_message(chat_id=query.message.chat.id,
+                                          text="找到歌曲: [{0}]({1})".format(song.song_name, song.song_url),
+                                          parse_mode=telegram.ParseMode.MARKDOWN)
 
+            songfile = self.utilz.get_songfile(song)
+            self.download_backend(bot, query, songfile, edited_msg)
 
-def selector_send_music(bot, query, hash, delete):
-    logger.info('selector_download_music: music_id={0}'.format(hash))
-    if delete:
-        song_util.selector_cancel(bot, query)
+    def handle_callback(self, bot, query, button_item):
+        button_type, button_operate, item_id, page = button_item.t, button_item.o, button_item.i, button_item.g
+        if button_operate == ButtonItem.OPERATE_CANCEL:
+            song_util.selector_cancel(bot, query)
+        if button_type == ButtonItem.TYPE_SONGLIST:
+            if button_operate == ButtonItem.OPERATE_PAGE_DOWN:
+                self.songlist_turning(bot, query, item_id, page + 1)
+            if button_operate == ButtonItem.OPERATE_PAGE_UP:
+                self.songlist_turning(bot, query, item_id, page - 1)
+            if button_operate == ButtonItem.OPERATE_SEND:
+                self.deliver_music(bot, query, item_id, delete=True)
+        if button_type == ButtonItem.TYPE_PLAYLIST:
+            if button_operate == ButtonItem.OPERATE_PAGE_DOWN:
+                self.playlist_turning(bot, query, item_id, page + 1)
+            if button_operate == ButtonItem.OPERATE_PAGE_UP:
+                self.playlist_turning(bot, query, item_id, page - 1)
+            if button_operate == ButtonItem.OPERATE_SEND:
+                self.deliver_music(bot, query, item_id, delete=False)
 
-    detail = kugou_api.get_music_detail_by_musicid(hash)
-    hq_detail = kugou_api.get_hqmusic_detail_by_musicid(hash)
+    def download_backend(self, bot, query, songfile, edited_msg):
+        self.logger.info('download_backend..')
+        try:
+            handle = song_util.ProgressHandle(bot, query, edited_msg.message_id)
+            self.crawler.write_file(songfile, handle=handle)
+            songfile.set_id3tags(songfile.song.song_name, list(v.artist_name for v in songfile.song.artists),
+                                 song_album=songfile.song.album.album_name)
+            self.send_file(bot, query, songfile, edited_msg)
+        finally:
+            if os.path.exists(songfile.file_path):
+                os.remove(songfile.file_path)
+            if not songfile.file_stream.closed:
+                songfile.file_stream.close()
+            if edited_msg:
+                edited_msg.delete()
 
-    # 转为对象好处理
-    music_obj = kugou_util.generate_music_obj(detail, hq_detail)
+    def send_file(self, bot, query, songfile, edited_msg):
+        bot.send_chat_action(query.message.chat.id, action=telegram.ChatAction.UPLOAD_AUDIO)
+        bot.edit_message_text(
+            chat_id=query.message.chat.id,
+            message_id=edited_msg.message_id,
+            text='酷狗 「{0}」 等待发送'.format(songfile.song.song_name),
+            parse_mode=telegram.ParseMode.MARKDOWN,
+            disable_web_page_preview=True
+        )
 
-    edited_msg = bot.send_message(chat_id=query.message.chat.id,
-                                  text="找到歌曲: [{0}]({1})".format(music_obj.name, music_obj.url),
-                                  parse_mode=telegram.ParseMode.MARKDOWN)
+        send_msg = None
+        try:
+            send_msg = bot.send_audio(chat_id=query.message.chat.id, audio=open(songfile.file_path, 'rb'), caption='',
+                                      duration=songfile.song.song_duration / 1000,
+                                      title=songfile.song.song_name,
+                                      performer=' / '.join(v.artist_name for v in songfile.song.artists),
+                                      timeout=self.timeout,
+                                      disable_notification=True)
 
-    full_file_name = r'{0} - {1}.{2}'.format(
-        music_obj.name, music_obj.singer_name, music_obj.suffix)
-    # 字符串进行处理
-    full_file_name = full_file_name.replace("/", ":")
-    music_file_path = os.path.join(application.TMP_Folder, full_file_name)
-    music_file = open(music_file_path, 'wb+')
-
-    try:
-        logger.info('kugou song url is {}'.format(music_obj.url))
-
-        kugou_util.download_continuous(bot, query, music_obj, music_file, edited_msg)
-
-        # 填写 id3tags
-        song_util.write_id3tags(music_file_path, music_obj.name, list(music_obj.singer_name),
-                                music_obj.album_name)
-
-        music_file.seek(0, os.SEEK_SET)  # 从开始位置开始读
-
-        send_music_file(bot, query, music_file, music_obj, music_caption='', edited_msg=edited_msg)
-
-    except:
-        logger.error('send file failed', exc_info=True)
-    finally:
-        if not music_file.closed:
-            music_file.close()
-        if os.path.exists(music_file_path):
-            os.remove(music_file_path)
-        if edited_msg:
-            edited_msg.delete()
-
-
-def send_music_file(bot, query, file, music_obj, music_caption, edited_msg):
-    logger.info("文件: {} >> 正在发送中".format(music_obj.name))
-    bot.send_chat_action(query.message.chat.id, action=telegram.ChatAction.UPLOAD_AUDIO)
-    bot.edit_message_text(
-        chat_id=query.message.chat.id,
-        message_id=edited_msg.message_id,
-        text='kg {0} 等待发送'.format(music_obj.name),
-        parse_mode=telegram.ParseMode.MARKDOWN,
-        disable_web_page_preview=True,
-    )
-
-    file_msg = None
-    try:
-        file_msg = bot.send_audio(chat_id=query.message.chat.id, audio=file, caption=music_caption,
-                                  duration=music_obj.duration,
-                                  title=music_obj.name,
-                                  performer=music_obj.singer_name,
-                                  disable_notification=True,
-                                  timeout=application.FILE_TRANSFER_TIMEOUT)
-
-        logger.info("文件: {} 发送成功.".format(music_obj.name))
-    except:
-        if file_msg:
-            file_msg.delete()
-        logger.error('send audio file failed', exc_info=True)
+            self.logger.info("文件: 「%s」 发送成功.", songfile.song.song_name)
+        except TelegramError as err:
+            if send_msg:
+                send_msg.delete()
+            self.logger.error("文件: 「%s」 发送失败.", songfile.song.song_name, exc_info=err)
