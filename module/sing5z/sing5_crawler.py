@@ -7,7 +7,7 @@ from config.application import CHUNK_SIZE
 from entity.bot_music import Artist, Song, Toplist, Album
 from interface.crawler import CrawlerZ
 from util.bot_result import BotResult
-from util.exception import GetRequestIllegal, exception_handle, SongNotAvailable
+from util.excep_util import GetRequestIllegal, exception_handle, SongNotAvailable
 
 
 class Crawler(CrawlerZ):

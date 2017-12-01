@@ -6,7 +6,7 @@ from module.kugouz import kugou
 from module.managez import admin
 from module.neteasz import netease
 from module.sing5z import sing5
-from util.manager_util import restricted
+from util.bot_util import restricted
 
 
 class Monitors(object):
@@ -14,6 +14,7 @@ class Monitors(object):
         self.netease = netease.Netease()
         self.kugou = kugou.Kugou()
         self.sing5 = sing5.Sing5z()
+        self.admin = admin.Adminz()
         self.logger = logging.getLogger(__name__)
 
     def netease_regex(self, bot, update):
@@ -60,7 +61,7 @@ class Monitors(object):
     @restricted
     def manage_bot(self, bot, update):
         payload = re.search(r'^cc:(\w+)\s?(\w*)', update.message.text).groups()
-        admin.manage_bot(bot, update, payload)
+        self.admin.manage_bot(bot, update, payload)
 
     def handler_monitors(self, dispatcher):
         dispatcher.add_handler(RegexHandler(r'^(音乐|m)\s(.+)$', self.netease_regex))

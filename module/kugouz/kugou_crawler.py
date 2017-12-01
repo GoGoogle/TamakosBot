@@ -7,8 +7,8 @@ from config.application import CHUNK_SIZE
 from entity.bot_music import Song, Album, Artist, SongList
 from interface.crawler import CrawlerZ
 from util.bot_result import BotResult
-from util.encrypt import md5_encrypt
-from util.exception import (
+from util.encrypt_util import md5_encrypt
+from util.excep_util import (
     SongNotAvailable, GetRequestIllegal, exception_handle)
 
 

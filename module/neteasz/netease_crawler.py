@@ -11,8 +11,8 @@ from config.application import HEADERS, COOKIE_PATH, CHUNK_SIZE
 from entity.bot_music import Song, Album, Artist, Playlist, User, SongList
 from interface.crawler import CrawlerZ
 from util.bot_result import BotResult
-from util.encrypt import encrypted_request
-from util.exception import (
+from util.encrypt_util import encrypted_request
+from util.excep_util import (
     SongNotAvailable, GetRequestIllegal, PostRequestIllegal, exception_handle)
 
 

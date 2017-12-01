@@ -16,6 +16,17 @@ TMP_Folder = 'tmp'
 
 LOG_FILE = 'LOG'
 
+WEBHOOK_LOCAL = {
+    'listen': '127.0.0.1',
+    'port': 5000,
+    'url_path': 'bottoken'
+}
+
+WEBHOOK_REMOTE = {
+    'path': 'https://telegram.lemo.site/bottoken',
+    'timeout': 40
+}
+
 # NETEASE CONFIG
 
 COOKIE_PATH = os.path.join(TMP_Folder, 'cookie')

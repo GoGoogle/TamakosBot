@@ -6,49 +6,51 @@ import yaml
 from telegram.ext import Updater
 
 from config import application
+from config.application import WEBHOOK_REMOTE, WEBHOOK_LOCAL
 from handler import commands, messages, monitors
 
 
-def main():
-    updater = Updater(token=application.BOT_TOKEN)
-    dp = updater.dispatcher
+class Bot(object):
+    def __init__(self, log_config="config/logconfig.yaml"):
+        self.logger = logging.getLogger("__name__")
+        self.commands = commands.Commands()
+        self.messages = messages.Message()
+        self.monitors = monitors.Monitors()
+        self.setup_build(log_config)
 
-    router(dp)  # route the handler
+    def setup_build(self, path):
+        self.logger.info('bot start..')
+        with open(path, "r") as f:
+            config = yaml.load(f)
+            logging.config.dictConfig(config)
+        if not os.path.exists(application.TMP_Folder):
+            os.mkdir(application.TMP_Folder)
 
-    # updater.start_polling(timeout=20)
-    # updater.idle()
-    updater.start_webhook(listen='127.0.0.1', port=5000, url_path='bottoken')
-    updater.bot.set_webhook(url='https://telegram.lemo.site/bottoken')
+    def error_handler(self, bot, update, err):
+        self.logger.warning('Update "%s" caused error "%s"', update, err)
 
+    def distribute(self, dispatcher):
+        commands.Commands().handler_commands(dispatcher)
+        messages.Message().handler_messages(dispatcher)
+        monitors.Monitors().handler_monitors(dispatcher)
+        dispatcher.add_error_handler(self.error_handler)
 
-def router(dp):
-    commands.Commands().handler_commands(dp)
-    messages.handler_messages(dp)
-    monitors.Monitors().handler_monitors(dp)
-    dp.add_error_handler(error)
+    def start_bot(self):
+        updater = Updater(token=application.BOT_TOKEN)
 
+        self.distribute(updater.dispatcher)
 
-def setup_build(path="config/logconfig.yaml"):
-    # 日志
-    with open(path, "r") as f:
-        config = yaml.load(f)
-        logging.config.dictConfig(config)
-    # 临时目录
-    if not os.path.exists(application.TMP_Folder):
-        os.mkdir(application.TMP_Folder)
+        # os.environ['HTTP_PROXY'] = "http://127.0.0.1:4242"
+        # os.environ['HTTPS_PROXY'] = "http://127.0.0.1:4242"
+        # os.environ['NO_PROXY'] = "m1.music.126.net,10.*.*.*,192.168.*.*,*.local,localhost,127.0.0.1"
 
+        # updater.start_polling(timeout=20)
+        # updater.idle()
 
-def error(bot, update, err):
-    logger.warning('Update "%s" caused error "%s"', update, err)
+        updater.start_webhook(listen=WEBHOOK_LOCAL['listen'], port=WEBHOOK_LOCAL['port'],
+                              url_path=WEBHOOK_LOCAL['url_path'])
+        updater.bot.set_webhook(url=WEBHOOK_REMOTE['url'], timeout=WEBHOOK_REMOTE['timeout'])
 
 
 if __name__ == '__main__':
-    setup_build()
-    logger = logging.getLogger("__name__")
-    logger.info('bot interface..')
-
-    # os.environ['HTTP_PROXY'] = "http://127.0.0.1:4242"
-    # os.environ['HTTPS_PROXY'] = "http://127.0.0.1:4242"
-    # os.environ['NO_PROXY'] = "m1.music.126.net,10.*.*.*,192.168.*.*,*.local,localhost,127.0.0.1"
-
-    main()
+    Bot().start_bot()
