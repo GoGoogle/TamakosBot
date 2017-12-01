@@ -1,8 +1,10 @@
 import logging
 import os
 import telegram
+from telegram import TelegramError
 
 from config import application
+from entity.bot_telegram import ButtonItem
 from interface.main import MainZ
 from module.sing5z import sing5_util, sing5_api, sing5_crawler
 from util import song_util
@@ -12,8 +14,9 @@ logger = logging.getLogger(__name__)
 
 class Sing5z(MainZ):
     def __init__(self):
-        super().__init__()
-        self.crawler = sing5_crawler.Crawler(timeout=application.FILE_TRANSFER_TIMEOUT)
+        super().__init__(timeout=application.FILE_TRANSFER_TIMEOUT)
+        self.m_name = 'sing5'
+        self.crawler = sing5_crawler.Crawler(timeout=self.timeout)
         self.utilz = sing5_util.Util()
 
     def search_music(self, bot, update, args):
@@ -31,37 +34,26 @@ class Sing5z(MainZ):
             pass
 
     def response_single_music(self, bot, update):
-        """
-        *: cancel J: down K: up T: music_id
-        :param bot:
-        :param update:
+        """监听响应的内容，取消、翻页或者下载
+        如果为取消，则直接删除选择列表
+        如果为翻页，则修改选择列表并进行翻页
+        如果为下载，则获取 music_id 并生成 NeteaseMusic。然后，加载-获取歌曲url，发送音乐文件，删除上一条信息
         :return:
         """
+        self.logger.info('netease listen_selector_reply: data={}'.format(update.callback_query.data))
         query = update.callback_query
-        index1 = query.data.find('*')
-        index2 = query.data.find('J')
-        index3 = query.data.find('K')
-        index4 = query.data.find('T')
-        if index1 != -1:
-            song_util.selector_cancel(bot, query)
-        elif index2 != -1:
-            page_code = int(query.data[index2 + 1:]) + 1
-            mtype = query.data[6:index2 - 1]
-            sing5_util.selector_page_turning(bot, query, mtype, page_code)
-        elif index3 != -1:
-            page_code = int(query.data[index3 + 1:]) - 1
-            mtype = query.data[6:index3 - 1]
-            sing5_util.selector_page_turning(bot, query, mtype, page_code)
-        else:
-            music_id = int(query.data[index4 + 1:])
-            mtype = query.data[6:index4 - 1]
-            selector_send_music(bot, query, music_id, mtype, False)
+
+        button_item = ButtonItem.parse_json(query.data)
+        self.handle_callback(bot, query, button_item)
 
     def response_playlist(self, bot, update, playlist_id):
         pass
 
-    def response_toplist(self, bot, update, search_type):
-        pass
+    def response_toplist(self, bot, update, search_type='yc'):
+        edited_msg = bot.send_message(chat_id=update.message.chat.id,
+                                      text="喵~")
+        update.message.message_id = edited_msg.message_id
+        self.toplist_turning(bot, update, search_type, 1)
 
     def songlist_turning(self, bot, query, kw, page):
         pass
@@ -69,132 +61,90 @@ class Sing5z(MainZ):
     def playlist_turning(self, bot, query, playlist_id, page):
         pass
 
-    def top_turning(self, bot, query, search_type, page):
-        pass
+    def toplist_turning(self, bot, query, search_type, page):
+        bot_result = self.crawler.get_songtop(search_type, page)
+        if bot_result.get_status() == 404:
+            text = "此榜单找不到~"
+            query.message.reply_text(text=text)
+        elif bot_result.get_status() == 200:
+            selector = self.utilz.get_toplist_selector(page, bot_result.get_body())
+            panel = self.utilz.produce_toplist_panel(self.m_name, selector)
+            query.message.edit_text(text=panel['text'], reply_markup=panel['reply_markup'])
 
     def deliver_music(self, bot, query, song_id, delete):
-        pass
+        if delete:
+            song_util.selector_cancel(bot, query)
+
+        bot_result = self.crawler.get_song_detail(song_id)
+        if bot_result.get_status() == 400:
+            text = "警告：版权问题，无法下载"
+            bot.send_message(chat_id=query.message.chat.id, text=text)
+        elif bot_result.get_status() == 200:
+            song = bot_result.get_body()
+            edited_msg = bot.send_message(chat_id=query.message.chat.id,
+                                          text="找到歌曲: [{0}]({1})".format(song.song_name, song.song_url),
+                                          parse_mode=telegram.ParseMode.MARKDOWN)
+
+            songfile = self.utilz.get_songfile(song)
+            self.download_backend(bot, query, songfile, edited_msg)
+
+    def handle_callback(self, bot, query, button_item):
+        button_type, button_operate, item_id, page = button_item.t, button_item.o, button_item.i, button_item.c
+        if button_operate == ButtonItem.OPERATE_CANCEL:
+            song_util.selector_cancel(bot, query)
+        if button_type == ButtonItem.TYPE_SONGLIST:
+            if button_operate == ButtonItem.OPERATE_PAGE_DOWN:
+                self.songlist_turning(bot, query, item_id, page + 1)
+            if button_operate == ButtonItem.OPERATE_PAGE_UP:
+                self.songlist_turning(bot, query, item_id, page - 1)
+            if button_operate == ButtonItem.OPERATE_SEND:
+                self.deliver_music(bot, query, item_id, True)
+        if button_type == ButtonItem.TYPE_TOPLIST:
+            if button_operate == ButtonItem.OPERATE_PAGE_DOWN:
+                self.toplist_turning(bot, query, item_id, page + 1)
+            if button_operate == ButtonItem.OPERATE_PAGE_UP:
+                self.toplist_turning(bot, query, item_id, page - 1)
+            if button_operate == ButtonItem.OPERATE_SEND:
+                self.deliver_music(bot, query, item_id, False)
 
     def download_backend(self, bot, query, songfile, edited_msg):
-        pass
+        self.logger.info('download_backend..')
+        try:
+            handle = song_util.ProgressHandle(bot, query, edited_msg.message_id)
+            self.crawler.write_file(songfile, handle=handle)
+            songfile.set_id3tags(songfile.song.song_name, list(v.artist_name for v in songfile.song.artists),
+                                 song_album=songfile.song.album.album_name)
+            self.send_file(bot, query, songfile, edited_msg)
+        finally:
+            if os.path.exists(songfile.file_path):
+                os.remove(songfile.file_path)
+            if not songfile.file_stream.closed:
+                songfile.file_stream.close()
+            if edited_msg:
+                edited_msg.delete()
 
-    def send__file(self, bot, query, songfile, edited_msg):
-        pass
+    def send_file(self, bot, query, songfile, edited_msg):
+        bot.send_chat_action(query.message.chat.id, action=telegram.ChatAction.UPLOAD_AUDIO)
+        bot.edit_message_text(
+            chat_id=query.message.chat.id,
+            message_id=edited_msg.message_id,
+            text='5sing 「{0}」 等待发送'.format(songfile.song.song_name),
+            parse_mode=telegram.ParseMode.MARKDOWN,
+            disable_web_page_preview=True
+        )
 
+        send_msg = None
+        try:
+            send_msg = bot.send_audio(chat_id=query.message.chat.id, audio=open(songfile.file_path, 'rb'), caption='',
+                                      duration=songfile.song.song_duration,
+                                      title=songfile.song.song_name,
+                                      performer=' / '.join(v.artist_name for v in songfile.song.artists),
+                                      timeout=self.timeout,
+                                      disable_notification=True)
 
-def response_single_music(bot, update):
-    logger.info('sing5 listen_selector_reply: data={}'.format(update.callback_query.data))
-    query = update.callback_query
-    index1 = query.data.find('*')
-    index2 = query.data.find('+')
-    index3 = query.data.find('-')
-    index4 = query.data.find('t')
-    if index1 != -1:
-        song_util.selector_cancel(bot, query)
-    elif index2 != -1:
-        page_code = int(query.data[index2 + 1:]) + 1
-        mtype = query.data[6:index2 - 1]
-        sing5_util.selector_page_turning(bot, query, mtype, page_code)
-    elif index3 != -1:
-        page_code = int(query.data[index3 + 1:]) - 1
-        mtype = query.data[6:index3 - 1]
-        sing5_util.selector_page_turning(bot, query, mtype, page_code)
-    else:
-        music_id = int(query.data[index4 + 1:])
-        mtype = query.data[6:index4 - 1]
-        selector_send_music(bot, query, music_id, mtype, False)
+            self.logger.info("文件: 「{}」 发送成功.".format(songfile.song.song_name))
+        except TelegramError as err:
+            if send_msg:
+                send_msg.delete()
+            self.logger.error("文件: 「{}」 发送失败.".format(songfile.song.song_name), exc_info=err)
 
-
-def response_toplist(bot, update, payload='yc'):
-    try:
-        edited_msg = bot.send_message(chat_id=update.message.chat.id,
-                                      text="喵~")
-        update.message.message_id = edited_msg.message_id
-
-        musics_result = sing5_api.get_music_top_by_type_pagecode_and_date(mtype=payload, pagecode=1)
-        top_selector = sing5_util.produce_music_top_selector(payload, 1, musics_result)
-        panel = sing5_util.transfer_music_top_selector_to_panel(top_selector)
-        bot.edit_message_text(chat_id=update.message.chat.id,
-                              message_id=update.message.message_id,
-                              text=panel['text'], quote=True,
-                              disable_web_page_preview=True,
-                              reply_markup=panel['reply_markup'])
-    except Exception as e:
-        logger.error('search music error', exc_info=True)
-
-
-def selector_send_music(bot, query, music_id, mtype, delete):
-    logger.info('selector_download_music: music_id={0}'.format(music_id))
-    if delete:
-        song_util.selector_cancel(bot, query)
-
-    #
-    detail = sing5_api.get_music_detail_by_id_and_type(music_id, song_type=mtype)['data']
-    url_detail = sing5_api.get_music_url_by_id_and_type(music_id, mtype)['data']
-
-    # 转为对象好处理
-    music_obj = sing5_util.generate_music_obj(detail,
-                                              url_detail)
-
-    edited_msg = bot.send_message(chat_id=query.message.chat.id,
-                                  text="找到歌曲: [{0}]({1})".format(music_obj.name, music_obj.url),
-                                  parse_mode=telegram.ParseMode.MARKDOWN)
-
-    # music_caption = "曲目: {0}\n演唱: {1}".format(
-    #     music_obj.name, music_obj.singer.name
-    # )
-    music_caption = ''
-    full_file_name = r'{0} - {1}.mp3'.format(
-        music_obj.name, music_obj.singer.name)
-    # 字符串进行处理
-    full_file_name = full_file_name.replace("/", ":")
-    music_file_path = os.path.join(application.TMP_Folder, full_file_name)
-    music_file = open(music_file_path, 'wb+')
-
-    try:
-        sing5_util.download_continuous(bot, query, music_obj, music_file, edited_msg)
-
-        # 填写 id3tags
-        song_util.write_id3tags(music_file_path, song_title=music_obj.name,
-                                song_artist_list=[music_obj.singer.name], song_album='5sing 音乐')
-
-        music_file.seek(0, os.SEEK_SET)  # 从开始位置开始读
-
-        send_music_file(bot, query, music_file, music_obj, music_caption, edited_msg)
-    except:
-        logger.error('send file failed', exc_info=True)
-    finally:
-        if not music_file.closed:
-            music_file.close()
-        if os.path.exists(music_file_path):
-            os.remove(music_file_path)
-        if edited_msg:
-            edited_msg.delete()
-
-
-def send_music_file(bot, query, music_file, music_obj, file_caption, edited_msg):
-    bot.edit_message_text(
-        chat_id=query.message.chat.id,
-        message_id=edited_msg.message_id,
-        text='5sing {0} 等待发送'.format(music_obj.name),
-        parse_mode=telegram.ParseMode.MARKDOWN,
-        disable_web_page_preview=True
-    )
-
-    logger.info("文件: {} >> 正在发送中".format(music_obj.name))
-    bot.send_chat_action(query.message.chat.id, action=telegram.ChatAction.UPLOAD_AUDIO)
-
-    file_msg = None
-    try:
-        file_msg = bot.send_audio(chat_id=query.message.chat.id, audio=music_file, caption=file_caption,
-                                  duration=music_obj.duration,
-                                  title=music_obj.name,
-                                  performer=music_obj.singer.name,
-                                  disable_notification=True,
-                                  timeout=application.FILE_TRANSFER_TIMEOUT)
-
-        logger.info("文件: {} 发送成功.".format(music_obj.name))
-    except:
-        if file_msg:
-            file_msg.delete()
-        logger.error('send audio file failed', exc_info=True)

@@ -36,6 +36,23 @@ class PlayListSelector(object):
                           sort_keys=True, indent=4)
 
 
+class TopListSelector(object):
+    def __init__(self,
+                 title,
+                 cur_page,
+                 total_page,
+                 toplist
+                 ):
+        self.title = title
+        self.cur_page = cur_page
+        self.total_page = total_page
+        self.toplist = toplist
+
+    def to_json(self):
+        return json.dumps(self, default=lambda o: o.__dict__, ensure_ascii=False,
+                          sort_keys=True, indent=4)
+
+
 class SongFile(object):
     def __init__(self, file_name, file_path, file_url, file_stream, song=None):
         self.file_name = file_name

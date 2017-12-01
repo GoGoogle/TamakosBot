@@ -1,10 +1,13 @@
 import logging
 import time
+
+import os
 import requests
 import telegram
 
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 from config import application
+from entity.bot_telegram import TopListSelector, ButtonItem, SongFile
 from entity.sing5 import MusicTopSelector, Song, Singer
 from interface.util import UtilZ
 from module.sing5z import sing5_api
@@ -13,160 +16,84 @@ logger = logging.getLogger(__name__)
 
 
 class Util(UtilZ):
-    pass
+    def __init__(self):
+        super().__init__()
 
+    def get_toplist_selector(self, curpage, toplist):
+        self.logger.info('get_toplist_selector: keyword={0}, pagecode={1}'.format(toplist.top_name, curpage))
 
-def generate_music_obj(detail, url_detail):
-    url = ''
-    size = 0
-    false_url = 'http://5sing.kugou.com/{0}/{1}.html'.format(detail['SK'], detail['ID'])
-    index1 = detail['squrl']
-    index2 = detail['hqurl']
-    index3 = detail['lqurl']
-    if index1:
-        url = index1
-        size = detail['sqsize']
-    elif index2:
-        url = index2
-        size = detail['hqsize']
-    elif index3:
-        url = index3
-        size = detail['lqsize']
+        total_page = (toplist.track_count + 4) // 5
+        title = '5sing 榜单 「{0}」p: {1}/{2}'.format(
+            toplist.top_name, curpage, total_page)
 
-    music_obj = Song(detail['ID'], detail['SN'], url, Singer(detail['user']['ID'], detail['user']['NN']),
-                     mtype=detail['SK'], size=size, falseurl=false_url)
-    return music_obj
+        return TopListSelector(title, curpage, total_page, toplist)
 
+    def produce_toplist_panel(self, module_name, toplist_selector):
+        button_list = []
 
-def produce_single_music_selector(kw, pagecode, musics_result):
-    pass
+        for x in toplist_selector.toplist.songs:
+            time_fmt = '{0}:{1:0>2d}'.format(int(x.song_duration // 60), int(x.song_duration % 60))
+            button_list.append([
+                InlineKeyboardButton(
+                    text='[{0}] {1} ({2})'.format(
+                        time_fmt, x.song_name, ' / '.join(v.artist_name for v in x.artists)),
+                    callback_data=ButtonItem(module_name, ButtonItem.TYPE_TOPLIST, ButtonItem.OPERATE_SEND,
+                                             x.song_id).dump_json()
+                )
+            ])
 
+        if toplist_selector.total_page == 1:
+            # 什么都不做
+            pass
+        elif toplist_selector.cur_page == 1:
+            button_list.append([
+                InlineKeyboardButton(
+                    text='下一页',
+                    callback_data=ButtonItem(module_name, ButtonItem.TYPE_TOPLIST, ButtonItem.OPERATE_PAGE_DOWN,
+                                             toplist_selector.toplist.top_id,
+                                             toplist_selector.cur_page).dump_json()
+                )
+            ])
+        elif toplist_selector.cur_page == toplist_selector.total_page:
+            button_list.append([
+                InlineKeyboardButton(
+                    text='上一页',
+                    callback_data=ButtonItem(module_name, ButtonItem.TYPE_TOPLIST, ButtonItem.OPERATE_PAGE_UP,
+                                             toplist_selector.toplist.top_id,
+                                             toplist_selector.cur_page).dump_json()
+                )
+            ])
+        else:
+            button_list.append([
+                InlineKeyboardButton(
+                    text='上一页',
+                    callback_data=ButtonItem(module_name, ButtonItem.TYPE_TOPLIST, ButtonItem.OPERATE_PAGE_UP,
+                                             toplist_selector.toplist.top_id,
+                                             toplist_selector.cur_page).dump_json()
+                ),
+                InlineKeyboardButton(
+                    text='下一页',
+                    callback_data=ButtonItem(module_name, ButtonItem.TYPE_TOPLIST, ButtonItem.OPERATE_PAGE_DOWN,
+                                             toplist_selector.toplist.top_id,
+                                             toplist_selector.cur_page).dump_json()
+                )
+            ])
 
-def transfer_single_music_selector_to_panel(music_list_selector):
-    pass
-
-
-def produce_music_top_selector(mtype, pagecode, musics_result):
-    logger.info('produce_music_top_selector, mtype:{0}-pagecode:{1}'.format(mtype, pagecode))
-    musics = []
-    songs = musics_result['data']['songs']
-    for x in songs:
-        s = Song(x['ID'], x['SN'], singer=Singer(x['user']['ID'], x['user']['NN']), mtype=mtype)
-        musics.append(s)
-
-    return MusicTopSelector(musics_result['data']['id'],
-                            musics_result['data']['name'],
-                            pagecode,
-                            musics_result['data']['count'],
-                            musics
-                            )
-
-
-def transfer_music_top_selector_to_panel(top_selector):
-    caption_text = '️5sing 🎵「{0}」p: {1}/{2}'.format(
-        top_selector.title,
-        top_selector.cur_page_code,
-        top_selector.total_songs_num
-    )
-
-    button_list = []
-    for x in top_selector.musics:
         button_list.append([
             InlineKeyboardButton(
-                text='{0} ({1})'.format(
-                    x.name, x.singer.name),
-                callback_data='sing5:{0}:t{1}'.format(top_selector.mtype, x.mid)
+                text='撤销显示',
+                callback_data=ButtonItem(module_name, ButtonItem.TYPE_TOPLIST, ButtonItem.OPERATE_CANCEL).dump_json()
             )
         ])
-    every_page_size = 5
-    if top_selector.total_songs_num == 50:
-        every_page_size = 50
 
-    if top_selector.total_songs_num <= every_page_size:
-        # 什么都不做
-        pass
-    elif top_selector.cur_page_code == 1:
-        button_list.append([
-            InlineKeyboardButton(
-                text='下一页',
-                callback_data='sing5:{0}:+{1}'.format(top_selector.mtype, top_selector.cur_page_code)
-            )
-        ])
-    elif top_selector.cur_page_code == top_selector.total_songs_num:
-        button_list.append([
-            InlineKeyboardButton(
-                text='上一页',
-                callback_data='sing5:{0}:-{1}'.format(top_selector.mtype, top_selector.cur_page_code)
-            )
-        ])
-    else:
-        button_list.append([
-            InlineKeyboardButton(
-                text='上一页',
-                callback_data='sing5:{0}:-{1}'.format(top_selector.mtype, top_selector.cur_page_code)
-            ),
-            InlineKeyboardButton(
-                text='下一页',
-                callback_data='sing5:{0}:+{1}'.format(top_selector.mtype, top_selector.cur_page_code)
-            )
-        ])
-    button_list.append([
-        InlineKeyboardButton(
-            text='撤销显示',
-            callback_data='sing5:*'
-        )
-    ])
+        return {'text': toplist_selector.title, 'reply_markup': InlineKeyboardMarkup(button_list)}
 
-    return {'text': caption_text, 'reply_markup': InlineKeyboardMarkup(button_list)}
-
-
-def selector_page_turning(bot, query, mtype, page_code):
-    logger.info('selector_page_turning: mtype: {0}; page_code={1}'.format(mtype, page_code))
-    musics_result = sing5_api.get_music_top_by_type_pagecode_and_date(mtype=mtype, pagecode=page_code)
-    top_selector = produce_music_top_selector(mtype, page_code, musics_result)
-    panel = transfer_music_top_selector_to_panel(top_selector)
-    query.message.edit_text(text=panel['text'], reply_markup=panel['reply_markup'])
-
-
-def download_continuous(bot, query, music_obj, music_file, edited_msg):
-    try:
-        r = requests.get(music_obj.url, stream=True, timeout=application.FILE_TRANSFER_TIMEOUT)
-
-        logger.info('{0} 下载中,url={1}'.format(music_obj.name, music_obj.url))
-
-        start = time.time()
-        total_length = int(r.headers.get('content-length'))
-        dl = 0
-        for chunk in r.iter_content(application.CHUNK_SIZE):
-            dl += len(chunk)
-            music_file.write(chunk)
-
-            network_speed = dl / (time.time() - start)
-            if network_speed > 1024 * 1024:
-                network_speed_status = '{:.2f} MB/s'.format(network_speed / (1024 * 1024))
-            else:
-                network_speed_status = '{:.2f} KB/s'.format(network_speed / 1024)
-
-            if dl > 1024 * 1024:
-                dl_status = '{:.2f} MB'.format(dl / (1024 * 1024))
-            else:
-                dl_status = '{:.0f} KB'.format(dl / 1024)
-
-            # 已下载大小，总大小，已下载的百分比，网速
-            progress = '{0} / {1:.2f} MB ({2:.0f}%) - {3}'.format(dl_status,
-                                                                  total_length / (1024 * 1024),
-                                                                  dl / total_length * 100,
-                                                                  network_speed_status)
-            progress_status = '{1}'.format(music_obj.name, progress)
-
-            bot.edit_message_text(
-                chat_id=query.message.chat.id,
-                message_id=edited_msg.message_id,
-                text=progress_status,
-                disable_web_page_preview=True,
-                parse_mode=telegram.ParseMode.MARKDOWN,
-                timeout=application.FILE_TRANSFER_TIMEOUT
-            )
-
-    except:
-        logger.error('download_continuous failed', exc_info=True)
+    def get_songfile(self, song):
+        file_name = r'{0} - {1}.{2}'.format(
+            song.song_name, ' & '.join(v.artist_name for v in song.artists), os.path.splitext(song.song_url)[1])
+        file_name = file_name.replace("/", ":")
+        file_path = os.path.join(application.TMP_Folder, file_name)
+        file_url = song.song_url
+        file_stream = open(file_path, 'wb+')
+        song = song
+        return SongFile(file_name, file_path, file_url, file_stream, song)

@@ -86,6 +86,7 @@ class Playlist(object):
 
 class Toplist(object):
     def __init__(self, top_id, top_name, track_count, songs=None):
+        """ top_id 是 榜单的类型"""
         self.top_id = top_id
         self.top_name = top_name
         self.track_count = track_count

@@ -20,7 +20,7 @@ class Util(UtilZ):
         """
         self.logger.info('get_songlist_selector: keyword={0}, pagecode={1}'.format(songlist.keyword, curpage))
         total_page = (songlist.track_count + 4) // 5
-        title = '163 ️🎵关键字「{0}」p: {1}/{2}'.format(songlist.keyword, curpage, total_page)
+        title = '163 ️🎵 关键字「{0}」p: {1}/{2}'.format(songlist.keyword, curpage, total_page)
         return SongListSelector(title, curpage, total_page, songlist)
 
     def produce_songlist_panel(self, module_name, songlist_selector):
@@ -160,6 +160,7 @@ class Util(UtilZ):
     def get_songfile(self, song):
         file_name = r'{0} - {1}.{2}'.format(
             song.song_name, ' & '.join(v.artist_name for v in song.artists), os.path.splitext(song.song_url)[1])
+        file_name = file_name.replace("/", ":")
         file_path = os.path.join(application.TMP_Folder, file_name)
         file_url = song.song_url
         file_stream = open(file_path, 'wb+')

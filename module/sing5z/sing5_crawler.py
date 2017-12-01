@@ -1,6 +1,6 @@
 import requests
 
-from entity.bot_music import Artist, Song, Toplist
+from entity.bot_music import Artist, Song, Toplist, Album
 from interface.crawler import CrawlerZ
 from util.bot_result import BotResult
 from util.exception import GetRequestIllegal, exception_handle
@@ -21,9 +21,10 @@ class Crawler(CrawlerZ):
         song_id, song_name, artist_id, artist_name = song['ID'], song['SN'], song['user']['ID'], song['user']['NN']
         if mode == 0:
             song_url = song['ID'], song['squrl'] or song['hqurl'] or song['lqurl']
-            return Song(song_id, song_name, artists=[Artist(artist_id, artist_name)], song_url=song_url)
+            return Song(song_id, song_name, 264, artists=[Artist(artist_id, artist_name)],
+                        album=Album(10010, "5sing 音乐"), song_url=song_url)
         if mode == 1:
-            return Song(song_id, song_name, artists=[Artist(artist_id, artist_name)])
+            return Song(song_id, song_name, 264, artists=[Artist(artist_id, artist_name)])
 
     @staticmethod
     def dump_songs(songs, mode=0):
@@ -91,6 +92,7 @@ class Crawler(CrawlerZ):
             'songtype': search_type
         }
         result = self.get_request(url, payload)
+        # 判断是否能下载?
         single_song = Crawler.dump_single_song(result['data'], mode=0)
         return BotResult(200, body=single_song)
 

@@ -2,8 +2,9 @@ import logging
 
 
 class MainZ(object):
-    def __init__(self):
+    def __init__(self, timeout=120):
         self.logger = logging.getLogger(__name__)
+        self.timeout = timeout
 
     def init_login(self, config):
         pass
@@ -26,7 +27,7 @@ class MainZ(object):
     def playlist_turning(self, bot, query, playlist_id, page):
         pass
 
-    def top_turning(self, bot, query, search_type, page):
+    def toplist_turning(self, bot, query, search_type, page):
         pass
 
     def deliver_music(self, bot, query, song_id, delete):
@@ -38,5 +39,5 @@ class MainZ(object):
     def download_backend(self, bot, query, songfile, edited_msg):
         pass
 
-    def send__file(self, bot, query, songfile, edited_msg):
+    def send_file(self, bot, query, songfile, edited_msg):
         pass

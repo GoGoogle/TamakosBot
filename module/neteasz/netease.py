@@ -10,9 +10,9 @@ from util import song_util
 
 class Netease(MainZ):
     def __init__(self):
-        super().__init__()
+        super().__init__(application.FILE_TRANSFER_TIMEOUT)
         self.m_name = 'netease'
-        self.crawler = netease_crawler.Crawler(timeout=application.FILE_TRANSFER_TIMEOUT)
+        self.crawler = netease_crawler.Crawler(timeout=self.timeout)
         self.utilz = netease_util.Util()
         self.init_login(application.NETEASE_LOGIN_PAYLOAD)
 
@@ -81,7 +81,7 @@ class Netease(MainZ):
 
         bot_result = self.crawler.get_song_detail(song_id)
         if bot_result.get_status() == 400:
-            text = "版权问题，无法下载。"
+            text = "警告：版权问题，无法下载"
             bot.send_message(chat_id=query.message.chat.id, text=text)
         elif bot_result.get_status() == 200:
             song = bot_result.get_body()
@@ -118,7 +118,7 @@ class Netease(MainZ):
             self.crawler.write_file(songfile, handle=handle)
             songfile.set_id3tags(songfile.song.song_name, list(v.artist_name for v in songfile.song.artists),
                                  song_album=songfile.song.album.album_name)
-            self.send__file(bot, query, songfile, edited_msg)
+            self.send_file(bot, query, songfile, edited_msg)
         finally:
             if os.path.exists(songfile.file_path):
                 os.remove(songfile.file_path)
@@ -127,7 +127,7 @@ class Netease(MainZ):
             if edited_msg:
                 edited_msg.delete()
 
-    def send__file(self, bot, query, songfile, edited_msg):
+    def send_file(self, bot, query, songfile, edited_msg):
         bot.send_chat_action(query.message.chat.id, action=telegram.ChatAction.UPLOAD_AUDIO)
         bot.edit_message_text(
             chat_id=query.message.chat.id,
@@ -143,7 +143,7 @@ class Netease(MainZ):
                                       duration=songfile.song.song_duration / 1000,
                                       title=songfile.song.song_name,
                                       performer=' / '.join(v.artist_name for v in songfile.song.artists),
-                                      timeout=application.FILE_TRANSFER_TIMEOUT,
+                                      timeout=self.timeout,
                                       disable_notification=True)
 
             self.logger.info("文件: 「{}」 发送成功.".format(songfile.song.song_name))

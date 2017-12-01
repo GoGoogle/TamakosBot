@@ -17,5 +17,11 @@ class UtilZ(object):
     def produce_playlist_panel(self, module_name, playlist_selector):
         pass
 
+    def get_toplist_selector(self, curpage, toplist):
+        pass
+
+    def produce_toplist_panel(self, module_name, toplist_selector):
+        pass
+
     def get_songfile(self, song):
         pass
