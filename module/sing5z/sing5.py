@@ -2,11 +2,10 @@ import logging
 import os
 import telegram
 from telegram import TelegramError
-
 from config import application
 from entity.bot_telegram import ButtonItem
 from interface.main import MainZ
-from module.sing5z import sing5_util, sing5_api, sing5_crawler
+from module.sing5z import sing5_util, sing5_crawler
 from util import song_util
 
 logger = logging.getLogger(__name__)
@@ -147,4 +146,3 @@ class Sing5z(MainZ):
             if send_msg:
                 send_msg.delete()
             self.logger.error("文件: 「{}」 发送失败.".format(songfile.song.song_name), exc_info=err)
-

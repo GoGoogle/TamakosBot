@@ -1,16 +1,10 @@
 import logging
-import time
-
 import os
-import requests
-import telegram
 
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 from config import application
 from entity.bot_telegram import TopListSelector, ButtonItem, SongFile
-from entity.sing5 import MusicTopSelector, Song, Singer
 from interface.util import UtilZ
-from module.sing5z import sing5_api
 
 logger = logging.getLogger(__name__)
 
