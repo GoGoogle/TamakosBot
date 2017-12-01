@@ -94,7 +94,7 @@ class ButtonItem(object):
         self.t = button_type
         self.o = button_operate
         self.i = item_id
-        self.c = page
+        self.g = page
 
     def dump_json(self):
         """ the most compact JSON"""
@@ -104,6 +104,6 @@ class ButtonItem(object):
     def parse_json(cls, json_data):
         obj = json.loads(json_data)
         pattern, button_type, operate, item_id, page = \
-            obj['p'], obj['t'], obj['o'], obj['i'], obj['c']
+            obj['p'], obj['t'], obj['o'], obj['i'], obj['g']
         button_item = cls(pattern, button_type, operate, item_id, page)
         return button_item

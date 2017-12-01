@@ -158,7 +158,7 @@ class Util(UtilZ):
         return {'text': playlist_selector.title, 'reply_markup': InlineKeyboardMarkup(button_list)}
 
     def get_songfile(self, song):
-        file_name = r'{0} - {1}.{2}'.format(
+        file_name = r'{0} - {1}{2}'.format(
             song.song_name, ' & '.join(v.artist_name for v in song.artists), os.path.splitext(song.song_url)[1])
         file_name = file_name.replace("/", ":")
         file_path = os.path.join(application.TMP_Folder, file_name)

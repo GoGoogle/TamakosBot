@@ -1,9 +1,13 @@
+import os
+import time
+
 import requests
 
+from config.application import CHUNK_SIZE
 from entity.bot_music import Artist, Song, Toplist, Album
 from interface.crawler import CrawlerZ
 from util.bot_result import BotResult
-from util.exception import GetRequestIllegal, exception_handle
+from util.exception import GetRequestIllegal, exception_handle, SongNotAvailable
 
 
 class Crawler(CrawlerZ):
@@ -15,12 +19,16 @@ class Crawler(CrawlerZ):
     def __init__(self, timeout=120, proxy=None):
         super().__init__(timeout, proxy)
         self.session = requests.Session()
+        self.download_session = requests.Session()
 
     @staticmethod
     def dump_single_song(song, mode=0):
         song_id, song_name, artist_id, artist_name = song['ID'], song['SN'], song['user']['ID'], song['user']['NN']
         if mode == 0:
-            song_url = song['ID'], song['squrl'] or song['hqurl'] or song['lqurl']
+            song_url = song['squrl'] or song['hqurl'] or song['lqurl']
+            if os.path.splitext(song_url)[1] == '.m4a':
+                raise SongNotAvailable(
+                    'Song {0} id={1} is not available due to copyright issue.'.format(song_name, song_id))
             return Song(song_id, song_name, 264, artists=[Artist(artist_id, artist_name)],
                         album=Album(10010, "5sing 音乐"), song_url=song_url)
         if mode == 1:
@@ -91,10 +99,13 @@ class Crawler(CrawlerZ):
             'songid': song_id,
             'songtype': search_type
         }
-        result = self.get_request(url, payload)
-        # 判断是否能下载?
-        single_song = Crawler.dump_single_song(result['data'], mode=0)
-        return BotResult(200, body=single_song)
+        try:
+            result = self.get_request(url, payload)
+            # 判断是否能下载?
+            single_song = Crawler.dump_single_song(result['data'], mode=0)
+            return BotResult(200, body=single_song)
+        except (GetRequestIllegal, SongNotAvailable) as e:
+            return BotResult(400, 'Return {0} when try to get {1} => {2}'.format(e, url, payload))
 
     def get_songtop(self, search_type='yc', page=1):
         url = 'http://mobileapi.5sing.kugou.com/rank/detail'
@@ -112,6 +123,30 @@ class Crawler(CrawlerZ):
                                                    result['data']['songs']
             toplist = Toplist(top_id, top_name, track_count, Crawler.dump_songs(songs, mode=1))
             return BotResult(200, body=toplist)
+
+    @exception_handle
+    def write_file(self, songfile, handle=None):
+        resp = self.download_session.get(songfile.file_url, stream=True, timeout=self.timeout)
+        start = time.time()
+        length = int(resp.headers.get('content-length'))
+        dl = 0
+        for chunk in resp.iter_content(CHUNK_SIZE):
+            dl += len(chunk)
+            songfile.file_stream.write(chunk)
+            network_speed = dl / (time.time() - start)
+            if network_speed > 1024 * 1024:
+                network_speed_status = '{:.2f} MB/s'.format(network_speed / (1024 * 1024))
+            else:
+                network_speed_status = '{:.2f} KB/s'.format(network_speed / 1024)
+            if dl > 1024 * 1024:
+                dl_status = '{:.2f} MB'.format(dl / (1024 * 1024))
+            else:
+                dl_status = '{:.0f} KB'.format(dl / 1024)
+            # 已下载大小，总大小，已下载的百分比，网速
+            progress = '{0} / {1:.2f} MB ({2:.0f}%) - {3}'.format(dl_status, length / (1024 * 1024), dl / length * 100,
+                                                                  network_speed_status)
+            if handle:
+                handle.update(progress)
 
     def login(self, username, password):
         pass

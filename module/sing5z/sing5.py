@@ -39,7 +39,7 @@ class Sing5z(MainZ):
         如果为下载，则获取 music_id 并生成 NeteaseMusic。然后，加载-获取歌曲url，发送音乐文件，删除上一条信息
         :return:
         """
-        self.logger.info('netease listen_selector_reply: data={}'.format(update.callback_query.data))
+        self.logger.info('{0} response_single_music: data={1}'.format(self.m_name, update.callback_query.data))
         query = update.callback_query
 
         button_item = ButtonItem.parse_json(query.data)
@@ -70,11 +70,11 @@ class Sing5z(MainZ):
             panel = self.utilz.produce_toplist_panel(self.m_name, selector)
             query.message.edit_text(text=panel['text'], reply_markup=panel['reply_markup'])
 
-    def deliver_music(self, bot, query, song_id, delete):
+    def deliver_music(self, bot, query, song_id, search_type='yc', delete=False):
         if delete:
             song_util.selector_cancel(bot, query)
 
-        bot_result = self.crawler.get_song_detail(song_id)
+        bot_result = self.crawler.get_song_detail(song_id, search_type)
         if bot_result.get_status() == 400:
             text = "警告：版权问题，无法下载"
             bot.send_message(chat_id=query.message.chat.id, text=text)
@@ -88,7 +88,7 @@ class Sing5z(MainZ):
             self.download_backend(bot, query, songfile, edited_msg)
 
     def handle_callback(self, bot, query, button_item):
-        button_type, button_operate, item_id, page = button_item.t, button_item.o, button_item.i, button_item.c
+        button_type, button_operate, item_id, page = button_item.t, button_item.o, button_item.i, button_item.g
         if button_operate == ButtonItem.OPERATE_CANCEL:
             song_util.selector_cancel(bot, query)
         if button_type == ButtonItem.TYPE_SONGLIST:
@@ -97,14 +97,16 @@ class Sing5z(MainZ):
             if button_operate == ButtonItem.OPERATE_PAGE_UP:
                 self.songlist_turning(bot, query, item_id, page - 1)
             if button_operate == ButtonItem.OPERATE_SEND:
-                self.deliver_music(bot, query, item_id, True)
+                # 这里的 page 指 search_type
+                self.deliver_music(bot, query, item_id, page, True)
         if button_type == ButtonItem.TYPE_TOPLIST:
             if button_operate == ButtonItem.OPERATE_PAGE_DOWN:
                 self.toplist_turning(bot, query, item_id, page + 1)
             if button_operate == ButtonItem.OPERATE_PAGE_UP:
                 self.toplist_turning(bot, query, item_id, page - 1)
             if button_operate == ButtonItem.OPERATE_SEND:
-                self.deliver_music(bot, query, item_id, False)
+                # 这里的 page 指 search_type
+                self.deliver_music(bot, query, item_id, page, False)
 
     def download_backend(self, bot, query, songfile, edited_msg):
         self.logger.info('download_backend..')

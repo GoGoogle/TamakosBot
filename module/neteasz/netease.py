@@ -37,7 +37,7 @@ class Netease(MainZ):
         如果为下载，则获取 music_id 并生成 NeteaseMusic。然后，加载-获取歌曲url，发送音乐文件，删除上一条信息
         :return:
         """
-        self.logger.info('netease listen_selector_reply: data={}'.format(update.callback_query.data))
+        self.logger.info('{0} response_single_music: data={1}'.format(self.m_name, update.callback_query.data))
         query = update.callback_query
 
         button_item = ButtonItem.parse_json(query.data)
@@ -75,7 +75,7 @@ class Netease(MainZ):
             panel = self.utilz.produce_playlist_panel(self.m_name, selector)
             query.message.edit_text(text=panel['text'], reply_markup=panel['reply_markup'])
 
-    def deliver_music(self, bot, query, song_id, delete):
+    def deliver_music(self, bot, query, song_id, search_type=None, delete=False):
         if delete:
             song_util.selector_cancel(bot, query)
 
@@ -93,7 +93,7 @@ class Netease(MainZ):
             self.download_backend(bot, query, songfile, edited_msg)
 
     def handle_callback(self, bot, query, button_item):
-        button_type, button_operate, item_id, page = button_item.t, button_item.o, button_item.i, button_item.c
+        button_type, button_operate, item_id, page = button_item.t, button_item.o, button_item.i, button_item.g
         if button_operate == ButtonItem.OPERATE_CANCEL:
             song_util.selector_cancel(bot, query)
         if button_type == ButtonItem.TYPE_SONGLIST:

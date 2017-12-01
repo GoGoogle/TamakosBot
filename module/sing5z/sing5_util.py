@@ -26,13 +26,14 @@ class Util(UtilZ):
         button_list = []
 
         for x in toplist_selector.toplist.songs:
+            """ButtonItem 这里用 search_type 指代原 page属性"""
             time_fmt = '{0}:{1:0>2d}'.format(int(x.song_duration // 60), int(x.song_duration % 60))
             button_list.append([
                 InlineKeyboardButton(
                     text='[{0}] {1} ({2})'.format(
                         time_fmt, x.song_name, ' / '.join(v.artist_name for v in x.artists)),
                     callback_data=ButtonItem(module_name, ButtonItem.TYPE_TOPLIST, ButtonItem.OPERATE_SEND,
-                                             x.song_id).dump_json()
+                                             x.song_id, toplist_selector.toplist.top_id).dump_json()
                 )
             ])
 
@@ -83,7 +84,7 @@ class Util(UtilZ):
         return {'text': toplist_selector.title, 'reply_markup': InlineKeyboardMarkup(button_list)}
 
     def get_songfile(self, song):
-        file_name = r'{0} - {1}.{2}'.format(
+        file_name = r'{0} - {1}{2}'.format(
             song.song_name, ' & '.join(v.artist_name for v in song.artists), os.path.splitext(song.song_url)[1])
         file_name = file_name.replace("/", ":")
         file_path = os.path.join(application.TMP_Folder, file_name)

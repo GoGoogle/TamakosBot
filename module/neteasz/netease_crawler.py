@@ -7,8 +7,7 @@ from http import cookiejar
 import requests
 from requests import RequestException
 
-from config import application
-from config.application import HEADERS, COOKIE_PATH
+from config.application import HEADERS, COOKIE_PATH, CHUNK_SIZE
 from entity.bot_music import Song, Album, Artist, Playlist, User, SongList
 from interface.crawler import CrawlerZ
 from util.bot_result import BotResult
@@ -378,7 +377,7 @@ class Crawler(CrawlerZ):
         start = time.time()
         length = int(resp.headers.get('content-length'))
         dl = 0
-        for chunk in resp.iter_content(application.CHUNK_SIZE):
+        for chunk in resp.iter_content(CHUNK_SIZE):
             dl += len(chunk)
             songfile.file_stream.write(chunk)
             network_speed = dl / (time.time() - start)
