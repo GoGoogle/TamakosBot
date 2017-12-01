@@ -29,7 +29,7 @@ class Crawler(CrawlerZ):
             artist_list = [Artist(10010, song['singername'])]
             album_id, album_name = song['album_id'], song['album_name']
             album = Album(album_id, album_name)
-            song_id = song['sqhash'] or song['320hash'] or song['128hash'] or song['hash']
+            song_id = song.get('sqhash') or song.get('320hash') or song.get('128hash') or song.get('hash')
             song_id, song_name, song_duration, artists, album = song_id, song['songname'], song[
                 'duration'], artist_list, album
             song = Song(song_id, song_name, song_duration, artists, album)
@@ -69,7 +69,7 @@ class Crawler(CrawlerZ):
             resp = custom_session.get(url, params=params, timeout=self.timeout,
                                       proxies=self.proxies)
         result = resp.json()
-        if result['code'] != 200:
+        if result.get('err_code') or result.get('errcode') or result.get('error'):
             self.logger.error('Return %s when try to get %s', result, url)
             raise GetRequestIllegal(result)
         else:
@@ -87,17 +87,18 @@ class Crawler(CrawlerZ):
             'format': 'json',
             'showtype': 1
         }
-        result = self.get_request(url, payload)
-        if result['errcode'] != 0:
+        try:
+            result = self.get_request(url, payload)
+            if result['data']['total'] <= 0:
+                self.logger.warning('Song %s not existed!', song_name)
+                return BotResult(404, 'Song {} not existed.'.format(song_name))
+            else:
+                keyword, song_count, songs = song_name, result['data']['total'], result['data']['info']
+                songlist = SongList(keyword, song_count, Crawler.dump_songs(songs))
+                return BotResult(200, body=songlist)
+        except (GetRequestIllegal, RequestException) as e:
             self.logger.warning('Song %s search error', song_name)
-            return BotResult(400, msg=result['error'])
-        if result['data']['total'] <= 0:
-            self.logger.warning('Song %s not existed!', song_name)
-            return BotResult(404, 'Song {} not existed.'.format(song_name))
-        else:
-            keyword, song_count, songs = song_name, result['data']['total'], result['data']['info']
-            songlist = SongList(keyword, song_count, Crawler.dump_songs(songs))
-            return BotResult(200, body=songlist)
+            return BotResult(400, 'Return {0} when try to get {1} => {2}'.format(e, url, payload))
 
     def get_playlist(self, playlist_id, page=1):
         pass
@@ -110,16 +111,14 @@ class Crawler(CrawlerZ):
         }
         try:
             result = self.get_request(url, payload)
-            if result['errcode'] != 0:
-                self.logger.warning('Song %s get detail failed', song_id)
-                return BotResult(400, msg='Song {} get detail failed'.format(song_id))
             song = result['data']
             single_song = Crawler.dump_single_song(song, mode=1)
             # 获取 song_url
             url = self.get_song_url(song_id)
             single_song.song_url = url
             return BotResult(200, body=single_song)
-        except (SongNotAvailable, RequestException) as e:
+        except (SongNotAvailable, GetRequestIllegal, RequestException) as e:
+            self.logger.warning('Song %s get detail error', song_id)
             return BotResult(400, 'Return {0} when try to get {1} => {2}'.format(e, url, payload))
 
     def get_song_url(self, song_id):

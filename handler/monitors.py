@@ -12,7 +12,7 @@ from util.manager_util import restricted
 class Monitors(object):
     def __init__(self):
         self.netease = netease.Netease()
-        self.kugou = kugou
+        self.kugou = kugou.Kugou()
         self.sing5 = sing5.Sing5z()
         self.logger = logging.getLogger(__name__)
 
@@ -75,6 +75,6 @@ class Monitors(object):
             RegexHandler(r'^TOP(\s\w*)?\s(五婶|5)$', self.response_sing5_toplist))
         dispatcher.add_handler(
             RegexHandler(r'^(酷狗|k)\s(\w+)$', self.kugou_regex))
-        dispatcher.add_handler(CallbackQueryHandler(self.kugou_music_selector_callback, pattern='kg'))
+        dispatcher.add_handler(CallbackQueryHandler(self.kugou_music_selector_callback, pattern=r"{\"p\":\"" + self.kugou.m_name))
         dispatcher.add_handler(
             RegexHandler(r'^cc:.*', self.manage_bot))

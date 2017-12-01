@@ -118,16 +118,19 @@ class Crawler(CrawlerZ):
         :params limit: song count returned by weapi.
         :return: a Song object.
         """
+        try:
+            result = self.search(song_name, search_type=1, page=page)
 
-        result = self.search(song_name, search_type=1, page=page)
-
-        if result['result']['songCount'] <= 0:
-            self.logger.warning('Song %s not existed!', song_name)
-            return BotResult(404, 'Song {} not existed.'.format(song_name))
-        else:
-            keyword, song_count, songs = song_name, result['result']['songCount'], result['result']['songs']
-            songlist = SongList(keyword, song_count, Crawler.dump_songs(songs))
-            return BotResult(200, body=songlist)
+            if result['result']['songCount'] <= 0:
+                self.logger.warning('Song %s not existed!', song_name)
+                return BotResult(404, 'Song {} not existed.'.format(song_name))
+            else:
+                keyword, song_count, songs = song_name, result['result']['songCount'], result['result']['songs']
+                songlist = SongList(keyword, song_count, Crawler.dump_songs(songs))
+                return BotResult(200, body=songlist)
+        except (PostRequestIllegal, RequestException) as e:
+            self.logger.warning('Song %s search error, %s', song_name, e)
+            return BotResult(400, 'Song {0} search error: {1}'.format(song_name, e))
 
     # def search_album(self, album_name, quiet=False, page=1):
     #     """Search album by album name.

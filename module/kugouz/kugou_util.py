@@ -18,12 +18,13 @@ class Util(UtilZ):
                 :param songlist: 歌曲列表🎵
                 :return: 歌曲列表选择器
                 """
-        self.logger.info('get_songlist_selector: keyword={0}, pagecode={1}'.format(songlist.keyword, curpage))
+        self.logger.info('get_songlist_selector: keyword=%s, pagecode=%s', songlist.keyword, curpage)
         total_page = (songlist.track_count + 4) // 5
         title = '酷狗 ️🎵 关键字「{0}」p: {1}/{2}'.format(songlist.keyword, curpage, total_page)
         return SongListSelector(title, curpage, total_page, songlist)
 
     def produce_songlist_panel(self, module_name, songlist_selector):
+        self.logger.info('produce_songlist_panel..')
         button_list = []
         # 由于 tg 对 callback_data 字数限制，必须对关键词进行切片
         songlist_selector.songlist.keyword = songlist_selector.songlist.keyword[:16]
@@ -85,6 +86,7 @@ class Util(UtilZ):
         return {'text': songlist_selector.title, 'reply_markup': InlineKeyboardMarkup(button_list)}
 
     def get_songfile(self, song):
+        self.logger.info('get_songfile..')
         file_name = r'{0} - {1}{2}'.format(
             song.song_name, ' & '.join(v.artist_name for v in song.artists), os.path.splitext(song.song_url)[1])
         file_name = file_name.replace("/", ":")
