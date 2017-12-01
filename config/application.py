@@ -23,7 +23,7 @@ WEBHOOK_LOCAL = {
 }
 
 WEBHOOK_REMOTE = {
-    'path': 'https://telegram.lemo.site/bottoken',
+    'url': 'https://telegram.lemo.site/bottoken',
     'timeout': 40
 }
 
