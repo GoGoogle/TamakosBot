@@ -39,6 +39,7 @@ class Bot(object):
         self.logger.info('bot start..')
         updater = Updater(token=application.BOT_TOKEN)
         self.distribute(updater.dispatcher)
+
         # updater.start_polling(timeout=20)
         # updater.idle()
         updater.start_webhook(listen=WEBHOOK_LOCAL['listen'], port=WEBHOOK_LOCAL['port'],

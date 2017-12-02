@@ -57,7 +57,7 @@ class Monitors(object):
     # kugou
 
     def kugou_regex(self, bot, update, user_data):
-        key_word = re.search(r'^\w*\s(\.+)$', update.message.text).group(1)
+        key_word = re.search(r'^\w*\s(.+)$', update.message.text).group(1)
         self.kugou.search_music(bot, update, key_word, user_data)
 
     @run_async
@@ -67,7 +67,7 @@ class Monitors(object):
     # xiami
 
     def xiami_regex(self, bot, update):
-        key_word = re.search(r'^\w*\s(\.+)$', update.message.text).group(1)
+        key_word = re.search(r'^\w*\s(.+)$', update.message.text).group(1)
         self.xiami.search_music(bot, update, key_word)
 
     @run_async
@@ -110,8 +110,8 @@ class Monitors(object):
         dispatcher.add_handler(
             RegexHandler(r'^(虾米|x)\s(\w+)$', self.xiami_regex))
         dispatcher.add_handler(
-            CallbackQueryHandler(self.xiami_music_selector_callback, pattern=r"{\"p\":\"" + self.xiami.m_name,
-                                 pass_user_data=True))
+            CallbackQueryHandler(self.xiami_music_selector_callback, pattern=r"{\"p\":\"" + self.xiami.m_name))
 
+        """管理命令入口"""
         dispatcher.add_handler(
             RegexHandler(r'^cc:.*', self.manage_bot))
