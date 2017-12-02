@@ -6,20 +6,20 @@ import yaml
 from telegram.ext import Updater
 
 from config import application
-from config.application import WEBHOOK_REMOTE, WEBHOOK_LOCAL
+from config.application import WEBHOOK_LOCAL, WEBHOOK_REMOTE
 from handler import commands, messages, monitors
 
 
 class Bot(object):
     def __init__(self, log_config="config/logconfig.yaml"):
-        self.logger = logging.getLogger("__name__")
         self.commands = commands.Commands()
         self.messages = messages.Message()
         self.monitors = monitors.Monitors()
         self.setup_build(log_config)
+        self.logger = logging.getLogger("__name__")
 
-    def setup_build(self, path):
-        self.logger.info('bot start..')
+    @staticmethod
+    def setup_build(path):
         with open(path, "r") as f:
             config = yaml.load(f)
             logging.config.dictConfig(config)
@@ -36,13 +36,11 @@ class Bot(object):
         dispatcher.add_error_handler(self.error_handler)
 
     def start_bot(self):
+        self.logger.info('bot start..')
         updater = Updater(token=application.BOT_TOKEN)
-
         self.distribute(updater.dispatcher)
-
         # updater.start_polling(timeout=20)
         # updater.idle()
-
         updater.start_webhook(listen=WEBHOOK_LOCAL['listen'], port=WEBHOOK_LOCAL['port'],
                               url_path=WEBHOOK_LOCAL['url_path'])
         updater.bot.set_webhook(url=WEBHOOK_REMOTE['url'], timeout=WEBHOOK_REMOTE['timeout'])
