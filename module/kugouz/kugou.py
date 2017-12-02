@@ -19,17 +19,14 @@ class Kugou(MainZ):
     def init_login(self, config):
         pass
 
-    def search_music(self, bot, update, kw, user_data=None):
+    def search_music(self, bot, update, kw):
         self.logger.info('get_music: %s', kw)
         edited_msg = bot.send_message(chat_id=update.message.chat.id,
                                       text="喵~")
         update.message.message_id = edited_msg.message_id
-        if user_data is None:
-            self.songlist_turning(bot, update, kw, 1)
-        else:
-            self.songlist_turning(bot, update, kw, 1, user_data)
+        self.songlist_turning(bot, update, kw, 1)
 
-    def response_single_music(self, bot, update, user_data=None):
+    def response_single_music(self, bot, update):
         """监听响应的内容，取消、翻页或者下载
         如果为取消，则直接删除选择列表
         如果为翻页，则修改选择列表并进行翻页
@@ -39,14 +36,10 @@ class Kugou(MainZ):
         self.logger.info('%s response_single_music: data=%s', self.m_name, update.callback_query.data)
         query = update.callback_query
 
-        # 判断 user_data dict 是否有值，有则取出原值
-        if user_data:
-            button_item = ButtonItem.parse_userdata(query.data, user_data)
-        else:
-            button_item = ButtonItem.parse_json(query.data)
-        self.handle_callback(bot, query, button_item, user_data)
+        button_item = ButtonItem.parse_kugou_json(query.data)
+        self.handle_callback(bot, query, button_item)
 
-    def songlist_turning(self, bot, query, kw, page, user_data=None):
+    def songlist_turning(self, bot, query, kw, page):
         self.logger.info('songlist_turning: kw=%s page=%s', kw, page)
         bot_result = self.crawler.search_song(kw, page)
         if bot_result.get_status() == 400:
@@ -57,10 +50,7 @@ class Kugou(MainZ):
             query.message.reply_text(text=text)
         elif bot_result.get_status() == 200:
             selector = self.utilz.get_songlist_selector(page, bot_result.get_body())
-            if user_data is None:
-                panel = self.utilz.produce_songlist_panel(self.m_name, selector)
-            else:
-                panel = self.utilz.produce_songlist_panel(self.m_name, selector, user_data)
+            panel = self.utilz.produce_songlist_panel(self.m_name, selector)
             query.message.edit_text(text=panel['text'], reply_markup=panel['reply_markup'])
 
     def deliver_music(self, bot, query, song_id, delete=False):
@@ -81,27 +71,18 @@ class Kugou(MainZ):
             songfile = self.utilz.get_songfile(song)
             self.download_backend(bot, query, songfile, edited_msg)
 
-    def handle_callback(self, bot, query, button_item, user_data=None):
+    def handle_callback(self, bot, query, button_item):
         self.logger.info('handle_callback: button_item')
         button_type, button_operate, item_id, page = button_item.t, button_item.o, button_item.i, button_item.g
         if button_operate == ButtonItem.OPERATE_CANCEL:
             song_util.selector_cancel(bot, query)
-        if user_data is None:
-            if button_type == ButtonItem.TYPE_SONGLIST:
-                if button_operate == ButtonItem.OPERATE_PAGE_DOWN:
-                    self.songlist_turning(bot, query, item_id, page + 1)
-                if button_operate == ButtonItem.OPERATE_PAGE_UP:
-                    self.songlist_turning(bot, query, item_id, page - 1)
-                if button_operate == ButtonItem.OPERATE_SEND:
-                    self.deliver_music(bot, query, item_id, delete=True)
-        else:
-            if button_type == ButtonItem.TYPE_SONGLIST:
-                if button_operate == ButtonItem.OPERATE_PAGE_DOWN:
-                    self.songlist_turning(bot, query, item_id, page + 1, user_data={})
-                if button_operate == ButtonItem.OPERATE_PAGE_UP:
-                    self.songlist_turning(bot, query, item_id, page - 1, user_data={})
-                if button_operate == ButtonItem.OPERATE_SEND:
-                    self.deliver_music(bot, query, item_id, delete=True)
+        if button_type == ButtonItem.TYPE_SONGLIST:
+            if button_operate == ButtonItem.OPERATE_PAGE_DOWN:
+                self.songlist_turning(bot, query, item_id, page + 1)
+            if button_operate == ButtonItem.OPERATE_PAGE_UP:
+                self.songlist_turning(bot, query, item_id, page - 1)
+            if button_operate == ButtonItem.OPERATE_SEND:
+                self.deliver_music(bot, query, item_id, delete=True)
 
     def download_backend(self, bot, query, songfile, edited_msg):
         self.logger.info('download_backend..')
