@@ -66,6 +66,17 @@ NETEASE_HEADERS = {
     'User-Agent': choice(userAgentList)
 }
 
+KUGOU_HEADERS = {
+    'Accept': '*/*',
+    'Accept-Encoding': 'gzip,deflate,sdch',
+    'Accept-Language': 'zh-CN,zh;q=0.8,gl;q=0.6,zh-TW;q=0.4',
+    'Connection': 'keep-alive',
+    'Content-Type': 'application/x-www-form-urlencoded',
+    'Referer': 'http://www.kugou.com/',
+    'X-Real-IP': '59.111.160.197',
+    'User-Agent': choice(userAgentList)
+}
+
 XIAMI_HEADERS = {
     'Accept': '*/*',
     'Accept-Encoding': 'gzip,deflate,sdch',

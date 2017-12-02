@@ -56,13 +56,13 @@ class Monitors(object):
 
     # kugou
 
-    def kugou_regex(self, bot, update, user_data):
+    def kugou_regex(self, bot, update):
         key_word = re.search(r'^\w*\s(.+)$', update.message.text).group(1)
-        self.kugou.search_music(bot, update, key_word, user_data)
+        self.kugou.search_music(bot, update, key_word)
 
     @run_async
-    def kugou_music_selector_callback(self, bot, update, user_data):
-        self.kugou.response_single_music(bot, update, user_data)
+    def kugou_music_selector_callback(self, bot, update):
+        self.kugou.response_single_music(bot, update)
 
     # xiami
 
@@ -101,14 +101,13 @@ class Monitors(object):
 
         """酷狗命令入口"""
         dispatcher.add_handler(
-            RegexHandler(r'^(酷狗|k)\s(\w+)$', self.kugou_regex, pass_user_data=True))
+            RegexHandler(r'^(酷狗|k)\s(.+)$', self.kugou_regex))
         dispatcher.add_handler(
-            CallbackQueryHandler(self.kugou_music_selector_callback, pattern=r"{\"p\":\"" + self.kugou.m_name,
-                                 pass_user_data=True))
+            CallbackQueryHandler(self.kugou_music_selector_callback, pattern=r"{\"p\":\"" + self.kugou.m_name))
 
         """虾米命令入口"""
         dispatcher.add_handler(
-            RegexHandler(r'^(虾米|x)\s(\w+)$', self.xiami_regex))
+            RegexHandler(r'^(虾米|x)\s(.+)$', self.xiami_regex))
         dispatcher.add_handler(
             CallbackQueryHandler(self.xiami_music_selector_callback, pattern=r"{\"p\":\"" + self.xiami.m_name))
 

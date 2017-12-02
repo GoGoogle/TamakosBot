@@ -101,6 +101,29 @@ class ButtonItem(object):
         """ the most compact JSON"""
         return json.dumps(self, default=lambda o: o.__dict__, separators=(',', ':'))
 
+    @classmethod
+    def parse_json(cls, json_data):
+        obj = json.loads(json_data)
+        pattern, button_type, operate, item_id, page = \
+            obj['p'], obj['t'], obj['o'], obj['i'], obj['g']
+        button_item = cls(pattern, button_type, operate, item_id, page)
+        return button_item
+
+    def dump_kugou_json(self):
+        return json.dumps({'p': self.p, 'x': self.i})
+
+    @classmethod
+    def parse_kugou_json(cls, json_data):
+        obj = json.loads(json_data)
+        if obj.get('x'):
+            pattern, item_id = obj['p'], obj['x']
+            button_item = cls(pattern, ButtonItem.TYPE_SONGLIST, ButtonItem.OPERATE_SEND, item_id)
+        else:
+            pattern, button_type, operate, item_id, page = \
+                obj['p'], obj['t'], obj['o'], obj['i'], obj['g']
+            button_item = cls(pattern, button_type, operate, item_id, page)
+        return button_item
+
     def dump_userdata(self, user_data):
         """
         imitate a json object which contains two properties: 'p' and 'u' means pattern and uuid
@@ -112,14 +135,6 @@ class ButtonItem(object):
         user_data[seq_uuid] = val
         callback_uuid = json.dumps({'p': self.p, 'u': seq_uuid}, separators=(',', ':'))
         return callback_uuid
-
-    @classmethod
-    def parse_json(cls, json_data):
-        obj = json.loads(json_data)
-        pattern, button_type, operate, item_id, page = \
-            obj['p'], obj['t'], obj['o'], obj['i'], obj['g']
-        button_item = cls(pattern, button_type, operate, item_id, page)
-        return button_item
 
     @staticmethod
     def parse_userdata(query_data, user_data):
