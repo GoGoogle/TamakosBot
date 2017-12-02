@@ -6,7 +6,7 @@ from module.kugouz import kugou
 from module.managez import admin
 from module.neteasz import netease
 from module.sing5z import sing5
-from util.bot_util import restricted
+from util.telegram_util import restricted
 
 
 class Monitors(object):
@@ -34,7 +34,7 @@ class Monitors(object):
 
     def sing5_regex(self, bot, update):
         """5sing音乐命令入口"""
-        payload = re.search(r'^\w+\s(1|2|3)?\s?(.+)$', update.message.text).groups()
+        payload = re.search(r'^\w+\s([123])?\s?(.+)$', update.message.text).groups()
         self.sing5.search_music(bot, update, payload)
 
     @run_async

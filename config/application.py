@@ -27,7 +27,7 @@ WEBHOOK_REMOTE = {
     'timeout': 40
 }
 
-# NETEASE CONFIG
+# MUSIC CONFIG
 
 COOKIE_PATH = os.path.join(TMP_Folder, 'cookie')
 
@@ -53,7 +53,7 @@ userAgentList = [
     'Mozilla/5.0 (iPad; CPU OS 10_0 like Mac OS X) AppleWebKit/602.1.38 (KHTML, like Gecko) Version/10.0 Mobile/14A300 Safari/602.1'
 ]
 
-HEADERS = {
+NETEASE_HEADERS = {
     'Accept': '*/*',
     'Accept-Encoding': 'gzip,deflate,sdch',
     'Accept-Language': 'zh-CN,zh;q=0.8,gl;q=0.6,zh-TW;q=0.4',
@@ -62,6 +62,18 @@ HEADERS = {
     'Host': 'music.163.com',
     'Referer': 'http://music.163.com',
     'Cookie': 'os=linux;appver=1.5.2',
+    'X-Real-IP': '59.111.160.197',
+    'User-Agent': choice(userAgentList)
+}
+
+XIAMI_HEADERS = {
+    'Accept': '*/*',
+    'Accept-Encoding': 'gzip,deflate,sdch',
+    'Accept-Language': 'zh-CN,zh;q=0.8,gl;q=0.6,zh-TW;q=0.4',
+    'Connection': 'keep-alive',
+    'Content-Type': 'application/x-www-form-urlencoded',
+    'Referer': 'http://h.xiami.com/',
+    'Cookie': 'user_from=2;XMPLAYER_addSongsToggler=0;XMPLAYER_isOpen=0;_xiamitoken=cb8bfadfe130abdbf5e2282c30f0b39a;',
     'X-Real-IP': '59.111.160.197',
     'User-Agent': choice(userAgentList)
 }

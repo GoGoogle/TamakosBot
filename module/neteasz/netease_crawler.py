@@ -7,10 +7,10 @@ from http import cookiejar
 import requests
 from requests import RequestException
 
-from config.application import HEADERS, COOKIE_PATH, CHUNK_SIZE
+from config.application import NETEASE_HEADERS, COOKIE_PATH, CHUNK_SIZE
 from entity.bot_music import Song, Album, Artist, Playlist, User, SongList
 from interface.crawler import CrawlerZ
-from util.bot_result import BotResult
+from util.telegram_util import BotResult
 from util.encrypt_util import encrypted_request
 from util.excep_util import (
     SongNotAvailable, GetRequestIllegal, PostRequestIllegal, exception_handle)
@@ -25,7 +25,7 @@ class Crawler(CrawlerZ):
     def __init__(self, timeout=120, proxy=None):
         super().__init__(timeout, proxy)
         self.session = requests.Session()
-        self.session.headers.update(HEADERS)
+        self.session.headers.update(NETEASE_HEADERS)
         self.session.cookies = cookiejar.LWPCookieJar(COOKIE_PATH)
         self.login_session = requests.Session()
         # self.download_session = requests.Session()

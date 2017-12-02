@@ -1,14 +1,13 @@
-import logging
 import os
+
 import telegram
 from telegram import TelegramError
+
 from config import application
 from entity.bot_telegram import ButtonItem
 from interface.main import MainZ
 from module.sing5z import sing5_util, sing5_crawler
 from util import song_util
-
-logger = logging.getLogger(__name__)
 
 
 class Sing5z(MainZ):
@@ -19,18 +18,7 @@ class Sing5z(MainZ):
         self.utilz = sing5_util.Util()
 
     def search_music(self, bot, update, args):
-        if len(args) == 2:
-            search_type, search_content = args[1], args[2]
-        else:
-            search_type, search_content = 2, args[1]
-
-        logger.info('search_music: {}'.format(search_content))
-        bot_result = self.crawler.search(search_content, search_type)
-        if bot_result.get_status() == 400:
-            text = "缺少歌曲名称"
-            update.message.reply_text(text=text)
-        elif bot_result.get_status() == 200:
-            pass
+        pass
 
     def response_single_music(self, bot, update):
         """监听响应的内容，取消、翻页或者下载

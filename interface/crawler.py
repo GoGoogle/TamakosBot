@@ -25,7 +25,6 @@ class CrawlerZ(object):
     def get_request(self, url, params=None, custom_session=None):
         pass
 
-    @abstractmethod
     def post_request(self, url, params, custom_session=None):
         pass
 

@@ -1,12 +1,10 @@
-import logging
 import os
 
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
+
 from config import application
 from entity.bot_telegram import TopListSelector, ButtonItem, SongFile
 from interface.util import UtilZ
-
-logger = logging.getLogger(__name__)
 
 
 class Util(UtilZ):
