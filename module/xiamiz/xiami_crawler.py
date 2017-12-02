@@ -1,15 +1,29 @@
 import time
+from random import choice
 from urllib.parse import unquote
 
 import requests
 from requests import RequestException
 
-from config.application import CHUNK_SIZE, XIAMI_HEADERS
+from config.application import CHUNK_SIZE
 from entity.bot_music import Song, Album, Artist, SongList
 from interface.crawler import CrawlerZ
+from util.encrypt_util import userAgentList
 from util.excep_util import (
     SongNotAvailable, GetRequestIllegal, exception_handle)
 from util.telegram_util import BotResult
+
+XIAMI_HEADERS = {
+    'Accept': '*/*',
+    'Accept-Encoding': 'gzip,deflate,sdch',
+    'Accept-Language': 'zh-CN,zh;q=0.8,gl;q=0.6,zh-TW;q=0.4',
+    'Connection': 'keep-alive',
+    'Content-Type': 'application/x-www-form-urlencoded',
+    'Referer': 'http://h.xiami.com/',
+    'Cookie': 'user_from=2;XMPLAYER_addSongsToggler=0;XMPLAYER_isOpen=0;_xiamitoken=cb8bfadfe130abdbf5e2282c30f0b39a;',
+    'X-Real-IP': '59.111.160.197',
+    'User-Agent': choice(userAgentList)
+}
 
 
 class Crawler(CrawlerZ):

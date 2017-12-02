@@ -24,9 +24,9 @@ class Crawler(CrawlerZ):
     @staticmethod
     def dump_single_song(song, mode=0):
         song_id, song_name, artist_id, artist_name = song['ID'], song['SN'], song['user']['ID'], song['user']['NN']
-        if mode == 1:
-            return Song(song_id, song_name, 264, artists=[Artist(artist_id, artist_name)])
         if mode == 0:
+            return Song(song_id, song_name, 264, artists=[Artist(artist_id, artist_name)])
+        if mode == 1:
             song_url = song.get('squrl') or song.get('hqurl') or song.get('lqurl')
             if os.path.splitext(song_url)[1] == '.m4a':
                 raise SongNotAvailable(
@@ -121,7 +121,7 @@ class Crawler(CrawlerZ):
         else:
             top_id, top_name, track_count, songs = search_type, result['data']['name'], result['data']['count'], \
                                                    result['data']['songs']
-            toplist = Toplist(top_id, top_name, track_count, Crawler.dump_songs(songs, mode=0))
+            toplist = Toplist(top_id, top_name, track_count, Crawler.dump_songs(songs))
             return BotResult(200, body=toplist)
 
     @exception_handle

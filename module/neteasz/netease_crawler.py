@@ -3,17 +3,31 @@ import json
 import re
 import time
 from http import cookiejar
+from random import choice
 
 import requests
 from requests import RequestException
 
-from config.application import NETEASE_HEADERS, COOKIE_PATH, CHUNK_SIZE
+from config.application import COOKIE_PATH, CHUNK_SIZE
 from entity.bot_music import Song, Album, Artist, Playlist, User, SongList
 from interface.crawler import CrawlerZ
-from util.telegram_util import BotResult
-from util.encrypt_util import encrypted_request
+from util.encrypt_util import encrypted_request, userAgentList
 from util.excep_util import (
     SongNotAvailable, GetRequestIllegal, PostRequestIllegal, exception_handle)
+from util.telegram_util import BotResult
+
+NETEASE_HEADERS = {
+    'Accept': '*/*',
+    'Accept-Encoding': 'gzip,deflate,sdch',
+    'Accept-Language': 'zh-CN,zh;q=0.8,gl;q=0.6,zh-TW;q=0.4',
+    'Connection': 'keep-alive',
+    'Content-Type': 'application/x-www-form-urlencoded',
+    'Host': 'music.163.com',
+    'Referer': 'http://music.163.com',
+    'Cookie': 'os=linux;appver=1.5.2',
+    'X-Real-IP': '59.111.160.197',
+    'User-Agent': choice(userAgentList)
+}
 
 
 class Crawler(CrawlerZ):

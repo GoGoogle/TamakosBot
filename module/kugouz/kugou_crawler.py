@@ -1,15 +1,27 @@
 import time
+from random import choice
 
 import requests
 from requests import RequestException
 
-from config.application import CHUNK_SIZE, KUGOU_HEADERS
+from config.application import CHUNK_SIZE
 from entity.bot_music import Song, Album, Artist, SongList
 from interface.crawler import CrawlerZ
-from util.telegram_util import BotResult
-from util.encrypt_util import md5_encrypt
+from util.encrypt_util import md5_encrypt, userAgentList
 from util.excep_util import (
     SongNotAvailable, GetRequestIllegal, exception_handle)
+from util.telegram_util import BotResult
+
+KUGOU_HEADERS = {
+    'Accept': '*/*',
+    'Accept-Encoding': 'gzip,deflate,sdch',
+    'Accept-Language': 'zh-CN,zh;q=0.8,gl;q=0.6,zh-TW;q=0.4',
+    'Connection': 'keep-alive',
+    'Content-Type': 'application/x-www-form-urlencoded',
+    'Referer': 'http://www.kugou.com/',
+    'X-Real-IP': '59.111.160.197',
+    'User-Agent': choice(userAgentList)
+}
 
 
 class Crawler(CrawlerZ):

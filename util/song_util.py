@@ -1,4 +1,5 @@
 import taglib
+
 import telegram
 
 from config import application
