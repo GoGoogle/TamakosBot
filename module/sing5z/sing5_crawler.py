@@ -6,7 +6,7 @@ import requests
 from config.application import CHUNK_SIZE
 from entity.bot_music import Artist, Song, Toplist, Album
 from interface.crawler import CrawlerZ
-from util.bot_result import BotResult
+from util.telegram_util import BotResult
 from util.excep_util import GetRequestIllegal, exception_handle, SongNotAvailable
 
 
@@ -27,7 +27,7 @@ class Crawler(CrawlerZ):
         if mode == 1:
             return Song(song_id, song_name, 264, artists=[Artist(artist_id, artist_name)])
         if mode == 0:
-            song_url = song['squrl'] or song['hqurl'] or song['lqurl']
+            song_url = song.get('squrl') or song.get('hqurl') or song.get('lqurl')
             if os.path.splitext(song_url)[1] == '.m4a':
                 raise SongNotAvailable(
                     'Song {0} id={1} is not available due to copyright issue.'.format(song_name, song_id))
