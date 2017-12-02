@@ -3,7 +3,7 @@ import time
 import requests
 from requests import RequestException
 
-from config.application import CHUNK_SIZE
+from config.application import CHUNK_SIZE, KUGOU_HEADERS
 from entity.bot_music import Song, Album, Artist, SongList
 from interface.crawler import CrawlerZ
 from util.telegram_util import BotResult
@@ -21,6 +21,7 @@ class Crawler(CrawlerZ):
     def __init__(self, timeout=120, proxy=None):
         super().__init__(timeout, proxy)
         self.session = requests.session()
+        self.session.headers.update(KUGOU_HEADERS)
         self.download_session = requests.session()
 
     @staticmethod
