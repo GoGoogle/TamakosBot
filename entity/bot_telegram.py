@@ -109,15 +109,23 @@ class ButtonItem(object):
         button_item = cls(pattern, button_type, operate, item_id, page)
         return button_item
 
-    def dump_kugou_json(self):
-        return json.dumps({'p': self.p, 'x': self.i})
+    def dump_simple_json(self):
+        if self.t == ButtonItem.TYPE_SONGLIST:
+            return json.dumps({'p': self.p, 'x': self.i}, separators=(',', ':'))
+        if self.t == ButtonItem.TYPE_PLAYLIST:
+            return json.dumps({'p': self.p, 'y': self.i}, separators=(',', ':'))
+        if self.t == ButtonItem.TYPE_TOPLIST:
+            return json.dumps({'p': self.p, 'z': self.i}, separators=(',', ':'))
 
     @classmethod
-    def parse_kugou_json(cls, json_data):
+    def parse_simple_json(cls, json_data):
         obj = json.loads(json_data)
         if obj.get('x'):
-            pattern, item_id = obj['p'], obj['x']
-            button_item = cls(pattern, ButtonItem.TYPE_SONGLIST, ButtonItem.OPERATE_SEND, item_id)
+            button_item = cls(obj['p'], ButtonItem.TYPE_SONGLIST, ButtonItem.OPERATE_SEND, obj['x'])
+        elif obj.get('y'):
+            button_item = cls(obj['p'], ButtonItem.TYPE_PLAYLIST, ButtonItem.OPERATE_SEND, obj['y'])
+        elif obj.get('z'):
+            button_item = cls(obj['p'], ButtonItem.TYPE_TOPLIST, ButtonItem.OPERATE_SEND, obj['z'])
         else:
             pattern, button_type, operate, item_id, page = \
                 obj['p'], obj['t'], obj['o'], obj['i'], obj['g']
