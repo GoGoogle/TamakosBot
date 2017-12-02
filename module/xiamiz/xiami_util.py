@@ -85,8 +85,14 @@ class Util(UtilZ):
 
     def get_songfile(self, song):
         self.logger.info('get_songfile..')
+
+        start = song.song_url.rindex('.')
+        end = song.song_url.rindex('?')
+        extension = song.song_url[start: end]
+
         file_name = r'{0} - {1}{2}'.format(
-            song.song_name, ' & '.join(v.artist_name for v in song.artists), os.path.splitext(song.song_url)[1])
+            song.song_name, ' & '.join(v.artist_name for v in song.artists), extension)
+        self.logger.info('song_name=%s url_extension=%s', song.song_name, extension)
         file_name = file_name.replace("/", ":")
         file_path = os.path.join(application.TMP_Folder, file_name)
         file_url = song.song_url

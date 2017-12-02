@@ -44,25 +44,21 @@ class Crawler(CrawlerZ):
 
     @staticmethod
     def parse_location(location):
-        encrypt_url, row = location[0], location[1:]
-        url = encrypt_url
-        urllen = len(url)
-        rows = int(row)
+        rows, _str = int(location[0]), location[1:]
 
-        cols_base = urllen / rows  # basic column count
-        rows_ex = urllen % rows  # count of rows that have 1 more column
-
-        matrix = []
-        for r in range(rows):
-            length = cols_base + 1 if r < rows_ex else cols_base
-            matrix.append(url[:length])
-            url = url[length:]
-
-        url = ''
-        for i in range(urllen):
-            url += matrix[i % rows][i / rows]
-
-        return unquote(url).replace('^', '0')
+        out = ""
+        cols = int(len(_str) / rows) + 1
+        full_row = len(_str) % rows
+        for c in range(cols):
+            for r in range(rows):
+                if c == (cols - 1) and r >= full_row:
+                    continue
+                if r < full_row:
+                    char = _str[r * cols + c]
+                else:
+                    char = _str[cols * full_row + (r - full_row) * (cols - 1) + c]
+                out += char
+        return unquote(out).replace("^", "0")
 
     @exception_handle
     def get_request(self, url, params=None, custom_session=None):
