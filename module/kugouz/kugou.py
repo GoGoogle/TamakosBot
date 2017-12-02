@@ -36,7 +36,7 @@ class Kugou(MainZ):
         self.logger.info('%s response_single_music: data=%s', self.m_name, update.callback_query.data)
         query = update.callback_query
 
-        button_item = ButtonItem.parse_kugou_json(query.data)
+        button_item = ButtonItem.parse_simple_json(query.data)
         self.handle_callback(bot, query, button_item)
 
     def songlist_turning(self, bot, query, kw, page):

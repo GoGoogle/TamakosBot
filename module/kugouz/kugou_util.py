@@ -36,7 +36,7 @@ class Util(UtilZ):
                     text='[{0}] {1} ({2})'.format(
                         time_fmt, x.song_name, ' / '.join(v.artist_name for v in x.artists)),
                     callback_data=ButtonItem(module_name, ButtonItem.TYPE_SONGLIST, ButtonItem.OPERATE_SEND,
-                                             x.song_id).dump_kugou_json()
+                                             x.song_id).dump_simple_json()
                 )
             ])
 
