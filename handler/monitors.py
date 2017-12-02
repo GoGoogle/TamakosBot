@@ -2,10 +2,12 @@ import logging
 import re
 
 from telegram.ext import CallbackQueryHandler, run_async, RegexHandler
+
 from module.kugouz import kugou
 from module.managez import admin
 from module.neteasz import netease
 from module.sing5z import sing5
+from module.xiamiz import xiami
 from util.telegram_util import restricted
 
 
@@ -14,11 +16,13 @@ class Monitors(object):
         self.netease = netease.Netease()
         self.kugou = kugou.Kugou()
         self.sing5 = sing5.Sing5z()
+        self.xiami = xiami.Xiami()
         self.admin = admin.Adminz()
         self.logger = logging.getLogger(__name__)
 
+    # netease
+
     def netease_regex(self, bot, update):
-        """网易云命令入口"""
         key_word = re.search(r'^.+\s(.+)$', update.message.text).group(1)
         self.netease.search_music(bot, update, key_word)
 
@@ -32,8 +36,9 @@ class Monitors(object):
                                 update.message.text).group(4)
         self.netease.response_playlist(bot, update, playlist_id)
 
+    # 5sing
+
     def sing5_regex(self, bot, update):
-        """5sing音乐命令入口"""
         payload = re.search(r'^\w+\s([123])?\s?(.+)$', update.message.text).groups()
         self.sing5.search_music(bot, update, payload)
 
@@ -49,36 +54,64 @@ class Monitors(object):
         else:
             self.sing5.response_toplist(bot, update)
 
+    # kugou
+
     def kugou_regex(self, bot, update, user_data):
-        """酷狗命令入口"""
-        key_word = re.search(r'^\w*\s(\w+)$', update.message.text).group(1)
+        key_word = re.search(r'^\w*\s(\.+)$', update.message.text).group(1)
         self.kugou.search_music(bot, update, key_word, user_data)
 
     @run_async
     def kugou_music_selector_callback(self, bot, update, user_data):
         self.kugou.response_single_music(bot, update, user_data)
 
+    # xiami
+
+    def xiami_regex(self, bot, update):
+        key_word = re.search(r'^\w*\s(\.+)$', update.message.text).group(1)
+        self.xiami.search_music(bot, update, key_word)
+
+    @run_async
+    def xiami_music_selector_callback(self, bot, update):
+        self.xiami.response_single_music(bot, update)
+
+    # manage
+
     @restricted
     def manage_bot(self, bot, update):
-        payload = re.search(r'^cc:(\w+)\s?(\w*)', update.message.text).groups()
+        payload = re.search(r'^cc:(\w+)\s?(\w*)', update.message.text).groups(1)  # 1 表示去除本身
         self.admin.manage_bot(bot, update, payload)
 
+    #
+
     def handler_monitors(self, dispatcher):
+        """网易命令入口"""
         dispatcher.add_handler(RegexHandler(r'^(音乐|m)\s(.+)$', self.netease_regex))
-        dispatcher.add_handler(RegexHandler(r'^(五婶|5)\s(1|2|3)?\s?(.+)$', self.sing5_regex))
-        dispatcher.add_handler(CallbackQueryHandler(self.netease_music_selector_callback,
-                                                    pattern=r"{\"p\":\"" + self.netease.m_name))
+        dispatcher.add_handler(
+            CallbackQueryHandler(self.netease_music_selector_callback, pattern=r"{\"p\":\"" + self.netease.m_name))
         dispatcher.add_handler(
             RegexHandler(r'.*https?://music.163.com/?#?/?m?/playlist((/)|(\?id=))(\d*).*',
                          self.response_netease_playlist))
+
+        """5sing命令入口"""
+        dispatcher.add_handler(RegexHandler(r'^(五婶|5)\s(1|2|3)?\s?(.+)$', self.sing5_regex))
         dispatcher.add_handler(
             CallbackQueryHandler(self.sing5_music_selector_callback, pattern=r"{\"p\":\"" + self.sing5.m_name))
         dispatcher.add_handler(
             RegexHandler(r'^TOP(\s\w*)?\s(五婶|5)$', self.response_sing5_toplist))
+
+        """酷狗命令入口"""
         dispatcher.add_handler(
             RegexHandler(r'^(酷狗|k)\s(\w+)$', self.kugou_regex, pass_user_data=True))
         dispatcher.add_handler(
             CallbackQueryHandler(self.kugou_music_selector_callback, pattern=r"{\"p\":\"" + self.kugou.m_name,
                                  pass_user_data=True))
+
+        """虾米命令入口"""
+        dispatcher.add_handler(
+            RegexHandler(r'^(虾米|x)\s(\w+)$', self.xiami_regex))
+        dispatcher.add_handler(
+            CallbackQueryHandler(self.xiami_music_selector_callback, pattern=r"{\"p\":\"" + self.xiami.m_name,
+                                 pass_user_data=True))
+
         dispatcher.add_handler(
             RegexHandler(r'^cc:.*', self.manage_bot))
