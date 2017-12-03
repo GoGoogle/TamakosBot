@@ -23,7 +23,7 @@ QQ_HEADERS = {
     'Content-Type': 'application/x-www-form-urlencoded',
     'Referer': 'https://y.qq.com/portal/search.html',
     'Host': 'c.y.qq.com',
-    'X-Real-IP': '59.111.160.197',
+    'X-Real-IP': '117.185.116.152',
     'User-Agent': choice(userAgentList)
 }
 

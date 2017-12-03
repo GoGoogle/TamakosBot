@@ -125,7 +125,7 @@ class Monitors(object):
 
         """qq 音乐命令入口"""
         dispatcher.add_handler(
-            RegexHandler(r'^(QQ|q)\s(.+)$', self.qq_regex))
+            RegexHandler(r'^(qq|q)\s(.+)$', self.qq_regex))
         dispatcher.add_handler(
             CallbackQueryHandler(self.qq_music_selector_callback, pattern=r"{\"p\":\"" + self.qq.m_name))
 
