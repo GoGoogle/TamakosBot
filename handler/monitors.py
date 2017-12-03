@@ -6,6 +6,7 @@ from telegram.ext import CallbackQueryHandler, run_async, RegexHandler
 from module.kugouz import kugou
 from module.managez import admin
 from module.neteasz import netease
+from module.qqz import qq
 from module.sing5z import sing5
 from module.xiamiz import xiami
 from util.telegram_util import restricted
@@ -17,6 +18,7 @@ class Monitors(object):
         self.kugou = kugou.Kugou()
         self.sing5 = sing5.Sing5z()
         self.xiami = xiami.Xiami()
+        self.qq = qq.Qqz()
         self.admin = admin.Adminz()
         self.logger = logging.getLogger(__name__)
 
@@ -74,6 +76,16 @@ class Monitors(object):
     def xiami_music_selector_callback(self, bot, update):
         self.xiami.response_single_music(bot, update)
 
+    # qq music
+
+    def qq_regex(self, bot, update):
+        key_word = re.search(r'^\w*\s(.+)$', update.message.text).group(1)
+        self.qq.search_music(bot, update, key_word)
+
+    @run_async
+    def qq_music_selector_callback(self, bot, update):
+        self.qq.response_single_music(bot, update)
+
     # manage
 
     @restricted
@@ -110,6 +122,12 @@ class Monitors(object):
             RegexHandler(r'^(虾米|x)\s(.+)$', self.xiami_regex))
         dispatcher.add_handler(
             CallbackQueryHandler(self.xiami_music_selector_callback, pattern=r"{\"p\":\"" + self.xiami.m_name))
+
+        """qq 音乐命令入口"""
+        dispatcher.add_handler(
+            RegexHandler(r'^(QQ|q)\s(.+)$', self.qq_regex))
+        dispatcher.add_handler(
+            CallbackQueryHandler(self.qq_music_selector_callback, pattern=r"{\"p\":\"" + self.qq.m_name))
 
         """管理命令入口"""
         dispatcher.add_handler(

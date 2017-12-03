@@ -2,7 +2,7 @@ import json
 import math
 import re
 import time
-from random import choice, random
+from random import choice, random as rand
 
 import requests
 from requests import RequestException
@@ -77,7 +77,7 @@ class Crawler(CrawlerZ):
             resp = custom_session.get(url, params=params, timeout=self.timeout,
                                       proxies=self.proxies)
         if callback:
-            regex_str = r'{}\((.+)\)'.format('callback')
+            regex_str = r'{}\((.+)\)'.format(callback)
             data = re.match(regex_str, resp.text).group(1)
             return json.loads(data)
         else:
@@ -111,7 +111,7 @@ class Crawler(CrawlerZ):
             'new_json': 1,
             'format': 'json'
         }
-        result = self.get_request(url, payload, callback='callback')
+        result = self.get_request(url, payload)
         if result['code'] != 0:
             self.logger.warning('Song %s search failed! url=%s result=%s', song_name, url, result)
             return BotResult(400, 'Song {} search failed.'.format(song_name))
@@ -119,7 +119,7 @@ class Crawler(CrawlerZ):
             self.logger.warning('Song %s not existed!', song_name)
             return BotResult(404, 'Song {} not existed.'.format(song_name))
         else:
-            keyword, song_count, songs = song_name, result['data']['song']['totalnum'], result['data']['songs']['list']
+            keyword, song_count, songs = song_name, result['data']['song']['totalnum'], result['data']['song']['list']
             songlist = SongList(keyword, song_count, Crawler.dump_songs(songs))
             return BotResult(200, body=songlist)
 
@@ -150,11 +150,11 @@ class Crawler(CrawlerZ):
             return BotResult(400, 'Return {0} when try to get {1} => {2}'.format(e, url, payload))
 
     def get_song_url(self, song_id, type_o=None):
-        guid = math.floor(random.random() * 1000000000)
+        guid = math.floor(rand() * 1000000000)
         secret_token = self.parse_guid(guid)
         base, prefix, extension, vkey, guid, fromtag = \
             secret_token['sip'][0], type_o[0], type_o[1], secret_token['key'], guid, 30
-        song_url = "{0}{1}{2}.{3}?vkey={3}&guid={4}&fromtag={5}".format(
+        song_url = "{0}{1}{2}.{3}?vkey={4}&guid={5}&fromtag={6}".format(
             base, prefix, song_id, extension, vkey, guid, fromtag)
         return song_url
 
