@@ -72,10 +72,60 @@ class SongFile(object):
             song.save()
 
 
+class BotChat(object):
+    def __init__(self, chat_id, chat_title, chat_type, date):
+        self.chat_id = chat_id
+        self.chat_title = chat_title
+        self.chat_type = chat_type
+        self.date = date
+
+
+class BotUser(object):
+    def __init__(self, user_id, first_name, last_name, username, is_bot):
+        self.user_id = user_id
+        self.first_name = first_name
+        self.last_name = last_name
+        self.username = username
+        self.is_bot = is_bot
+
+
+class Picture(object):
+    def __init__(self, sticker_id, thumb_id):
+        self.sticker_id = sticker_id
+        self.thumb_id = thumb_id
+
+
+class BotContent(object):
+    def __init__(self, text, photo_id, picture=None):
+        self.text = text
+        self.photo_id = photo_id
+        self.picture = picture
+
+
+class BotMessage(object):
+    def __init__(self, msg_id, bot_chat, bot_user, bot_content):
+        self.msg_id = msg_id
+        self.bot_chat = bot_chat
+        self.bot_user = bot_user
+        self.bot_content = bot_content
+
+    @staticmethod
+    def get_botmsg(msg):
+        msg_id = msg['message_id']
+        bot_chat = BotChat(msg['chat']['id'], msg['chat']['title'], msg['chat']['type'], msg['date'])
+        bot_user = BotUser(msg['from_user']['id'], msg['from_user']['first_name'], msg['from_user']['last_name'],
+                           msg['from_user']['username'], msg['from_user']['is_bot'])
+        bot_content = BotContent(msg['text'], msg['photo'][0]['file_id'] if msg['photo'] else [],
+                                 Picture(msg['sticker'], msg['thumb']))
+        bot_msg = BotMessage(msg_id, bot_chat, bot_user, bot_content)
+        return bot_msg
+
+
 class ButtonItem(object):
     TYPE_SONGLIST = 0
     TYPE_PLAYLIST = 1
     TYPE_TOPLIST = 2
+    TYPE_DIALOG = 3
 
     OPERATE_PAGE_DOWN = '+'
     OPERATE_PAGE_UP = '-'

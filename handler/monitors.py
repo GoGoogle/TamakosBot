@@ -1,14 +1,14 @@
 import logging
 import re
 
-from telegram.ext import CallbackQueryHandler, run_async, RegexHandler
+from telegram.ext import CallbackQueryHandler, run_async, RegexHandler, MessageHandler, Filters
 
 from module.kugouz import kugou
-from module.managez import admin
 from module.neteasz import netease
 from module.qqz import qq
 from module.sing5z import sing5
 from module.xiamiz import xiami
+from module.recordz import record
 from util.telegram_util import restricted
 
 
@@ -19,7 +19,7 @@ class Monitors(object):
         self.sing5 = sing5.Sing5z()
         self.xiami = xiami.Xiami()
         self.qq = qq.Qqz()
-        self.admin = admin.Adminz()
+        self.record = record.Recordz()
         self.logger = logging.getLogger(__name__)
 
     # netease
@@ -88,10 +88,15 @@ class Monitors(object):
 
     # manage
 
+    def record_msg(self, bot, update, user_data):
+        self.record.record_msg(bot, update, user_data)
+
+    def record_selector_callback(self, bot, update, user_data):
+        self.record.response_chat_enter(bot, update, user_data)
+
     @restricted
-    def manage_bot(self, bot, update):
-        payload = re.search(r'^cc:(\w+)\s?(\w*)', update.message.text).groups(1)  # 1 表示去除本身
-        self.admin.manage_bot(bot, update, payload)
+    def end_conversation(self, bot, update, user_data):
+        self.record.end_conversation(bot, update, user_data)
 
     #
 
@@ -130,5 +135,8 @@ class Monitors(object):
             CallbackQueryHandler(self.qq_music_selector_callback, pattern=r"{\"p\":\"" + self.qq.m_name))
 
         """管理命令入口"""
+        dispatcher.add_handler(RegexHandler(r'^(EXIT|退出房间)$', self.end_conversation, pass_user_data=True))
+        dispatcher.add_handler(MessageHandler(Filters.all, self.record_msg, pass_user_data=True))
         dispatcher.add_handler(
-            RegexHandler(r'^cc:.*', self.manage_bot))
+            CallbackQueryHandler(self.record_selector_callback, pattern=r"{\"p\":\"" + self.record.m_name,
+                                 pass_user_data=True))

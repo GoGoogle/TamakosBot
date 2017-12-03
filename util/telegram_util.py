@@ -21,11 +21,19 @@ class BotResult:
 
 def restricted(func):
     @wraps(func)
-    def wrapped(bot, update, *args, **kwargs):
+    def wrapped(*args, **kwargs):
+        update = list(filter(lambda x: isinstance(x, Update), args))[0]
         user_id = update.effective_user.id
         if user_id not in ADMINS:
-            print("Unauthorized access denied for {}.".format(user_id))
+            logger.warning("Unauthorized access denied for {}.".format(user_id))
             return
-        return func(bot, update, *args, **kwargs)
+        return func(*args, **kwargs)
 
     return wrapped
+
+
+def selector_cancel(bot, query):
+    bot.answerCallbackQuery(query.id,
+                            text="加载中",
+                            show_alert=False)
+    query.message.delete()
