@@ -37,6 +37,9 @@ def exception_handle(method):
         except Timeout:
             logger.exception('Timeout when try to get %s', args)
             raise Timeout('The request timed out.')
+        except GetRequestIllegal:
+            logger.exception('RequestException when try to get %s.', args)
+            raise GetRequestIllegal('Please check out your network.')
         except RequestException:
             logger.exception('RequestException when try to get %s.', args)
             raise RequestException('Please check out your network.')

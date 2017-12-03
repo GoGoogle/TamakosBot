@@ -48,7 +48,7 @@ class Bot(object):
 
 
 if __name__ == '__main__':
-    # os.environ['HTTP_PROXY'] = "http://127.0.0.1:4242"
-    # os.environ['HTTPS_PROXY'] = "http://127.0.0.1:4242"
-    # os.environ['NO_PROXY'] = "m1.music.126.net,10.*.*.*,192.168.*.*,*.local,localhost,127.0.0.1"
+    os.environ['HTTP_PROXY'] = "http://127.0.0.1:4242"
+    os.environ['HTTPS_PROXY'] = "http://127.0.0.1:4242"
+    os.environ['NO_PROXY'] = "m1.music.126.net,10.*.*.*,192.168.*.*,*.local,localhost,127.0.0.1"
     Bot().start_bot()
