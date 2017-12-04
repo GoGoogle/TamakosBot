@@ -1,6 +1,9 @@
 from functools import wraps
 
+from telegram import Update
+
 from config.application import ADMINS
+from util.excep_util import NotAuthorized
 
 
 class BotResult:
@@ -25,8 +28,7 @@ def restricted(func):
         update = list(filter(lambda x: isinstance(x, Update), args))[0]
         user_id = update.effective_user.id
         if user_id not in ADMINS:
-            logger.warning("Unauthorized access denied for {}.".format(user_id))
-            return
+            raise NotAuthorized("Unauthorized access denied for {}".format(user_id))
         return func(*args, **kwargs)
 
     return wrapped

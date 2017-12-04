@@ -95,7 +95,7 @@ class Monitors(object):
         self.record.response_chat_enter(bot, update, user_data)
 
     @restricted
-    def end_conversation(self, bot, update, user_data):
+    def exit_chatroom(self, bot, update, user_data):
         self.record.end_conversation(bot, update, user_data)
 
     #
@@ -135,8 +135,8 @@ class Monitors(object):
             CallbackQueryHandler(self.qq_music_selector_callback, pattern=r"{\"p\":\"" + self.qq.m_name))
 
         """管理命令入口"""
-        dispatcher.add_handler(RegexHandler(r'^(EXIT|退出房间)$', self.end_conversation, pass_user_data=True))
         dispatcher.add_handler(MessageHandler(Filters.all, self.record_msg, pass_user_data=True))
+        dispatcher.add_handler(RegexHandler(r'^(EXIT|退出房间)$', self.exit_chatroom, pass_user_data=True))
         dispatcher.add_handler(
             CallbackQueryHandler(self.record_selector_callback, pattern=r"{\"p\":\"" + self.record.m_name,
                                  pass_user_data=True))

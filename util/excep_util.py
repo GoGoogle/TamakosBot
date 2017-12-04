@@ -1,6 +1,7 @@
 import logging
 
 from requests.exceptions import ConnectionError as ConnectionException, RequestException, Timeout, ProxyError
+from telegram import TelegramError
 
 logger = logging.getLogger(__name__)
 
@@ -18,6 +19,10 @@ class GetRequestIllegal(RequestException):
 
 
 class PostRequestIllegal(RequestException):
+    """Status code is not 200."""
+
+
+class NotAuthorized(TelegramError):
     """Status code is not 200."""
 
 
