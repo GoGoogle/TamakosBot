@@ -40,11 +40,11 @@ class Bot(object):
         updater = Updater(token=application.BOT_TOKEN)
         self.distribute(updater.dispatcher)
 
-        # updater.start_polling(timeout=20)
-        # updater.idle()
-        updater.start_webhook(listen=WEBHOOK_LOCAL['listen'], port=WEBHOOK_LOCAL['port'],
-                              url_path=WEBHOOK_LOCAL['url_path'])
-        updater.bot.set_webhook(url=WEBHOOK_REMOTE['url'], timeout=WEBHOOK_REMOTE['timeout'])
+        updater.start_polling(timeout=20)
+        updater.idle()
+        # updater.start_webhook(listen=WEBHOOK_LOCAL['listen'], port=WEBHOOK_LOCAL['port'],
+        #                       url_path=WEBHOOK_LOCAL['url_path'])
+        # updater.bot.set_webhook(url=WEBHOOK_REMOTE['url'], timeout=WEBHOOK_REMOTE['timeout'])
 
 
 if __name__ == '__main__':

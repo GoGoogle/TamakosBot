@@ -158,6 +158,10 @@ class Util(UtilZ):
         return {'text': playlist_selector.title, 'reply_markup': InlineKeyboardMarkup(button_list)}
 
     def get_songfile(self, song):
+        # 对文件名程度限制一般性处理，特殊情况不予考虑
+        if isinstance(song.song_name, str) and len(song.song_name.encode('utf-8')) > 200:
+            song.song_name = song.song_name[:66]
+
         file_name = r'{0} - {1}{2}'.format(
             song.song_name, ' & '.join(v.artist_name for v in song.artists), os.path.splitext(song.song_url)[1])
         file_name = file_name.replace("/", ":")

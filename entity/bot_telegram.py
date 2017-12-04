@@ -132,7 +132,7 @@ class ButtonItem(object):
     OPERATE_CANCEL = '*'
     OPERATE_SEND = '#'
 
-    def __init__(self, pattern, button_type, button_operate, item_id=None, page=None):
+    def __init__(self, pattern, button_type, button_operate, item_id="", page=""):
         """
         由于 64 字节限制。故采用变量缩写。
         :param pattern: query_data 匹配的模块
@@ -148,8 +148,17 @@ class ButtonItem(object):
         self.g = page
 
     def dump_json(self):
-        """ the most compact JSON"""
-        return json.dumps(self, default=lambda o: o.__dict__, separators=(',', ':'))
+        """
+        the most compact JSON
+        the self.i's max length is 22 bytes, and utf-8 Chinese 3 bytes per character. only handle for chinese
+        :return:
+        """
+        if isinstance(self.i, str) and len(self.i.encode('utf-8')) > 22:
+            self.i = self.i[:7]
+        _json = json.dumps(self, default=lambda o: o.__dict__, separators=(',', ':'), ensure_ascii=False)
+        print(_json)
+        print(len(_json.encode('utf-8')))
+        return _json
 
     @classmethod
     def parse_json(cls, json_data):
@@ -160,12 +169,14 @@ class ButtonItem(object):
         return button_item
 
     def dump_simple_json(self):
+        if isinstance(self.i, str) and len(self.i.encode('utf-8')) > 22:
+            self.i = self.i[:7]
         if self.t == ButtonItem.TYPE_SONGLIST:
-            return json.dumps({'p': self.p, 'x': self.i}, separators=(',', ':'))
+            return json.dumps({'p': self.p, 'x': self.i}, separators=(',', ':'), ensure_ascii=False)
         if self.t == ButtonItem.TYPE_PLAYLIST:
-            return json.dumps({'p': self.p, 'y': self.i}, separators=(',', ':'))
+            return json.dumps({'p': self.p, 'y': self.i}, separators=(',', ':'), ensure_ascii=False)
         if self.t == ButtonItem.TYPE_TOPLIST:
-            return json.dumps({'p': self.p, 'z': self.i}, separators=(',', ':'))
+            return json.dumps({'p': self.p, 'z': self.i}, separators=(',', ':'), ensure_ascii=False)
 
     @classmethod
     def parse_simple_json(cls, json_data):
