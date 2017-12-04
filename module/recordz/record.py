@@ -21,16 +21,22 @@ class Recordz(object):
             plain_msg = bot.send_message(chat_id=application.ADMINS[0], text=panel["text"],
                                          reply_markup=panel["markup"])
             if bot_msg.bot_content.picture.sticker_id:
-                bot.send_sticker(chat_id=application.ADMINS[0], sticker=bot_msg.bot_content.picture.sticker_id,
+                bot.send_sticker(chat_id=application.ADMINS[0], sticker=bot_msg.bot_content.picture.sticker,
                                  reply_to_message_id=plain_msg.message_id)
         else:
             if self.m_name in user_data:
                 if bot_msg.bot_content.text:
                     bot.send_message(chat_id=user_data.get(self.m_name), text=bot_msg.bot_content.text)
-                if bot_msg.bot_content.picture.sticker_id:
-                    bot.send_sticker(chat_id=user_data.get(self.m_name), sticker=bot_msg.bot_content.picture.sticker_id)
-                if bot_msg.bot_content.photo_id:
-                    bot.send_photo(chat_id=user_data.get(self.m_name), photo=bot_msg.bot_content.photo_id)
+                if bot_msg.bot_content.picture.sticker:
+                    bot.send_sticker(chat_id=user_data.get(self.m_name), sticker=bot_msg.bot_content.picture.sticker)
+                if bot_msg.bot_content.photo:
+                    bot.send_photo(chat_id=user_data.get(self.m_name), photo=bot_msg.bot_content.photo)
+                if bot_msg.bot_content.audio:
+                    bot.send_audio(chat_id=user_data.get(self.m_name), audio=bot_msg.bot_content.audio)
+                if bot_msg.bot_content.video:
+                    bot.send_video(chat_id=user_data.get(self.m_name), video=bot_msg.bot_content.video)
+                if bot_msg.bot_content.document:
+                    bot.send_document(chat_id=user_data.get(self.m_name), document=bot_msg.bot_content.document)
 
     def response_chat_enter(self, bot, update, user_data):
         self.logger.info('response_chat_enter !')

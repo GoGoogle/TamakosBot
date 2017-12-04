@@ -90,16 +90,19 @@ class BotUser(object):
 
 
 class Picture(object):
-    def __init__(self, sticker_id, thumb_id):
-        self.sticker_id = sticker_id
-        self.thumb_id = thumb_id
+    def __init__(self, sticker, thumb):
+        self.sticker = sticker
+        self.thumb = thumb
 
 
 class BotContent(object):
-    def __init__(self, text, photo_id, picture=None):
+    def __init__(self, text, picture=None, photo=None, audio=None, video=None, document=None):
         self.text = text
-        self.photo_id = photo_id
         self.picture = picture
+        self.photo = photo
+        self.audio = audio
+        self.video = video
+        self.document = document
 
 
 class BotMessage(object):
@@ -115,8 +118,11 @@ class BotMessage(object):
         bot_chat = BotChat(msg['chat']['id'], msg['chat']['title'], msg['chat']['type'], msg['date'])
         bot_user = BotUser(msg['from_user']['id'], msg['from_user']['first_name'], msg['from_user']['last_name'],
                            msg['from_user']['username'], msg['from_user']['is_bot'])
-        bot_content = BotContent(msg['text'], msg['photo'][0]['file_id'] if msg['photo'] else [],
-                                 Picture(msg['sticker'], msg['thumb']))
+        bot_content = BotContent(msg['text'], Picture(msg['sticker'], msg['thumb']),
+                                 msg['photo'][0] if msg['photo'] else None,
+                                 msg['audio'],
+                                 msg['video'],
+                                 msg['document'])
         bot_msg = BotMessage(msg_id, bot_chat, bot_user, bot_content)
         return bot_msg
 
@@ -156,8 +162,6 @@ class ButtonItem(object):
         if isinstance(self.i, str) and len(self.i.encode('utf-8')) > 22:
             self.i = self.i[:7]
         _json = json.dumps(self, default=lambda o: o.__dict__, separators=(',', ':'), ensure_ascii=False)
-        print(_json)
-        print(len(_json.encode('utf-8')))
         return _json
 
     @classmethod
