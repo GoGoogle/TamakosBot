@@ -20,7 +20,7 @@ class Recordz(object):
             panel = self.util.produce_record_panel(bot_msg, self.m_name)
             plain_msg = bot.send_message(chat_id=application.ADMINS[0], text=panel["text"],
                                          reply_markup=panel["markup"])
-            if bot_msg.bot_content.picture.sticker_id:
+            if bot_msg.bot_content.picture.sticker:
                 bot.send_sticker(chat_id=application.ADMINS[0], sticker=bot_msg.bot_content.picture.sticker,
                                  reply_to_message_id=plain_msg.message_id)
         else:
