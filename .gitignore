@@ -7,9 +7,3 @@ config/application.py.bak
 cmake-build-debug/
 *.iws
 out/
-.idea_modules/
-atlassian-ide-plugin.xml
-com_crashlytics_export_strings.xml
-crashlytics.properties
-crashlytics-build.properties
-fabric.properties

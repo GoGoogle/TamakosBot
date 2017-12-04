@@ -1,9 +1,3 @@
-import os
-
-# COMMON CONFIG
-
-BOT_TOKEN = "432786658:AAGTxGRs9tXTM1YEf343e1fWnvio04eB7ns"
-
 ADMINS = [423453012]
 
 FILE_TRANSFER_TIMEOUT = 300
@@ -20,14 +14,14 @@ WEBHOOK_LOCAL = {
     'url_path': 'bottoken'
 }
 
+BOT_TOKEN = "432786658:AAGTxGRs9tXTM1YEf343e1fWnvio04eB7ns"
+
 WEBHOOK_REMOTE = {
     'url': 'https://telegram.lemo.site/bottoken',
     'timeout': 40
 }
 
-# MUSIC CONFIG
-
-COOKIE_PATH = os.path.join(TMP_Folder, 'cookie')
+COOKIE_PATH = "{0}/{1}".format(TMP_Folder, 'cookie')
 
 NETEASE_LOGIN_PAYLOAD = {
     'username': 'xxxxxx',
