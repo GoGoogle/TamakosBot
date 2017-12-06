@@ -22,8 +22,8 @@ def write_id3tags(file_path, song_title, song_artist_list, song_album=None, trac
         song.save()
 
 
-def progress_download(session, songfile, timeout, handle):
-    resp = session.get(songfile.file_url, stream=True, timeout=timeout)
+def progress_download(session, songfile, handle):
+    resp = session.get(songfile.file_url, stream=True, timeout=application.FILE_TRANSFER_TIMEOUT)
     start = time.time()
     length = int(resp.headers.get('content-length'))
     dl = 0
