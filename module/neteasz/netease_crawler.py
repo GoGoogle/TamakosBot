@@ -390,4 +390,4 @@ class Crawler(CrawlerZ):
 
     @exception_handle
     def write_file(self, songfile, handle=None):
-        progress_download(self.login_session, songfile, self.timeout, handle)
+        progress_download(self.login_session, songfile, handle)

@@ -157,7 +157,7 @@ class Crawler(CrawlerZ):
 
     @exception_handle
     def write_file(self, songfile, handle=None):
-        progress_download(self.download_session, songfile, self.timeout, handle)
+        progress_download(self.download_session, songfile, handle)
 
     def login(self, username, password):
         pass

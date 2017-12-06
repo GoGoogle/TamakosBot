@@ -3,7 +3,7 @@ import taglib
 import time
 
 from config import application
-from config.application import CHUNK_SIZE
+from config.application import CHUNK_SIZE, FILE_TRANSFER_TIMEOUT
 
 
 def selector_cancel(bot, query):
@@ -23,8 +23,8 @@ def write_id3tags(file_path, song_title, song_artist_list, song_album=None, trac
         song.save()
 
 
-def progress_download(session, songfile, timeout, handle):
-    resp = session.get(songfile.file_url, stream=True, timeout=timeout)
+def progress_download(session, songfile, handle):
+    resp = session.get(songfile.file_url, stream=True, timeout=FILE_TRANSFER_TIMEOUT)
     start = time.time()
     length = int(resp.headers.get('content-length'))
     dl = 0
@@ -47,7 +47,7 @@ def progress_download(session, songfile, timeout, handle):
         raw = "»»»»»»»»»»"
         percent = int(10 - 10 * dl / length)
         dl_status = raw.replace("»", "..", percent)[::-1]
-        progress = '[{0:.0f}%] ◒[{1}] [2]'.format(dl / length * 100, dl_status, network_speed_status)
+        progress = '◒ [{0}] [{1:.0f}%] [2]'.format(dl_status, dl / length * 100, network_speed_status)
         if handle:
             handle.update(progress)
 
