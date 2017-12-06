@@ -134,7 +134,7 @@ class Netease(MainZ):
         bot.edit_message_text(
             chat_id=query.message.chat.id,
             message_id=edited_msg.message_id,
-            text='163 「{0}」 等待发送'.format(songfile.song.song_name),
+            text='☁️ 「{0}」 等待发送'.format(songfile.song.song_name),
             parse_mode=telegram.ParseMode.MARKDOWN,
             disable_web_page_preview=True
         )
