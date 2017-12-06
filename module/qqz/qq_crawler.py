@@ -1,7 +1,6 @@
 import json
 import math
 import re
-import time
 from random import choice, random as rand
 
 import requests

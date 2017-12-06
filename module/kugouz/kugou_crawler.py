@@ -1,7 +1,5 @@
-import time
 from random import choice
 
-import math
 import requests
 from requests import RequestException
 

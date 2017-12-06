@@ -1,7 +1,6 @@
 import hashlib
 import json
 import re
-import time
 from http import cookiejar
 from random import choice
 
