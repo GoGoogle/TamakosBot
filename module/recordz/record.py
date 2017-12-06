@@ -70,7 +70,6 @@ class Recordz(object):
         if button_type == ButtonItem.TYPE_DIALOG:
             if button_operate == ButtonItem.OPERATE_EXIT:
                 self.end_conversation(bot, query, user_data)
-                telegram_util.selector_cancel(bot, query)
             if button_operate == ButtonItem.OPERATE_CANCEL:
                 telegram_util.selector_cancel(bot, query)
             if button_operate == ButtonItem.OPERATE_ENTER:

@@ -27,7 +27,7 @@ class Utilz(object):
                                              bot_msg.msg_id).dump_json()
                 )],
                 [InlineKeyboardButton(
-                    text='退出房间',
+                    text='退出当前',
                     callback_data=ButtonItem(module_name, ButtonItem.TYPE_DIALOG, ButtonItem.OPERATE_EXIT).dump_json()
                 )]
             ]
@@ -45,8 +45,8 @@ class Utilz(object):
                                              bot_msg.bot_chat.chat_id).dump_json()
                 )],
                 [InlineKeyboardButton(
-                    text='撤销显示',
-                    callback_data=ButtonItem(module_name, ButtonItem.TYPE_DIALOG, ButtonItem.OPERATE_CANCEL).dump_json()
+                    text='退出旧间',
+                    callback_data=ButtonItem(module_name, ButtonItem.TYPE_DIALOG, ButtonItem.OPERATE_EXIT).dump_json()
                 )]
             ]
         markup = InlineKeyboardMarkup(button_list, one_time_keyboard=True)
