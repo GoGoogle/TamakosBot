@@ -35,9 +35,9 @@ def progress_download(session, songfile, handle):
         songfile.file_stream.write(chunk)
         network_speed = dl / (time.time() - start)
         if network_speed > 1024 * 1024:
-            network_speed_status = '{:.2f}M/s'.format(network_speed / (1024 * 1024))
+            network_speed_status = '{:.0f}M/s'.format(network_speed / (1024 * 1024))
         else:
-            network_speed_status = '{:.2f}KB/s'.format(network_speed / 1024)
+            network_speed_status = '{:.0f}KB/s'.format(network_speed / 1024)
         # if dl > 1024 * 1024:
         #     dl_status = '{:.2f} MB'.format(dl / (1024 * 1024))
         # else:
@@ -48,8 +48,8 @@ def progress_download(session, songfile, handle):
         #                                                       network_speed_status)
         raw = "»»»»»»»»»»"
         percent = int(10 - 10 * dl / length)
-        dl_status = raw.replace("»", ".", percent)[::-1]
-        progress = '`[{0:.0f}%] [{1}] [{2}]`'.format(dl / length * 100, dl_status, network_speed_status)
+        dl_status = raw.replace("+", "-", percent)[::-1]
+        progress = '`[{0}] [{1}]`'.format(dl_status, network_speed_status)
         if handle:
             handle.update(progress)
 
