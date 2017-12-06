@@ -13,7 +13,7 @@ class Utilz(object):
         self.logger.info("produce_record_panel")
 
         if user_data.get(ButtonItem.OPERATE_ENTER):
-            msg_chat = "已进入房间: `{0}` \n-------------\n房间:  {1} (chat_id:  {2})\n用户:  {3} (user_id: {4})\n" \
+            msg_chat = "新消息！ 当前房间: `{0}` \n-------------\n房间:  {1} (chat_id:  {2})\n用户:  {3} (user_id: {4})\n" \
                        "信息:  {5} (msg_id:  {6})".format(user_data.get(ButtonItem.OPERATE_ENTER),
                                                         bot_msg.bot_chat.chat_title, bot_msg.bot_chat.chat_id,
                                                         bot_msg.bot_user.first_name, bot_msg.bot_user.user_id,
@@ -49,7 +49,6 @@ class Utilz(object):
                     callback_data=ButtonItem(module_name, ButtonItem.TYPE_DIALOG, ButtonItem.OPERATE_CANCEL).dump_json()
                 )]
             ]
-        # if user_data.get('')
         markup = InlineKeyboardMarkup(button_list, one_time_keyboard=True)
 
         return {"text": msg_chat, "markup": markup}

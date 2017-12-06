@@ -17,7 +17,7 @@ class Message(object):
 
     @staticmethod
     def bye_message(bot, update):
-        text = '拜拜'
+        text = '我今天算是得罪了你们一下！'
         bot.send_message(chat_id=update.message.chat_id, text=text)
 
     @staticmethod
@@ -61,7 +61,7 @@ class Message(object):
     )
 
     def handler_messages(self, dispatcher):
-        dispatcher.add_handler(RegexHandler(r'^(Hi|你好)$', self.hi_message))
-        dispatcher.add_handler(RegexHandler(r'.*有事$', self.bye_message))
-        dispatcher.add_handler(RegexHandler(r'.*曰..曰.*', self.tks_message))
+        dispatcher.add_handler(RegexHandler(r'.*来了.*', self.hi_message))
+        dispatcher.add_handler(RegexHandler(r'.*告辞.*', self.bye_message))
+        dispatcher.add_handler(RegexHandler(r'.*(得罪|你们|效率|完全|我).*', self.tks_message))
         dispatcher.add_handler(self.conv_handler)

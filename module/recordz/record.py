@@ -1,7 +1,5 @@
 import logging
 
-import telegram
-
 from config import application
 from entity.bot_telegram import BotMessage, ButtonItem
 from module.recordz import record_util
@@ -21,8 +19,7 @@ class Recordz(object):
             self.logger.info('msg send success!')
             panel = self.util.produce_record_panel(bot_msg, self.m_name, user_data)
             plain_msg = bot.send_message(chat_id=application.ADMINS[0], text=panel["text"],
-                                         reply_markup=panel["markup"],
-                                         parse_mode=telegram.ParseMode.MARKDOWN)
+                                         reply_markup=panel["markup"])
             if bot_msg.bot_content.picture.sticker:
                 bot.send_sticker(chat_id=application.ADMINS[0], sticker=bot_msg.bot_content.picture.sticker,
                                  reply_to_message_id=plain_msg.message_id)
@@ -92,23 +89,21 @@ class Recordz(object):
         """
         user_data[ButtonItem.OPERATE_ENTER] = room_id
         text = "进入房间: {}".format(room_id)
-        query.message.reply_text(text)
+        bot.send_message(chat_id=application.ADMINS[0], text=text)
 
     def end_conversation(self, bot, update, user_data):
         if ButtonItem.OPERATE_ENTER in user_data:
             self.logger.info("退出房间: %s", user_data[ButtonItem.OPERATE_ENTER])
             text = "退出房间: {}".format(user_data[ButtonItem.OPERATE_ENTER])
-            update.message.reply_text(text)
+            bot.send_message(chat_id=application.ADMINS[0], text=text)
             del user_data[ButtonItem.OPERATE_ENTER]
         user_data.clear()
 
     def reply_message(self, bot, query, msg_id, user_data):
         user_data[ButtonItem.OPERATE_REPLY] = msg_id
         text = "回复消息: {}".format(msg_id)
-        query.message.reply_text(text)
+        bot.send_message(chat_id=application.ADMINS[0], text=text)
 
     def end_message(self, bot, update, user_data):
         self.logger.info("结束回复: %s", user_data[ButtonItem.OPERATE_REPLY])
-        text = "结束回复: {}".format(user_data[ButtonItem.OPERATE_REPLY])
-        update.message.reply_text(text)
         del user_data[ButtonItem.OPERATE_REPLY]
