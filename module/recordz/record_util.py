@@ -9,26 +9,47 @@ class Utilz(object):
     def __init__(self):
         self.logger = logging.getLogger(__name__)
 
-    def produce_record_panel(self, bot_msg, module_name):
+    def produce_record_panel(self, bot_msg, module_name, user_data):
         self.logger.info("produce_record_panel")
 
-        msg_chat = "新消息！\n-------------\n房间:  {0} (chat_id:  {1})\n用户:  {2} (user_id: {3})\n" \
-                   "信息:  {4} (msg_id:  {5})".format(bot_msg.bot_chat.chat_title, bot_msg.bot_chat.chat_id,
-                                                    bot_msg.bot_user.first_name, bot_msg.bot_user.user_id,
-                                                    bot_msg.bot_content.text,
-                                                    bot_msg.msg_id
-                                                    )
-        button_list = [
-            [InlineKeyboardButton(
-                text='进入房间',
-                callback_data=ButtonItem(module_name, ButtonItem.TYPE_DIALOG, ButtonItem.OPERATE_SEND,
-                                         bot_msg.bot_chat.chat_id).dump_json()
-            )],
-            [InlineKeyboardButton(
-                text='退出房间',
-                callback_data=ButtonItem(module_name, ButtonItem.TYPE_DIALOG, ButtonItem.OPERATE_CANCEL).dump_json()
-            )]
-        ]
+        if user_data.get(ButtonItem.OPERATE_ENTER):
+            msg_chat = "已进入房间: `{0}` \n-------------\n房间:  {1} (chat_id:  {2})\n用户:  {3} (user_id: {4})\n" \
+                       "信息:  {5} (msg_id:  {6})".format(user_data.get(ButtonItem.OPERATE_ENTER),
+                                                        bot_msg.bot_chat.chat_title, bot_msg.bot_chat.chat_id,
+                                                        bot_msg.bot_user.first_name, bot_msg.bot_user.user_id,
+                                                        bot_msg.bot_content.text,
+                                                        bot_msg.msg_id
+                                                        )
+            button_list = [
+                [InlineKeyboardButton(
+                    text='回复信息',
+                    callback_data=ButtonItem(module_name, ButtonItem.TYPE_DIALOG, ButtonItem.OPERATE_REPLY,
+                                             bot_msg.msg_id).dump_json()
+                )],
+                [InlineKeyboardButton(
+                    text='退出房间',
+                    callback_data=ButtonItem(module_name, ButtonItem.TYPE_DIALOG, ButtonItem.OPERATE_EXIT).dump_json()
+                )]
+            ]
+        else:
+            msg_chat = "新消息{0}！\n-------------\n房间:  {1} (chat_id:  {2})\n用户:  {3} (user_id: {4})\n" \
+                       "信息:  {5} (msg_id:  {6})".format('', bot_msg.bot_chat.chat_title, bot_msg.bot_chat.chat_id,
+                                                        bot_msg.bot_user.first_name, bot_msg.bot_user.user_id,
+                                                        bot_msg.bot_content.text,
+                                                        bot_msg.msg_id
+                                                        )
+            button_list = [
+                [InlineKeyboardButton(
+                    text='进入房间',
+                    callback_data=ButtonItem(module_name, ButtonItem.TYPE_DIALOG, ButtonItem.OPERATE_ENTER,
+                                             bot_msg.bot_chat.chat_id).dump_json()
+                )],
+                [InlineKeyboardButton(
+                    text='撤销显示',
+                    callback_data=ButtonItem(module_name, ButtonItem.TYPE_DIALOG, ButtonItem.OPERATE_CANCEL).dump_json()
+                )]
+            ]
+        # if user_data.get('')
         markup = InlineKeyboardMarkup(button_list, one_time_keyboard=True)
 
         return {"text": msg_chat, "markup": markup}

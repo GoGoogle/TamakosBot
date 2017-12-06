@@ -133,10 +133,14 @@ class ButtonItem(object):
     TYPE_TOPLIST = 2
     TYPE_DIALOG = 3
 
+    OPERATE_CANCEL = '*'
     OPERATE_PAGE_DOWN = '+'
     OPERATE_PAGE_UP = '-'
-    OPERATE_CANCEL = '*'
     OPERATE_SEND = '#'
+
+    OPERATE_ENTER = '+'
+    OPERATE_EXIT = '-'
+    OPERATE_REPLY = '@'
 
     def __init__(self, pattern, button_type, button_operate, item_id="", page=""):
         """

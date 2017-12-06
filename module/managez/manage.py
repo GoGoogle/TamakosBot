@@ -28,8 +28,6 @@ class Adminz(object):
             pass
         if command == "close_listen":
             pass
-        if command == "reply_msg":
-            bot.send_message(chat_id=params[0], reply_to_message_id=params[1], text=params[2])
         if command == "delete_msg":
             bot.delete_message(chat_id=params[0], message_id=params[1])
         if command == "edit_msg":
@@ -47,7 +45,6 @@ class Adminz(object):
         if command == "help":
             update.message.reply_text(
                 "命令列表:\n`add_listen, close_listen,\n"
-                "reply_msg(chat_id, reply_to_message_id, text)"
                 "delete_msg(chat_id, message_id),\n"
                 "edit_msg(chat_id, message_id, text)\n"
                 "exit(chat_id)` ",
