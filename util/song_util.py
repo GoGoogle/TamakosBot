@@ -49,7 +49,7 @@ def progress_download(session, songfile, handle):
         raw = "»»»»»»»»»»"
         percent = int(10 - 10 * dl / length)
         dl_status = raw.replace("+", "-", percent)[::-1]
-        progress = '`[{0}] [{1}]`'.format(dl_status, network_speed_status)
+        progress = '[{0}] [{1}]'.format(dl_status, network_speed_status)
         if handle:
             handle.update(progress)
 
@@ -66,6 +66,5 @@ class ProgressHandle(object):
             message_id=self.msg_id,
             text=progress_status,
             disable_web_page_preview=True,
-            parse_mode=telegram.ParseMode.MARKDOWN,
             timeout=application.FILE_TRANSFER_TIMEOUT
         )
