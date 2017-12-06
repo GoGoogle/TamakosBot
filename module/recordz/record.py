@@ -94,6 +94,9 @@ class Recordz(object):
             text = "退出房间: {}".format(user_data[ButtonItem.OPERATE_ENTER])
             bot.send_message(chat_id=application.ADMINS[0], text=text)
             del user_data[ButtonItem.OPERATE_ENTER]
+        else:
+            text = "已退出全部房间"
+            bot.send_message(chat_id=application.ADMINS[0], text=text)
         user_data.clear()
 
     def reply_message(self, bot, query, msg_id, user_data):
