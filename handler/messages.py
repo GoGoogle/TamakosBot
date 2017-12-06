@@ -63,5 +63,5 @@ class Message(object):
     def handler_messages(self, dispatcher):
         dispatcher.add_handler(RegexHandler(r'.*来了.*', self.hi_message))
         dispatcher.add_handler(RegexHandler(r'.*告辞.*', self.bye_message))
-        dispatcher.add_handler(RegexHandler(r'.*(得罪|你们|效率|完全|我).*', self.tks_message))
+        dispatcher.add_handler(RegexHandler(r'.*(得罪|你们|效率).*', self.tks_message))
         dispatcher.add_handler(self.conv_handler)

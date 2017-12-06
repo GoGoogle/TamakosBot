@@ -2,6 +2,8 @@ import taglib
 
 import time
 
+import telegram
+
 from config import application
 from config.application import CHUNK_SIZE, FILE_TRANSFER_TIMEOUT
 
@@ -46,8 +48,8 @@ def progress_download(session, songfile, handle):
         #                                                       network_speed_status)
         raw = "»»»»»»»»»»"
         percent = int(10 - 10 * dl / length)
-        dl_status = raw.replace("»", "..", percent)[::-1]
-        progress = '◒ [{0}] [{1:.0f}%] [2]'.format(dl_status, dl / length * 100, network_speed_status)
+        dl_status = raw.replace("»", ".", percent)[::-1]
+        progress = '`[{0:.0f}%] [{1}] [{2}]`'.format(dl / length * 100, dl_status, network_speed_status)
         if handle:
             handle.update(progress)
 
@@ -64,5 +66,6 @@ class ProgressHandle(object):
             message_id=self.msg_id,
             text=progress_status,
             disable_web_page_preview=True,
+            parse_mode=telegram.ParseMode.MARKDOWN,
             timeout=application.FILE_TRANSFER_TIMEOUT
         )
