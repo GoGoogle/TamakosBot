@@ -44,8 +44,7 @@ def progress_download(session, songfile, timeout, handle):
         #                                                       network_speed_status)
         raw = "»»»»»»»»»»"
         percent = int(10 - 10 * dl / length)
-        dl_status = raw.replace("»", " ", percent)[::-1]
-        "{:10f}".format(percent, )
+        dl_status = raw.replace("»", "#", percent)[::-1]
         progress = '[ {0} ] {1:.0f}% {2:.2f}M'.format(dl_status, dl / length * 100, length / (1024 * 1024))
         if handle:
             handle.update(progress)

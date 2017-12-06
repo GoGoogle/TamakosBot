@@ -8,7 +8,7 @@ class CrawlerZ(object):
             cls.instance = super(CrawlerZ, cls).__new__(cls)
         return cls.instance
 
-    def __init__(self, timeout=120, proxy=None):
+    def __init__(self, timeout=220, proxy=None):
         self.timeout = timeout
         self.proxies = {'http': proxy, 'https': proxy}
         self.logger = logging.getLogger(__name__)
