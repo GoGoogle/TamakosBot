@@ -10,6 +10,7 @@ from interface.crawler import CrawlerZ
 from util.encrypt_util import userAgentList
 from util.excep_util import (
     SongNotAvailable, GetRequestIllegal, exception_handle)
+from util.song_util import progress_download
 from util.telegram_util import BotResult
 
 XIAMI_HEADERS = {
@@ -149,18 +150,4 @@ class Crawler(CrawlerZ):
 
     @exception_handle
     def write_file(self, songfile, handle=None):
-        resp = self.download_session.get(songfile.file_url, stream=True, timeout=self.timeout)
-        length = int(resp.headers.get('content-length'))
-        dl = 0
-        for chunk in resp.iter_content(CHUNK_SIZE):
-            dl += len(chunk)
-            songfile.file_stream.write(chunk)
-
-            middle_num, full_status, empty_remaining = int(10 * dl / length), "»»»»»»»»»»", "          "
-            dl_status = full_status[:middle_num] + empty_remaining[middle_num:]
-            progress = '[ {0} ] {1:.0f}% {2:.2f}M'.format(dl_status, dl / length * 100, length / (1024 * 1024))
-            if handle:
-                handle.update(progress)
-
-    def login(self, username, password):
-        pass
+        progress_download(self.download_session, songfile, self.timeout, handle)

@@ -7,13 +7,14 @@ from random import choice
 import requests
 from requests import RequestException
 
-from config.application import COOKIE_PATH, CHUNK_SIZE
+from config.application import COOKIE_PATH
 from entity.bot_music import Song, Album, Artist, Playlist, User, SongList
 from interface.crawler import CrawlerZ
 from util.encrypt_util import encrypted_request, userAgentList
 from util.excep_util import (
     SongNotAvailable, GetRequestIllegal, PostRequestIllegal, exception_handle)
 from util.telegram_util import BotResult
+from util.song_util import progress_download
 
 NETEASE_HEADERS = {
     'Accept': '*/*',
@@ -389,28 +390,4 @@ class Crawler(CrawlerZ):
 
     @exception_handle
     def write_file(self, songfile, handle=None):
-        resp = self.login_session.get(songfile.file_url, stream=True, timeout=self.timeout)
-        # start = time.time()
-        length = int(resp.headers.get('content-length'))
-        dl = 0
-        for chunk in resp.iter_content(CHUNK_SIZE):
-            dl += len(chunk)
-            songfile.file_stream.write(chunk)
-            # network_speed = dl / (time.time() - start)
-            # if network_speed > 1024 * 1024:
-            #     network_speed_status = '{:.2f} MB/s'.format(network_speed / (1024 * 1024))
-            # else:
-            #     network_speed_status = '{:.2f} KB/s'.format(network_speed / 1024)
-            # if dl > 1024 * 1024:
-            #     dl_status = '{:.2f} MB'.format(dl / (1024 * 1024))
-            # else:
-            #     dl_status = '{:.0f} KB'.format(dl / 1024)
-            # 已下载大小，总大小，已下载的百分比，网速
-            # progress = '{0} / {1:.2f} MB ({2:.0f}%) - {3}'.format(dl_status, length / (1024 * 1024),
-            #                                                       dl / length * 100,
-            #                                                       network_speed_status)
-            middle_num, full_status, empty_remaining = int(10 * dl / length), "»»»»»»»»»»", "          "
-            dl_status = full_status[:middle_num] + empty_remaining[middle_num:]
-            progress = '[ {0} ] {1:.0f}% {2:.2f}M'.format(dl_status, dl / length * 100, length / (1024 * 1024))
-            if handle:
-                handle.update(progress)
+        progress_download(self.login_session, songfile, self.timeout, handle)
