@@ -3,7 +3,6 @@ from random import choice
 import requests
 from requests import RequestException
 
-from config.application import CHUNK_SIZE
 from entity.bot_music import Song, Album, Artist, SongList
 from interface.crawler import CrawlerZ
 from util.encrypt_util import md5_encrypt, userAgentList

@@ -13,8 +13,8 @@ from interface.crawler import CrawlerZ
 from util.encrypt_util import encrypted_request, userAgentList
 from util.excep_util import (
     SongNotAvailable, GetRequestIllegal, PostRequestIllegal, exception_handle)
-from util.telegram_util import BotResult
 from util.song_util import progress_download
+from util.telegram_util import BotResult
 
 NETEASE_HEADERS = {
     'Accept': '*/*',

@@ -2,7 +2,6 @@ import os
 
 import requests
 
-from config.application import CHUNK_SIZE
 from entity.bot_music import Artist, Song, Toplist, Album
 from interface.crawler import CrawlerZ
 from util.excep_util import GetRequestIllegal, exception_handle, SongNotAvailable
