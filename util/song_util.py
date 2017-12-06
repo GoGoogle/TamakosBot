@@ -1,5 +1,7 @@
 import taglib
 
+import time
+
 from config import application
 from config.application import CHUNK_SIZE
 
@@ -23,17 +25,17 @@ def write_id3tags(file_path, song_title, song_artist_list, song_album=None, trac
 
 def progress_download(session, songfile, timeout, handle):
     resp = session.get(songfile.file_url, stream=True, timeout=timeout)
-    # start = time.time()
+    start = time.time()
     length = int(resp.headers.get('content-length'))
     dl = 0
     for chunk in resp.iter_content(CHUNK_SIZE):
         dl += len(chunk)
         songfile.file_stream.write(chunk)
-        # network_speed = dl / (time.time() - start)
-        # if network_speed > 1024 * 1024:
-        #     network_speed_status = '{:.2f} MB/s'.format(network_speed / (1024 * 1024))
-        # else:
-        #     network_speed_status = '{:.2f} KB/s'.format(network_speed / 1024)
+        network_speed = dl / (time.time() - start)
+        if network_speed > 1024 * 1024:
+            network_speed_status = '{:.2f}M/s'.format(network_speed / (1024 * 1024))
+        else:
+            network_speed_status = '{:.2f}KB/s'.format(network_speed / 1024)
         # if dl > 1024 * 1024:
         #     dl_status = '{:.2f} MB'.format(dl / (1024 * 1024))
         # else:
@@ -44,8 +46,8 @@ def progress_download(session, songfile, timeout, handle):
         #                                                       network_speed_status)
         raw = "»»»»»»»»»»"
         percent = int(10 - 10 * dl / length)
-        dl_status = raw.replace("»", "#", percent)[::-1]
-        progress = '[ {0} ] {1:.0f}% {2:.2f}M'.format(dl_status, dl / length * 100, length / (1024 * 1024))
+        dl_status = raw.replace("»", "..", percent)[::-1]
+        progress = '[{0:.0f}%] ◒[{1}] [2]'.format(dl / length * 100, dl_status, network_speed_status)
         if handle:
             handle.update(progress)
 

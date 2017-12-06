@@ -23,4 +23,4 @@ handlers:
 #    propagate: 0
 root:
   level: INFO
-  handlers: [console, logfile]
+  handlers: [logfile]
