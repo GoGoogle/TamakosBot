@@ -18,11 +18,10 @@ class Recordz(object):
         if bot_msg.bot_chat.chat_id != application.ADMINS[0]:
             self.logger.info('msg send success!')
             panel = self.util.produce_record_panel(bot_msg, self.m_name, chat_data)
-            plain_msg = bot.send_message(chat_id=application.ADMINS[0], text=panel["text"],
-                                         reply_markup=panel["markup"])
+            bot.send_message(chat_id=application.ADMINS[0], text=panel["text"],
+                             reply_markup=panel["markup"])
             if bot_msg.bot_content.picture.sticker:
-                bot.send_sticker(chat_id=application.ADMINS[0], sticker=bot_msg.bot_content.picture.sticker,
-                                 reply_to_message_id=plain_msg.message_id)
+                bot.send_sticker(chat_id=application.ADMINS[0], sticker=bot_msg.bot_content.picture.sticker)
         else:
             try:
                 if ButtonItem.OPERATE_REPLY in chat_data:
