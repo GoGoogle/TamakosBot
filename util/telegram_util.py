@@ -39,3 +39,28 @@ def selector_cancel(bot, query):
                             text="加载中",
                             show_alert=False)
     query.message.delete()
+
+
+class DataStore(object):
+    def __new__(cls):
+        if not hasattr(cls, 'instance'):
+            cls.instance = super(DataStore, cls).__new__(cls)
+        return cls.instance
+
+    def __init__(self):
+        self.data = {}
+
+    def set(self, key, value):
+        self.data[key] = value
+
+    def get(self, key):
+        return self.data.get(key)
+
+    def del_data(self, key):
+        del self.data[key]
+
+    def clear_data(self):
+        self.data.clear()
+
+    def is_exist(self, key):
+        return True if key in self.data else False

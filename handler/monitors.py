@@ -88,15 +88,15 @@ class Monitors(object):
 
     # manage
 
-    def record_msg(self, bot, update, chat_data):
-        self.record.record_msg(bot, update, chat_data)
+    def record_msg(self, bot, update):
+        self.record.record_msg(bot, update)
 
-    def record_selector_callback(self, bot, update, chat_data):
-        self.record.response_chat_enter(bot, update, chat_data)
+    def record_selector_callback(self, bot, update):
+        self.record.response_chat_enter(bot, update)
 
     @restricted
-    def exit_chatroom(self, bot, update, chat_data):
-        self.record.end_conversation(bot, update, chat_data)
+    def exit_chatroom(self, bot, update):
+        self.record.end_conversation(bot, update)
 
     #
 
@@ -135,8 +135,7 @@ class Monitors(object):
             CallbackQueryHandler(self.qq_music_selector_callback, pattern=r"{\"p\":\"" + self.qq.m_name))
 
         """管理命令入口"""
-        dispatcher.add_handler(MessageHandler(Filters.all, self.record_msg, pass_chat_data=True))
-        dispatcher.add_handler(RegexHandler(r'^(EXIT|退出房间)$', self.exit_chatroom, pass_chat_data=True))
+        dispatcher.add_handler(MessageHandler(Filters.all, self.record_msg))
+        dispatcher.add_handler(RegexHandler(r'^(EXIT|退出房间)$', self.exit_chatroom))
         dispatcher.add_handler(
-            CallbackQueryHandler(self.record_selector_callback, pattern=r"{\"p\":\"" + self.record.m_name,
-                                 pass_chat_data=True))
+            CallbackQueryHandler(self.record_selector_callback, pattern=r"{\"p\":\"" + self.record.m_name))
