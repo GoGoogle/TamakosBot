@@ -10,6 +10,8 @@ from util import song_util
 
 
 class Kugou(MainZ):
+    m_name = 'kugou'
+
     def __new__(cls):
         if not hasattr(cls, 'instance'):
             cls.instance = super(Kugou, cls).__new__(cls)
@@ -17,7 +19,6 @@ class Kugou(MainZ):
 
     def __init__(self, timeout=120):
         super().__init__(timeout)
-        self.m_name = 'kugou'
         self.crawler = kugou_crawler.Crawler(timeout=self.timeout)
         self.utilz = kugou_util.Util()
 

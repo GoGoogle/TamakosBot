@@ -11,6 +11,8 @@ from util import song_util
 
 
 class Qqz(MainZ):
+    m_name = 'qq'
+
     def __new__(cls):
         if not hasattr(cls, 'instance'):
             cls.instance = super(Qqz, cls).__new__(cls)
@@ -18,7 +20,6 @@ class Qqz(MainZ):
 
     def __init__(self):
         super().__init__(timeout=application.FILE_TRANSFER_TIMEOUT)
-        self.m_name = 'qq'
         self.crawler = qq_crawler.Crawler(timeout=self.timeout)
         self.utilz = qq_util.Util()
 

@@ -1,7 +1,7 @@
 import os
 
 import telegram
-from telegram import TelegramError, ReplyKeyboardMarkup
+from telegram import TelegramError
 
 from config import application
 from entity.bot_telegram import ButtonItem
@@ -11,6 +11,8 @@ from util import song_util
 
 
 class Sing5z(MainZ):
+    m_name = 'sing5'
+
     def __new__(cls):
         if not hasattr(cls, 'instance'):
             cls.instance = super(Sing5z, cls).__new__(cls)
@@ -18,7 +20,6 @@ class Sing5z(MainZ):
 
     def __init__(self):
         super().__init__(timeout=application.FILE_TRANSFER_TIMEOUT)
-        self.m_name = 'sing5'
         self.crawler = sing5_crawler.Crawler(timeout=self.timeout)
         self.utilz = sing5_util.Util()
 

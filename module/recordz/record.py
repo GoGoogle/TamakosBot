@@ -7,6 +7,8 @@ from util import telegram_util
 
 
 class Recordz(object):
+    m_name = "recordz"
+
     def __new__(cls):
         if not hasattr(cls, 'instance'):
             cls.instance = super(Recordz, cls).__new__(cls)
@@ -14,7 +16,6 @@ class Recordz(object):
 
     def __init__(self):
         self.logger = logging.getLogger(__name__)
-        self.m_name = "recordz"
         self.util = record_util.Utilz()
         self.store = telegram_util.DataStore()
 

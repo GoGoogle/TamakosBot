@@ -11,6 +11,8 @@ from util import song_util
 
 
 class Xiami(MainZ):
+    m_name = 'xiami'
+
     def __new__(cls):
         if not hasattr(cls, 'instance'):
             cls.instance = super(Xiami, cls).__new__(cls)
@@ -18,7 +20,6 @@ class Xiami(MainZ):
 
     def __init__(self):
         super().__init__(timeout=application.FILE_TRANSFER_TIMEOUT)
-        self.m_name = 'xiami'
         self.crawler = xiami_crawler.Crawler(timeout=self.timeout)
         self.utilz = xiami_util.Util()
 
