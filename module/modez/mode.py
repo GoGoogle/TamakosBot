@@ -36,8 +36,10 @@ class Modez(object):
     def produce_mode_board(self, bot, update, user_data):
         self.logger.info("produce_mode_board")
 
-        monitor_action = self.record_module_name if update.effective_user.id in application.ADMINS \
-            else monitor_action = self.common_mode
+        if update.effective_user.id in application.ADMINS:
+            monitor_action = self.record_module_name
+        else:
+            monitor_action = self.common_mode
 
         msg_mode = "模式选择"
 
