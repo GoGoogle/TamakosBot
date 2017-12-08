@@ -27,7 +27,6 @@ class Recordz(object):
         bot_msg = BotMessage.get_botmsg(update['message'])
 
         if bot_msg.bot_chat.chat_id != application.ADMINS[0]:
-            """ 别的地方记录"""
             self.logger.info('msg send success!')
             panel = self.util.produce_record_panel(bot_msg, self.m_name, self.store)
             bot.send_message(chat_id=application.ADMINS[0], text=panel["text"],
@@ -35,7 +34,6 @@ class Recordz(object):
             if bot_msg.bot_content.picture.sticker:
                 bot.send_sticker(chat_id=application.ADMINS[0], sticker=bot_msg.bot_content.picture.sticker)
         else:
-            """ 大本营输出"""
             try:
                 if self.store.is_exist(ButtonItem.OPERATE_REPLY):
                     reply_to_msg_id = self.store.get(ButtonItem.OPERATE_REPLY)
