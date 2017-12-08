@@ -9,6 +9,7 @@ from module.neteasz import netease
 from module.qqz import qq
 from module.recordz import record
 from module.sing5z import sing5
+from module.translatez import translate
 from module.xiamiz import xiami
 from util import telegram_util
 
@@ -28,16 +29,15 @@ class Modez(object):
         self.sing5_module_name = sing5.Sing5z.m_name
         self.xiami_module_name = xiami.Xiami.m_name
         self.qq_module_name = qq.Qqz.m_name
+        self.translate_module_name = translate.Translate.m_name
         self.record_module_name = record.Recordz.m_name
         self.common_mode = 'common'
 
     def produce_mode_board(self, bot, update, user_data):
         self.logger.info("produce_mode_board")
 
-        if update.effective_user.id in application.ADMINS:
-            monitor_action = self.record_module_name
-        else:
-            monitor_action = self.common_mode
+        monitor_action = self.record_module_name if update.effective_user.id in application.ADMINS \
+            else monitor_action = self.common_mode
 
         msg_mode = "模式选择"
 
@@ -66,6 +66,11 @@ class Modez(object):
                 text='音乐排行',
                 callback_data=ButtonItem(self.m_name, ButtonItem.TYPE_MODE, ButtonItem.OPERATE_SEND,
                                          self.sing5_module_name).dump_json()
+            )],
+            [InlineKeyboardButton(
+                text='翻译模式',
+                callback_data=ButtonItem(self.m_name, ButtonItem.TYPE_MODE, ButtonItem.OPERATE_SEND,
+                                         self.translate_module_name + 0).dump_json()
             )],
             [InlineKeyboardButton(
                 text='监控模式',
@@ -108,6 +113,14 @@ class Modez(object):
                     user_data[self.m_name] = item_id
                     bot.answerCallbackQuery(query.id, text="模式已切换", show_alert=False)
                     sing5.Sing5z.show_toplist_category(bot, query)
+                if item_id[:-1] == self.translate_module_name:
+                    if user_data.get(self.m_name) and user_data.get(self.m_name)[-1:] == 0:
+                        user_data[self.m_name] = item_id[:-1] + 1
+                        bot.answerCallbackQuery(query.id, text="中译英", show_alert=False)
+                    else:
+                        user_data[self.m_name] = item_id[:-1] + 0
+                        bot.answerCallbackQuery(query.id, text="英译中", show_alert=False)
+                    user_data[self.m_name] = item_id
                 else:
                     user_data[self.m_name] = item_id
                     bot.answerCallbackQuery(query.id, text="模式已切换", show_alert=False)

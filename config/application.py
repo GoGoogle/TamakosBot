@@ -2,7 +2,7 @@ ADMINS = [-1001238951919, 423453012]
 
 FILE_TRANSFER_TIMEOUT = 300
 
-CHUNK_SIZE = 1024 * 1024
+CHUNK_SIZE = 1024 * 2048
 
 TMP_Folder = 'tmp'
 
@@ -26,4 +26,9 @@ COOKIE_PATH = "{0}/{1}".format(TMP_Folder, 'cookie')
 NETEASE_LOGIN_PAYLOAD = {
     'username': 'xxxxxx',
     'password': 'xxxxxx'
+}
+
+TRANSLATE_TOKEN = {
+    "app_kid": "5a2a8aea5d714",
+    "app_key": "22397615c7fe6945e8f6bbc488a190ca"
 }
