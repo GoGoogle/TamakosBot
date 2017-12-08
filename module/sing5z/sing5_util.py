@@ -35,7 +35,7 @@ class Util(UtilZ):
                 )
             ])
 
-        if toplist_selector.total_page == 1:
+        if toplist_selector.total_page == 1 or toplist_selector.total_page == 10:
             # 什么都不做
             pass
         elif toplist_selector.cur_page == 1:
