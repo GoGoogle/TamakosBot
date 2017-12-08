@@ -7,11 +7,20 @@ from util import telegram_util
 
 
 class Recordz(object):
+    def __new__(cls):
+        if not hasattr(cls, 'instance'):
+            cls.instance = super(Recordz, cls).__new__(cls)
+        return cls.instance
+
     def __init__(self):
         self.logger = logging.getLogger(__name__)
         self.m_name = "recordz"
         self.util = record_util.Utilz()
         self.store = telegram_util.DataStore()
+
+    @staticmethod
+    def get_module_name(self):
+        return self.m_name
 
     def record_msg(self, bot, update):
         bot_msg = BotMessage.get_botmsg(update['message'])
@@ -106,4 +115,6 @@ class Recordz(object):
 
     def end_message(self, bot, update):
         self.logger.info("结束回复: %s", self.store.get(ButtonItem.OPERATE_REPLY))
+        text = "结束回复: {}".format(self.store.get(ButtonItem.OPERATE_REPLY))
+        bot.send_message(chat_id=application.ADMINS[0], text=text)
         self.store.del_data(ButtonItem.OPERATE_REPLY)

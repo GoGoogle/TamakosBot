@@ -11,6 +11,11 @@ from util import song_util
 
 
 class Sing5z(MainZ):
+    def __new__(cls):
+        if not hasattr(cls, 'instance'):
+            cls.instance = super(Sing5z, cls).__new__(cls)
+        return cls.instance
+
     def __init__(self):
         super().__init__(timeout=application.FILE_TRANSFER_TIMEOUT)
         self.m_name = 'sing5'
@@ -37,10 +42,20 @@ class Sing5z(MainZ):
         pass
 
     def response_toplist(self, bot, update, search_type='yc'):
+        alert_msg = "喵~"
+        if search_type == "原创":
+            self.toplist_turning(bot, update, 'yc', 1)
+        if search_type == "翻唱":
+            self.toplist_turning(bot, update, 'fc', 1)
+        if search_type == "新歌推荐":
+            self.toplist_turning(bot, update, 'list23', 1)
+        if search_type.lower() in ['fc', 'yc', 'list23']:
+            self.toplist_turning(bot, update, search_type.lower(), 1)
+        else:
+            alert_msg = "请输入 `原创` , `翻唱` 或者 `新歌推荐` !"
         edited_msg = bot.send_message(chat_id=update.message.chat.id,
-                                      text="喵~")
+                                      text=alert_msg)
         update.message.message_id = edited_msg.message_id
-        self.toplist_turning(bot, update, search_type, 1)
 
     def songlist_turning(self, bot, query, kw, page):
         pass

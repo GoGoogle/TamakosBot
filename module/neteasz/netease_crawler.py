@@ -31,11 +31,6 @@ NETEASE_HEADERS = {
 
 
 class Crawler(CrawlerZ):
-    def __new__(cls, timeout=120, proxy=None):
-        if not hasattr(cls, 'instance'):
-            cls.instance = super(Crawler, cls).__new__(cls)
-        return cls.instance
-
     def __init__(self, timeout=120, proxy=None):
         super().__init__(timeout, proxy)
         self.session = requests.Session()

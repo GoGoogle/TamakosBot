@@ -11,6 +11,11 @@ from util import song_util
 
 
 class Netease(MainZ):
+    def __new__(cls):
+        if not hasattr(cls, 'instance'):
+            cls.instance = super(Netease, cls).__new__(cls)
+        return cls.instance
+
     def __init__(self):
         super().__init__(application.FILE_TRANSFER_TIMEOUT)
         self.m_name = 'netease'

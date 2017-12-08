@@ -10,6 +10,11 @@ from util import song_util
 
 
 class Kugou(MainZ):
+    def __new__(cls):
+        if not hasattr(cls, 'instance'):
+            cls.instance = super(Kugou, cls).__new__(cls)
+        return cls.instance
+
     def __init__(self, timeout=120):
         super().__init__(timeout)
         self.m_name = 'kugou'

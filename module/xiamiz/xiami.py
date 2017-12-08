@@ -11,6 +11,11 @@ from util import song_util
 
 
 class Xiami(MainZ):
+    def __new__(cls):
+        if not hasattr(cls, 'instance'):
+            cls.instance = super(Xiami, cls).__new__(cls)
+        return cls.instance
+
     def __init__(self):
         super().__init__(timeout=application.FILE_TRANSFER_TIMEOUT)
         self.m_name = 'xiami'

@@ -20,7 +20,7 @@ class Util(UtilZ):
         """
         self.logger.info('get_songlist_selector: keyword={0}, pagecode={1}'.format(songlist.keyword, curpage))
         total_page = (songlist.track_count + 4) // 5
-        title = '163 ️🎵 关键字「{0}」p: {1}/{2}'.format(songlist.keyword, curpage, total_page)
+        title = '☁️ ️🎵 关键字「{0}」p: {1}/{2}'.format(songlist.keyword, curpage, total_page)
         return SongListSelector(title, curpage, total_page, songlist)
 
     def produce_songlist_panel(self, module_name, songlist_selector):
@@ -88,7 +88,7 @@ class Util(UtilZ):
         self.logger.info('get_playlist_selector: keyword={0}, pagecode={1}'.format(playlist.playlist_name, curpage))
 
         total_page = (playlist.track_count + 4) // 5
-        title = '163 🎵歌单 「{0}」\n创建者 {1} ({2} 首歌)'.format(
+        title = '☁️ 🎵歌单 「{0}」\n创建者 {1} ({2} 首歌)'.format(
             playlist.playlist_name, playlist.creator.user_name, playlist.track_count)
 
         # 分页处理

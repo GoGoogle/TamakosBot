@@ -7,14 +7,13 @@ from telegram.ext import Updater
 
 from config import application
 from config.application import WEBHOOK_LOCAL, WEBHOOK_REMOTE
-from handler import commands, messages, monitors
+from handler import boot, monitor
 
 
 class Bot(object):
     def __init__(self, log_config="config/logconfig.yaml"):
-        self.commands = commands.Commands()
-        self.messages = messages.Message()
-        self.monitors = monitors.Monitors()
+        self.commands = boot.Startup()
+        self.monitors = monitor.Monitor()
         self.setup_build(log_config)
         self.logger = logging.getLogger("__name__")
 
@@ -30,9 +29,8 @@ class Bot(object):
         self.logger.warning('Update "%s" caused error "%s"', update, err)
 
     def distribute(self, dispatcher):
-        commands.Commands().handler_commands(dispatcher)
-        messages.Message().handler_messages(dispatcher)
-        monitors.Monitors().handler_monitors(dispatcher)
+        boot.Startup().handler_startup(dispatcher)
+        monitor.Monitor().handler_response(dispatcher)
         dispatcher.add_error_handler(self.error_handler)
 
     def start_bot(self):

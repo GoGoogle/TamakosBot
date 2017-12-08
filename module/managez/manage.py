@@ -8,6 +8,11 @@ from config import application
 
 
 class Adminz(object):
+    def __new__(cls):
+        if not hasattr(cls, 'instance'):
+            cls.instance = super(Adminz, cls).__new__(cls)
+        return cls.instance
+
     def __init__(self):
         self.logger = logging.getLogger(__name__)
 

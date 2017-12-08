@@ -128,10 +128,12 @@ class BotMessage(object):
 
 
 class ButtonItem(object):
-    TYPE_SONGLIST = 0
-    TYPE_PLAYLIST = 1
-    TYPE_TOPLIST = 2
-    TYPE_DIALOG = 3
+    TYPE_MODE = 0
+
+    TYPE_SONGLIST = 1
+    TYPE_PLAYLIST = 2
+    TYPE_TOPLIST = 3
+    TYPE_DIALOG = 4
 
     OPERATE_CANCEL = '*'
     OPERATE_PAGE_DOWN = '+'
