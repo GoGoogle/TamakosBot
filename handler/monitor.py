@@ -50,7 +50,7 @@ class Monitor(object):
             if mode_key == self.tencent.m_name:
                 self.tencent.search_music(bot, update, update.message.text)
             if mode_key == self.sing5.m_name:
-                self.sing5.response_toplist(bot, update, update.message.text)
+                self.sing5.toggle_category(bot, update)
             if mode_key == self.record.m_name:
                 self.record.record_msg(bot, update)
 
@@ -82,7 +82,7 @@ class Monitor(object):
         dispatcher.add_handler(
             CallbackQueryHandler(self.mode_toggle, pattern=r"{\"p\":\"" + self.mode.m_name, pass_user_data=True))
         dispatcher.add_handler(
-            MessageHandler(Filters.text, self.mode_analyze, pass_user_data=True)
+            MessageHandler(~ Filters.command, self.mode_analyze, pass_user_data=True)
         )
 
         """网易命令入口"""

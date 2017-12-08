@@ -61,7 +61,7 @@ class Modez(object):
                                          self.sing5_module_name).dump_json()
             )],
             [InlineKeyboardButton(
-                text='记录模式',
+                text='监控模式',
                 callback_data=ButtonItem(self.m_name, ButtonItem.TYPE_MODE, ButtonItem.OPERATE_SEND,
                                          self.record_module_name).dump_json()
             )],
@@ -97,13 +97,6 @@ class Modez(object):
                         user_data.clear()
                         bot.answerCallbackQuery(query.id, text="普通模式切换成功", show_alert=False)
                     bot.answerCallbackQuery(query.id, text="当前模式已为普通模式", show_alert=False)
-                if item_id == self.sing5_module_name:
-                    user_data[self.m_name] = item_id
-                    bot.answerCallbackQuery(query.id, text="排行模式切换成功", show_alert=False)
-                    reply_keyboard = [['原创排行', '翻唱排行'], ['新歌推荐', '其它']]
-                    markup = ReplyKeyboardMarkup(reply_keyboard)
-                    bot.send_message(chat_id=query.message.chat.id, text="请选择分类", reply_markup=markup,
-                                     one_time_keyboard=True)
                 else:
                     user_data[self.m_name] = item_id
                     bot.answerCallbackQuery(query.id, text="模式已切换", show_alert=False)

@@ -42,6 +42,9 @@ class Sing5z(MainZ):
     def response_playlist(self, bot, update, playlist_id):
         pass
 
+    def toggle_category(self, bot, update):
+        update.reply_text(text="你需要氪金！")
+
     def response_toplist(self, bot, update, search_type='yc'):
         edited_msg = bot.send_message(chat_id=update.message.chat.id,
                                       text="喵~")
