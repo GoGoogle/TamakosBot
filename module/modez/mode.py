@@ -70,9 +70,9 @@ class Modez(object):
                                          self.sing5_module_name).dump_json()
             )],
             [InlineKeyboardButton(
-                text='翻译模式',
+                text='语言翻译',
                 callback_data=ButtonItem(self.m_name, ButtonItem.TYPE_MODE, ButtonItem.OPERATE_SEND,
-                                         self.translate_module_name + 0).dump_json()
+                                         self.translate_module_name + "0").dump_json()
             )],
             [InlineKeyboardButton(
                 text='监控模式',
@@ -116,13 +116,12 @@ class Modez(object):
                     bot.answerCallbackQuery(query.id, text="模式已切换", show_alert=False)
                     sing5.Sing5z.show_toplist_category(bot, query)
                 if item_id[:-1] == self.translate_module_name:
-                    if user_data.get(self.m_name) and user_data.get(self.m_name)[-1:] == 0:
-                        user_data[self.m_name] = item_id[:-1] + 1
+                    if user_data.get(self.m_name) and user_data.get(self.m_name)[-1:] == "0":
+                        user_data[self.m_name] = item_id[:-1] + "1"
                         bot.answerCallbackQuery(query.id, text="中译英", show_alert=False)
                     else:
-                        user_data[self.m_name] = item_id[:-1] + 0
+                        user_data[self.m_name] = item_id[:-1] + "0"
                         bot.answerCallbackQuery(query.id, text="英译中", show_alert=False)
-                    user_data[self.m_name] = item_id
                 else:
                     user_data[self.m_name] = item_id
                     bot.answerCallbackQuery(query.id, text="模式已切换", show_alert=False)

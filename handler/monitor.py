@@ -46,6 +46,8 @@ class Monitor(object):
                         self.netease.response_playlist(bot, update, playlist_id)
                     else:
                         self.netease.search_music(bot, update, update.message.text)
+                if mode_value[:-1] == self.translate.m_name:
+                    self.translate.translate_it(bot, update, update.message.text, int(mode_value[-1:]))
                 if mode_value == self.xiami.m_name:
                     self.xiami.search_music(bot, update, update.message.text)
                 if mode_value == self.kugou.m_name:
@@ -54,8 +56,6 @@ class Monitor(object):
                     self.tencent.search_music(bot, update, update.message.text)
                 if mode_value == self.sing5.m_name:
                     self.sing5.response_toplist(bot, update, update.message.text)
-                if mode_value[:-1] == self.translate.m_name:
-                    self.translate.request_translate(bot, update, update.message.text, mode_value[-1:])
             if mode_value == self.record.m_name:
                 self.record.record_msg(bot, update)
 

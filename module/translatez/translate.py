@@ -10,11 +10,8 @@ class Translate(object):
         self.logger = logging.getLogger(__name__)
         self.crawler = translate_crawler.TranslateApi()
 
-    def request_translate(self, bot, update, source, option):
-        if option == 1:
-            options = {'from': 'zh', 'to': 'en'}
-        else:
-            options = {'from': 'en', 'to': 'zh'}
+    def translate_it(self, bot, update, source, option):
+        options = {'from': 'en', 'to': 'zh'} if option == 0 else {'from': 'zh', 'to': 'en'}
         bot_result = self.crawler.post_translate(source, options)
         if bot_result.get_status() == 200:
             result = bot_result.get_body()['translation'][0]['translated'][0]['text']
