@@ -1,6 +1,8 @@
 import logging
 
-from telegram import InlineKeyboardMarkup, InlineKeyboardButton, ReplyKeyboardMarkup
+from telegram import InlineKeyboardMarkup, InlineKeyboardButton
+
+from config import application
 from entity.bot_telegram import ButtonItem
 from module.kugouz import kugou
 from module.neteasz import netease
@@ -29,8 +31,13 @@ class Modez(object):
         self.record_module_name = record.Recordz.m_name
         self.common_mode = 'common'
 
-    def produce_mode_board(self, user_data):
+    def produce_mode_board(self, bot, update, user_data):
         self.logger.info("produce_mode_board")
+
+        if update.message.user.id in application.ADMINS:
+            monitor_action = self.record_module_name
+        else:
+            monitor_action = self.common_mode
 
         msg_mode = "模式选择"
 
@@ -63,7 +70,7 @@ class Modez(object):
             [InlineKeyboardButton(
                 text='监控模式',
                 callback_data=ButtonItem(self.m_name, ButtonItem.TYPE_MODE, ButtonItem.OPERATE_SEND,
-                                         self.record_module_name).dump_json()
+                                         monitor_action).dump_json()
             )],
             [InlineKeyboardButton(
                 text='普通模式',
@@ -80,7 +87,7 @@ class Modez(object):
         return {"text": msg_mode, "markup": markup}
 
     def show_mode_board(self, bot, update, user_data):
-        panel = self.produce_mode_board(user_data)
+        panel = self.produce_mode_board(bot, update, user_data)
         update.message.reply_text(text=panel["text"], reply_markup=panel["markup"])
 
     def toggle_mode(self, bot, update, user_data):

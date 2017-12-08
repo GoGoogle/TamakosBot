@@ -27,7 +27,7 @@ class Recordz(object):
         bot_msg = BotMessage.get_botmsg(update['message'])
 
         if bot_msg.bot_chat.chat_id != application.ADMINS[0]:
-            """ 别的地方记录（只记录普通模式下的内容）"""
+            """ 别的地方记录"""
             self.logger.info('msg send success!')
             panel = self.util.produce_record_panel(bot_msg, self.m_name, self.store)
             bot.send_message(chat_id=application.ADMINS[0], text=panel["text"],
