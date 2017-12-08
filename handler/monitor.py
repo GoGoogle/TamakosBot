@@ -36,21 +36,22 @@ class Monitor(object):
     def mode_analyze(self, bot, update, user_data):
         if user_data.get(self.mode.m_name):
             mode_key = user_data[self.mode.m_name]
-            if mode_key == self.netease.m_name:
-                if re.match(r'.*https?://music.163.com/?#?/?m?/playlist((/)|(\?id=))(\d*).*', update.message.text):
-                    playlist_id = re.search(r'https?://music.163.com/?#?/?m?/playlist((/)|(\?id=))(\d*)',
-                                            update.message.text).group(4)
-                    self.netease.response_playlist(bot, update, playlist_id)
-                else:
-                    self.netease.search_music(bot, update, update.message.text)
-            if mode_key == self.xiami.m_name:
-                self.xiami.search_music(bot, update, update.message.text)
-            if mode_key == self.kugou.m_name:
-                self.kugou.search_music(bot, update, update.message.text)
-            if mode_key == self.tencent.m_name:
-                self.tencent.search_music(bot, update, update.message.text)
-            if mode_key == self.sing5.m_name:
-                self.sing5.response_toplist(bot, update, update.message.text)
+            if update.message.text:
+                if mode_key == self.netease.m_name:
+                    if re.match(r'.*https?://music.163.com/?#?/?m?/playlist((/)|(\?id=))(\d*).*', update.message.text):
+                        playlist_id = re.search(r'https?://music.163.com/?#?/?m?/playlist((/)|(\?id=))(\d*)',
+                                                update.message.text).group(4)
+                        self.netease.response_playlist(bot, update, playlist_id)
+                    else:
+                        self.netease.search_music(bot, update, update.message.text)
+                if mode_key == self.xiami.m_name:
+                    self.xiami.search_music(bot, update, update.message.text)
+                if mode_key == self.kugou.m_name:
+                    self.kugou.search_music(bot, update, update.message.text)
+                if mode_key == self.tencent.m_name:
+                    self.tencent.search_music(bot, update, update.message.text)
+                if mode_key == self.sing5.m_name:
+                    self.sing5.response_toplist(bot, update, update.message.text)
             if mode_key == self.record.m_name:
                 self.record.record_msg(bot, update)
 
