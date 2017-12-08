@@ -20,7 +20,7 @@ class Util(UtilZ):
                 """
         self.logger.info('get_songlist_selector: keyword=%s, pagecode=%s', songlist.keyword, curpage)
         total_page = (songlist.track_count + 4) // 5
-        title = '酷狗 ️🎵 关键字「{0}」p: {1}/{2}'.format(songlist.keyword, curpage, total_page)
+        title = '🐶 ️🎵 关键字「{0}」p: {1}/{2}'.format(songlist.keyword, curpage, total_page)
         return SongListSelector(title, curpage, total_page, songlist)
 
     def produce_songlist_panel(self, module_name, songlist_selector):

@@ -15,7 +15,7 @@ class Util(UtilZ):
         self.logger.info('get_toplist_selector: keyword={0}, pagecode={1}'.format(toplist.top_name, curpage))
 
         total_page = (toplist.track_count + 4) // 5
-        title = '5sing 榜单 「{0}」p: {1}/{2}'.format(
+        title = '🍏 榜单 「{0}」p: {1}/{2}'.format(
             toplist.top_name, curpage, total_page)
 
         return TopListSelector(title, curpage, total_page, toplist)
