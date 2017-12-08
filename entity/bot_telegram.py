@@ -134,6 +134,7 @@ class ButtonItem(object):
     TYPE_PLAYLIST = 2
     TYPE_TOPLIST = 3
     TYPE_DIALOG = 4
+    TYPE_TOPLIST_CATEGORY = 5
 
     OPERATE_CANCEL = '*'
     OPERATE_PAGE_DOWN = '+'

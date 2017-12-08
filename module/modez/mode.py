@@ -97,6 +97,10 @@ class Modez(object):
                         user_data.clear()
                         bot.answerCallbackQuery(query.id, text="普通模式切换成功", show_alert=False)
                     bot.answerCallbackQuery(query.id, text="当前模式已为普通模式", show_alert=False)
+                if item_id == self.sing5_module_name:
+                    user_data[self.m_name] = item_id
+                    bot.answerCallbackQuery(query.id, text="模式已切换", show_alert=False)
+                    sing5.Sing5z.show_toplist_category(bot, query)
                 else:
                     user_data[self.m_name] = item_id
                     bot.answerCallbackQuery(query.id, text="模式已切换", show_alert=False)

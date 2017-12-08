@@ -1,7 +1,7 @@
 import os
 
 import telegram
-from telegram import TelegramError
+from telegram import TelegramError, InlineKeyboardMarkup, InlineKeyboardButton
 
 from config import application
 from entity.bot_telegram import ButtonItem
@@ -12,6 +12,7 @@ from util import song_util
 
 class Sing5z(MainZ):
     m_name = 'sing5'
+    top_cate = "sing5top"
 
     def __new__(cls):
         if not hasattr(cls, 'instance'):
@@ -42,8 +43,10 @@ class Sing5z(MainZ):
     def response_playlist(self, bot, update, playlist_id):
         pass
 
-    def toggle_category(self, bot, update):
-        update.reply_text(text="你需要氪金！")
+    def response_top_category(self, bot, update):
+        query = update.callback_query
+        button_item = ButtonItem.parse_json(query.data)
+        self.handle_callback(bot, query, button_item)
 
     def response_toplist(self, bot, update, search_type='yc'):
         edited_msg = bot.send_message(chat_id=update.message.chat.id,
@@ -113,6 +116,9 @@ class Sing5z(MainZ):
             if button_operate == ButtonItem.OPERATE_SEND:
                 # 这里的 page 指 search_type
                 self.deliver_music(bot, query, item_id, page, delete=False)
+        if button_type == ButtonItem.TYPE_TOPLIST_CATEGORY:
+            if button_operate == ButtonItem.OPERATE_SEND:
+                self.response_toplist(bot, query, item_id)
 
     def download_backend(self, bot, query, songfile, edited_msg):
         self.logger.info('download_backend..')
@@ -154,3 +160,38 @@ class Sing5z(MainZ):
             if send_msg:
                 send_msg.delete()
             self.logger.error("文件: 「{}」 发送失败.".format(songfile.song.song_name), exc_info=err)
+
+    @staticmethod
+    def show_toplist_category(bot, query):
+        top_msg = "排行分类"
+        button_list = [
+            [InlineKeyboardButton(
+                text='原创排行',
+                callback_data=ButtonItem(Sing5z.top_cate, ButtonItem.TYPE_TOPLIST_CATEGORY, ButtonItem.OPERATE_SEND,
+                                         "yc").dump_json()
+            )],
+            [InlineKeyboardButton(
+                text='翻唱排行',
+                callback_data=ButtonItem(Sing5z.top_cate, ButtonItem.TYPE_TOPLIST_CATEGORY, ButtonItem.OPERATE_SEND,
+                                         "fc").dump_json()
+            )
+            ],
+            [InlineKeyboardButton(
+                text='新歌推荐',
+                callback_data=ButtonItem(Sing5z.top_cate, ButtonItem.TYPE_TOPLIST_CATEGORY, ButtonItem.OPERATE_SEND,
+                                         "list23").dump_json()
+            )],
+            [InlineKeyboardButton(
+                text='其它',
+                callback_data=ButtonItem(Sing5z.top_cate, ButtonItem.TYPE_TOPLIST_CATEGORY, ButtonItem.OPERATE_SEND,
+                                         "bz").dump_json()
+            )
+            ],
+            [InlineKeyboardButton(
+                text='取消',
+                callback_data=ButtonItem(Sing5z.top_cate, ButtonItem.TYPE_TOPLIST_CATEGORY,
+                                         ButtonItem.OPERATE_CANCEL).dump_json()
+            )]
+        ]
+        bot.send_message(text=top_msg, chat_id=query.message.chat.id,
+                         reply_markup=InlineKeyboardMarkup(button_list, one_time_keyboard=True))

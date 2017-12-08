@@ -50,7 +50,7 @@ class Monitor(object):
             if mode_key == self.tencent.m_name:
                 self.tencent.search_music(bot, update, update.message.text)
             if mode_key == self.sing5.m_name:
-                self.sing5.toggle_category(bot, update)
+                self.sing5.response_toplist(bot, update, update.message.text)
             if mode_key == self.record.m_name:
                 self.record.record_msg(bot, update)
 
@@ -61,6 +61,10 @@ class Monitor(object):
     @run_async
     def sing5_music_selector_callback(self, bot, update):
         self.sing5.response_single_music(bot, update)
+
+    @run_async
+    def sing5_music_top_category_callback(self, bot, update):
+        self.sing5.response_top_category(bot, update)
 
     @run_async
     def kugou_music_selector_callback(self, bot, update):
@@ -92,6 +96,10 @@ class Monitor(object):
         )
 
         """5sing命令入口"""
+        dispatcher.add_handler(
+            CallbackQueryHandler(self.sing5_music_top_category_callback, pattern=r"{\"p\":\"" + self.sing5.top_cate),
+            group=3
+        )
         dispatcher.add_handler(
             CallbackQueryHandler(self.sing5_music_selector_callback, pattern=r"{\"p\":\"" + self.sing5.m_name),
             group=3
