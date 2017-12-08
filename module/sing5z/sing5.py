@@ -1,7 +1,7 @@
 import os
 
 import telegram
-from telegram import TelegramError
+from telegram import TelegramError, ReplyKeyboardMarkup
 
 from config import application
 from entity.bot_telegram import ButtonItem
@@ -42,20 +42,19 @@ class Sing5z(MainZ):
         pass
 
     def response_toplist(self, bot, update, search_type='yc'):
-        alert_msg = "喵~"
-        if search_type == "原创":
+        edited_msg = bot.send_message(chat_id=update.message.chat.id,
+                                      text="喵~")
+        update.message.message_id = edited_msg.message_id
+        if search_type == "原创排行":
             self.toplist_turning(bot, update, 'yc', 1)
-        if search_type == "翻唱":
+        if search_type == "翻唱排行":
             self.toplist_turning(bot, update, 'fc', 1)
         if search_type == "新歌推荐":
             self.toplist_turning(bot, update, 'list23', 1)
-        if search_type.lower() in ['fc', 'yc', 'list23']:
+        if search_type == "其它":
+            self.toplist_turning(bot, update, 'bz', 1)
+        if search_type.lower() in ['fc', 'yc', 'list23', 'bz']:
             self.toplist_turning(bot, update, search_type.lower(), 1)
-        else:
-            alert_msg = "请输入 `原创` , `翻唱` 或者 `新歌推荐` !"
-        edited_msg = bot.send_message(chat_id=update.message.chat.id,
-                                      text=alert_msg)
-        update.message.message_id = edited_msg.message_id
 
     def songlist_turning(self, bot, query, kw, page):
         pass
