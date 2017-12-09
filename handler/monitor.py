@@ -1,8 +1,9 @@
 import logging
 import re
-import emoji
 
+import emoji
 from telegram.ext import CallbackQueryHandler, run_async, MessageHandler, Filters
+
 from module.animez import anime
 from module.kugouz import kugou
 from module.modez import mode
@@ -62,7 +63,8 @@ class Monitor(object):
                 if mode_value == anime.Anime.m_name:
                     self.anime.search_anime(bot, update)
             if mode_value == self.record.m_name:
-                self.record.record_msg(bot, update)
+                self.record.record_reply(bot, update)
+        self.record.record_msg(bot, update)
 
     @run_async
     def netease_music_selector_callback(self, bot, update):

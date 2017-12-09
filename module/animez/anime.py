@@ -22,10 +22,10 @@ class Anime(object):
 
     def search_anime(self, bot, update):
         self.logger.debug("search anime start..")
-        file_path = ""
+        file_path = None
         server_file = None
         try:
-            file_id = update.message.photo[0]
+            file_id = update.message.photo[0].file_id
             random_str = str(uuid.uuid4())
             filename = "{0}{1}.{2}".format(file_id, random_str, "png")
             file_path = os.path.join(application.TMP_Folder, filename)
