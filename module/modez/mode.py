@@ -34,7 +34,7 @@ class Modez(object):
         self.common_mode = 'common'
 
     def produce_mode_board(self, bot, update, user_data):
-        self.logger.info("produce_mode_board")
+        self.logger.debug("produce_mode_board")
 
         if update.effective_user.id in application.ADMINS:
             monitor_action = self.record_module_name
@@ -70,7 +70,7 @@ class Modez(object):
                                          self.sing5_module_name).dump_json()
             )],
             [InlineKeyboardButton(
-                text='语言翻译',
+                text='中英互译',
                 callback_data=ButtonItem(self.m_name, ButtonItem.TYPE_MODE, ButtonItem.OPERATE_SEND,
                                          self.translate_module_name + "0").dump_json()
             )],
@@ -98,7 +98,7 @@ class Modez(object):
         update.message.reply_text(text=panel["text"], reply_markup=panel["markup"])
 
     def toggle_mode(self, bot, update, user_data):
-        self.logger.info('response_toggle_mode !')
+        self.logger.debug('response_toggle_mode !')
         query = update.callback_query
 
         button_item = ButtonItem.parse_json(query.data)

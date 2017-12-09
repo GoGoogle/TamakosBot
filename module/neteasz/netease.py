@@ -34,7 +34,7 @@ class Netease(MainZ):
     def search_music(self, bot, update, kw):
         self.logger.info('get_music: %s', kw)
         edited_msg = bot.send_message(chat_id=update.message.chat.id,
-                                      text="喵~")
+                                      text="🙄")
         update.message.message_id = edited_msg.message_id
         self.songlist_turning(bot, update, kw, 1)
 
@@ -54,7 +54,7 @@ class Netease(MainZ):
     def response_playlist(self, bot, update, playlist_id):
         try:
             edited_msg = bot.send_message(chat_id=update.message.chat.id,
-                                          text="喵~")
+                                          text="🙄")
             update.message.message_id = edited_msg.message_id
             self.playlist_turning(bot, update, playlist_id, 1)
         except IndexError:
@@ -89,7 +89,7 @@ class Netease(MainZ):
 
         bot_result = self.crawler.get_song_detail(song_id)
         if bot_result.get_status() == 400:
-            text = "警告：版权问题，无法下载"
+            text = "没有版权©"
             bot.send_message(chat_id=query.message.chat.id, text=text)
         elif bot_result.get_status() == 200:
             song = bot_result.get_body()
