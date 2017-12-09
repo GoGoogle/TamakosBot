@@ -10,7 +10,7 @@ class Utilz(object):
         self.logger = logging.getLogger(__name__)
 
     def produce_record_panel(self, bot_msg, module_name, chat_store):
-        self.logger.info("produce_record_panel")
+        self.logger.debug("produce_record_panel")
 
         if chat_store.get(ButtonItem.OPERATE_ENTER):
             msg_chat = "新消息！ 当前房间: `{0}` \n-------------\n房间:  {1} (chat_id:  {2})\n用户:  {3} (user_id: {4})\n" \

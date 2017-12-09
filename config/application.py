@@ -34,5 +34,5 @@ TRANSLATE_TOKEN = {
 }
 
 ANIME_TOKEN = {
-
+    "token": "f7059ee0b05b9c59e15cd5c1e49955444420f596z"
 }

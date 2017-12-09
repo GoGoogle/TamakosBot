@@ -105,7 +105,7 @@ class Modez(object):
         update.message.reply_text(text=panel["text"], reply_markup=panel["markup"])
 
     def toggle_mode(self, bot, update, user_data):
-        self.logger.debug('response_toggle_mode !')
+        self.logger.debug('response_toggle_mode..')
         query = update.callback_query
 
         button_item = ButtonItem.parse_json(query.data)
