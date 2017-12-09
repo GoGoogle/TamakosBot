@@ -85,7 +85,7 @@ class Sing5z(MainZ):
 
         bot_result = self.crawler.get_song_detail(song_id, search_type)
         if bot_result.get_status() == 400:
-            text = "没有版权©"
+            text = "😶没有版权©"
             bot.send_message(chat_id=query.message.chat.id, text=text)
         elif bot_result.get_status() == 200:
             song = bot_result.get_body()
