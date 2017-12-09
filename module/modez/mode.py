@@ -4,6 +4,7 @@ from telegram import InlineKeyboardMarkup, InlineKeyboardButton
 
 from config import application
 from entity.bot_telegram import ButtonItem
+from module.animez import anime
 from module.kugouz import kugou
 from module.neteasz import netease
 from module.qqz import qq
@@ -30,6 +31,7 @@ class Modez(object):
         self.xiami_module_name = xiami.Xiami.m_name
         self.qq_module_name = qq.Qqz.m_name
         self.translate_module_name = translate.Translate.m_name
+        self.anime_module_name = anime.Anime.m_name
         self.record_module_name = record.Recordz.m_name
         self.common_mode = 'common'
 
@@ -73,6 +75,11 @@ class Modez(object):
                 text='中英互译',
                 callback_data=ButtonItem(self.m_name, ButtonItem.TYPE_MODE, ButtonItem.OPERATE_SEND,
                                          self.translate_module_name + "0").dump_json()
+            )],
+            [InlineKeyboardButton(
+                text='动画索引',
+                callback_data=ButtonItem(self.m_name, ButtonItem.TYPE_MODE, ButtonItem.OPERATE_SEND,
+                                         self.anime_module_name).dump_json()
             )],
             [InlineKeyboardButton(
                 text='监控模式',

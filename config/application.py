@@ -32,3 +32,7 @@ TRANSLATE_TOKEN = {
     "app_kid": "5a2a8aea5d714",
     "app_key": "22397615c7fe6945e8f6bbc488a190ca"
 }
+
+ANIME_TOKEN = {
+
+}

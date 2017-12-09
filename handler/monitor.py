@@ -3,7 +3,7 @@ import re
 import emoji
 
 from telegram.ext import CallbackQueryHandler, run_async, MessageHandler, Filters
-
+from module.animez import anime
 from module.kugouz import kugou
 from module.modez import mode
 from module.neteasz import netease
@@ -24,6 +24,7 @@ class Monitor(object):
         self.tencent = qq.Qqz()
         self.sing5 = sing5.Sing5z()
         self.translate = translate.Translate()
+        self.anime = anime.Anime()
         self.record = record.Recordz()
 
     def mode_toggle(self, bot, update, user_data):
@@ -57,6 +58,9 @@ class Monitor(object):
                     self.tencent.search_music(bot, update, update.message.text)
                 if mode_value == self.sing5.m_name:
                     self.sing5.response_toplist(bot, update, update.message.text)
+            if update.message.photo:
+                if mode_value == anime.Anime.m_name:
+                    self.anime.search_anime(bot, update)
             if mode_value == self.record.m_name:
                 self.record.record_msg(bot, update)
 
