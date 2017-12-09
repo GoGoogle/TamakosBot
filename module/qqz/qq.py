@@ -33,7 +33,7 @@ class Qqz(MainZ):
     def songlist_turning(self, bot, query, kw, page):
         bot_result = self.crawler.search_song(kw, page)
         if bot_result.get_status() == 400:
-            text = "缺少歌曲名称"
+            text = "🤔缺少歌曲名称"
             query.message.reply_text(text=text)
         elif bot_result.get_status() == 404:
             text = "🤔此歌曲找不到"
