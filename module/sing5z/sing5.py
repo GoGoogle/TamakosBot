@@ -73,7 +73,7 @@ class Sing5z(MainZ):
         bot_result = self.crawler.get_songtop(search_type, page)
         if bot_result.get_status() == 404:
             text = "🤔此榜单找不到"
-            query.message.reply_text(text=text)
+            bot.send_message(chat_id=query.message.chat.id, text=text)
         elif bot_result.get_status() == 200:
             selector = self.utilz.get_toplist_selector(page, bot_result.get_body())
             panel = self.utilz.produce_toplist_panel(self.m_name, selector)

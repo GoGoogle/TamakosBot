@@ -65,10 +65,10 @@ class Netease(MainZ):
         bot_result = self.crawler.search_song(kw, page)
         if bot_result.get_status() == 400:
             text = "🤔缺少歌曲名称"
-            query.message.reply_text(text=text)
+            bot.send_message(chat_id=query.message.chat.id, text=text)
         elif bot_result.get_status() == 404:
             text = "🤔此歌曲找不到"
-            query.message.reply_text(text=text)
+            bot.send_message(chat_id=query.message.chat.id, text=text)
         elif bot_result.get_status() == 200:
             selector = self.utilz.get_songlist_selector(page, bot_result.get_body())
             panel = self.utilz.produce_songlist_panel(self.m_name, selector)
@@ -78,7 +78,7 @@ class Netease(MainZ):
         bot_result = self.crawler.get_playlist(playlist_id, page)
         if bot_result.get_status() == 400:
             text = "🤔此歌单找不到"
-            query.message.reply_text(text=text)
+            bot.send_message(chat_id=query.message.chat.id, text=text)
         elif bot_result.get_status() == 200:
             selector = self.utilz.get_playlist_selector(page, bot_result.get_body())
             panel = self.utilz.produce_playlist_panel(self.m_name, selector)

@@ -25,7 +25,7 @@ COOKIE_PATH = "{0}/{1}".format(TMP_Folder, 'cookie')
 
 NETEASE_LOGIN_PAYLOAD = {
     'username': 'xxxxxx',
-    'password': 'xxxxxx'
+    'password': ''
 }
 
 TRANSLATE_TOKEN = {
