@@ -8,6 +8,7 @@ requests 或 requests[socks]
 pyyaml
 pytaglib
 pycryptodome
+emoji
 ```
 > 网易云音乐 模块
 

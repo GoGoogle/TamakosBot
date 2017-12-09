@@ -1,5 +1,6 @@
 import logging
 import re
+import emoji
 
 from telegram.ext import CallbackQueryHandler, run_async, MessageHandler, Filters
 
@@ -38,7 +39,7 @@ class Monitor(object):
     def mode_analyze(self, bot, update, user_data):
         if user_data.get(self.mode.m_name):
             mode_value = user_data[self.mode.m_name]
-            if update.message.text:
+            if update.message.text and update.message.text not in emoji.UNICODE_EMOJI:
                 if mode_value == self.netease.m_name:
                     if re.match(r'.*https?://music.163.com/?#?/?m?/playlist((/)|(\?id=))(\d*).*', update.message.text):
                         playlist_id = re.search(r'https?://music.163.com/?#?/?m?/playlist((/)|(\?id=))(\d*)',

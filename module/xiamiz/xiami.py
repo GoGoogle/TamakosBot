@@ -66,7 +66,7 @@ class Xiami(MainZ):
         if delete:
             song_util.selector_cancel(bot, query)
 
-        bot_result = self.crawler.get_song_detai(song_id)
+        bot_result = self.crawler.get_song_detail(song_id)
         if bot_result.get_status() == 400:
             text = "😶没有版权©"
             bot.send_message(chat_id=query.message.chat.id, text=text)

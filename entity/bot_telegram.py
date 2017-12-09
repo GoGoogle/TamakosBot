@@ -166,7 +166,7 @@ class ButtonItem(object):
         the self.i's max length is 22 bytes, and utf-8 Chinese 3 bytes per character. only handle for chinese
         :return:
         """
-        if isinstance(self.i, str) and len(self.i.encode('utf-8')) > 22:
+        if isinstance(self.i, str) and u'\u4e00' <= self.i <= u'\u9fa5' and len(self.i.encode('utf-8')) > 22:
             self.i = self.i[:7]
         _json = json.dumps(self, default=lambda o: o.__dict__, separators=(',', ':'), ensure_ascii=False)
         return _json
@@ -180,7 +180,7 @@ class ButtonItem(object):
         return button_item
 
     def dump_simple_json(self):
-        if isinstance(self.i, str) and len(self.i.encode('utf-8')) > 22:
+        if isinstance(self.i, str) and u'\u4e00' <= self.i <= u'\u9fa5' and len(self.i.encode('utf-8')) > 22:
             self.i = self.i[:7]
         if self.t == ButtonItem.TYPE_SONGLIST:
             return json.dumps({'p': self.p, 'x': self.i}, separators=(',', ':'), ensure_ascii=False)
