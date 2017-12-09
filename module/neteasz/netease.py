@@ -25,11 +25,12 @@ class Netease(MainZ):
         self.init_login(application.NETEASE_LOGIN_PAYLOAD)
 
     def init_login(self, config):
-        bot_result = self.crawler.login(config['username'], config['password'])
-        if bot_result.get_status() == 200:
-            self.logger.info(bot_result.get_msg())
-        elif bot_result.get_status() == 400:
-            self.logger.error(bot_result.get_msg())
+        if config.get("username") and config.get("password"):
+            bot_result = self.crawler.login(config['username'], config['password'])
+            if bot_result.get_status() == 200:
+                self.logger.info(bot_result.get_msg())
+            elif bot_result.get_status() == 400:
+                self.logger.error(bot_result.get_msg())
 
     def search_music(self, bot, update, kw):
         self.logger.info('get_music: %s', kw)
