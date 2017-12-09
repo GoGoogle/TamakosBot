@@ -66,7 +66,7 @@ class Netease(MainZ):
             text = "缺少歌曲名称"
             query.message.reply_text(text=text)
         elif bot_result.get_status() == 404:
-            text = "此歌曲找不到~"
+            text = "🤔此歌曲找不到"
             query.message.reply_text(text=text)
         elif bot_result.get_status() == 200:
             selector = self.utilz.get_songlist_selector(page, bot_result.get_body())
@@ -76,7 +76,7 @@ class Netease(MainZ):
     def playlist_turning(self, bot, query, playlist_id, page):
         bot_result = self.crawler.get_playlist(playlist_id, page)
         if bot_result.get_status() == 400:
-            text = "此歌单找不到~"
+            text = "🤔此歌单找不到"
             query.message.reply_text(text=text)
         elif bot_result.get_status() == 200:
             selector = self.utilz.get_playlist_selector(page, bot_result.get_body())
