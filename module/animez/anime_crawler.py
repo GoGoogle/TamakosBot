@@ -46,13 +46,16 @@ class Crawler(object):
             if not result.get("docs"):
                 return BotResult(404, "anime not found: {}".format(result))
             else:
+                episode_num = result["docs"][0]["episode"]
+                if not episode_num:
+                    episode_num = 0
                 anilist_id, filename, anime_name, season, episode, timeline, similarity = \
                     result["docs"][0]["anilist_id"], result["docs"][0]["filename"], result["docs"][0]["anime"], \
-                    result["docs"][0]["season"], result["docs"][0][
-                        "episode"], result["docs"][0]["at"], result["docs"][0]["similarity"]
+                    result["docs"][0]["season"], episode_num, result["docs"][0]["at"], result["docs"][0]["similarity"]
                 tokenthumb = result["docs"][0]["tokenthumb"] if result["docs"][0].get("tokenthumb") else None
                 anime = AnimeFile(anilist_id, filename, anime_name, season, episode, timeline, similarity,
                                   tokenthumb=tokenthumb)
+                print(anime.episode, 333)
                 return BotResult(200, body=anime)
         except (PostRequestIllegal, RequestException) as e:
             self.logger.error(e)
