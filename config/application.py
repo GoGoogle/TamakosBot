@@ -14,7 +14,7 @@ WEBHOOK_LOCAL = {
     'url_path': 'bottoken'
 }
 
-BOT_TOKEN = "432786658:AAGTxGRs9tXTM1YEf343e1fWnvio04eB7ns"
+BOT_TOKEN = "321305199:AAFKD4JcwYZuqH6yTyH5kII6hWKUeo0xH_I"
 
 WEBHOOK_REMOTE = {
     'url': 'https://telegram.lemo.site/bottoken',

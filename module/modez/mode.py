@@ -27,6 +27,7 @@ class Modez(object):
         self.qq_module_name = qq.Qqz.m_name
         self.anime_module_name = anime.Anime.m_name
         self.record_module_name = record.Recordz.m_name
+        self.common_mode = "common"
 
     def produce_mode_board(self, bot, update, user_data):
         self.logger.debug("produce_mode_board")
@@ -39,31 +40,35 @@ class Modez(object):
         msg_mode = "模式选择"
 
         button_list = [
-            [InlineKeyboardButton(
-                text='酷狗音乐',
-                callback_data=ButtonItem(self.m_name, ButtonItem.TYPE_MODE, ButtonItem.OPERATE_SEND,
-                                         self.kugou_module_name).dump_json()
-            )],
-            [InlineKeyboardButton(
-                text='腾讯音乐',
-                callback_data=ButtonItem(self.m_name, ButtonItem.TYPE_MODE, ButtonItem.OPERATE_SEND,
-                                         self.qq_module_name).dump_json()
-            )],
-            [InlineKeyboardButton(
-                text='网易音乐',
-                callback_data=ButtonItem(self.m_name, ButtonItem.TYPE_MODE, ButtonItem.OPERATE_SEND,
-                                         self.netease_module_name).dump_json()
-            )],
-            [InlineKeyboardButton(
-                text='动画索引',
-                callback_data=ButtonItem(self.m_name, ButtonItem.TYPE_MODE, ButtonItem.OPERATE_SEND,
-                                         self.anime_module_name).dump_json()
-            )],
+            [
+                InlineKeyboardButton(
+                    text='酷狗音乐',
+                    callback_data=ButtonItem(self.m_name, ButtonItem.TYPE_MODE, ButtonItem.OPERATE_SEND,
+                                             self.kugou_module_name).dump_json()
+                ),
+                InlineKeyboardButton(
+                    text='腾讯音乐',
+                    callback_data=ButtonItem(self.m_name, ButtonItem.TYPE_MODE, ButtonItem.OPERATE_SEND,
+                                             self.qq_module_name).dump_json()
+                )
+            ],
+            [
+                InlineKeyboardButton(
+                    text='网易音乐',
+                    callback_data=ButtonItem(self.m_name, ButtonItem.TYPE_MODE, ButtonItem.OPERATE_SEND,
+                                             self.netease_module_name).dump_json()
+                ),
+                InlineKeyboardButton(
+                    text='动画索引',
+                    callback_data=ButtonItem(self.m_name, ButtonItem.TYPE_MODE, ButtonItem.OPERATE_SEND,
+                                             self.anime_module_name).dump_json()
+                )
+            ],
             [InlineKeyboardButton(
                 text='回应模式',
                 callback_data=ButtonItem(self.m_name, ButtonItem.TYPE_MODE, ButtonItem.OPERATE_SEND,
                                          monitor_action).dump_json()
-            )]
+            )],
             [InlineKeyboardButton(
                 text='撤销显示',
                 callback_data=ButtonItem(self.m_name, ButtonItem.TYPE_MODE, ButtonItem.OPERATE_CANCEL).dump_json()
