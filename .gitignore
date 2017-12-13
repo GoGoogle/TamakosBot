@@ -7,3 +7,6 @@ config/application.py.bak
 cmake-build-debug/
 *.iws
 out/
+syntax:glob   # .gitignore 文件不需要这行
+*.py[cod]     # 将匹配 .pyc、.pyo 和 .pyd文件
+__pycache__/  # 排除整个文件夹
