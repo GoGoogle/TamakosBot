@@ -76,7 +76,7 @@ class Modez(object):
 
     def show_mode_board(self, bot, update, user_data):
         panel = self.produce_mode_board(bot, update, user_data)
-        update.message.reply_text(text=panel["text"], reply_markup=panel["markup"])
+        bot.send_message(chat_id=update.message.chat.id, text=panel["text"], reply_markup=panel["markup"])
 
     def toggle_mode(self, bot, update, user_data):
         self.logger.debug('response_toggle_mode..')
