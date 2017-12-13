@@ -68,10 +68,6 @@ class Modez(object):
                 text='回应模式',
                 callback_data=ButtonItem(self.m_name, ButtonItem.TYPE_MODE, ButtonItem.OPERATE_SEND,
                                          monitor_action).dump_json()
-            )],
-            [InlineKeyboardButton(
-                text='撤销显示',
-                callback_data=ButtonItem(self.m_name, ButtonItem.TYPE_MODE, ButtonItem.OPERATE_CANCEL).dump_json()
             )]
         ]
 
