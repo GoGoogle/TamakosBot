@@ -55,7 +55,6 @@ class Crawler(object):
                 tokenthumb = result["docs"][0]["tokenthumb"] if result["docs"][0].get("tokenthumb") else None
                 anime = AnimeFile(anilist_id, filename, anime_name, season, episode, timeline, similarity,
                                   tokenthumb=tokenthumb)
-                print(anime.episode, 333)
                 return BotResult(200, body=anime)
         except (PostRequestIllegal, RequestException) as e:
             self.logger.error(e)
