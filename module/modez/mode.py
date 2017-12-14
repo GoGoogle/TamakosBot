@@ -64,5 +64,9 @@ class Modez(object):
                     panel = self.util.produce_mode_board(last_module, self.m_name)
                     query.message.edit_text(text=panel['text'], reply_markup=panel['markup'])
                 else:
+                    last_module = {"title": "正常模式", "name": self.common_module_name}
+                    panel = self.util.produce_mode_board(last_module, self.m_name)
+                    query.message.edit_text(text=panel['text'], reply_markup=panel['markup'])
+
                     user_data[self.m_name] = item_id
                     bot.answerCallbackQuery(query.id, text="模式已切换", show_alert=False)
