@@ -77,24 +77,24 @@ class Recordz(object):
             if self.store.is_exist(ButtonItem.OPERATE_REPLY):
                 self.end_message(bot, update)
 
-    def response_chat_enter(self, bot, update):
+    def response_chat_enter(self, bot, update, chat_data):
         self.logger.debug('response_chat_enter !')
         query = update.callback_query
 
         button_item = ButtonItem.parse_json(query.data)
-        self.handle_callback(bot, query, button_item)
+        self.handle_callback(bot, query, button_item, chat_data)
 
-    def handle_callback(self, bot, query, button_item):
+    def handle_callback(self, bot, query, button_item, chat_data):
         button_type, button_operate, item_id = button_item.t, button_item.o, button_item.i
         if button_type == ButtonItem.TYPE_DIALOG:
             if button_operate == ButtonItem.OPERATE_EXIT:
                 self.end_conversation(bot, query)
             if button_operate == ButtonItem.OPERATE_ENTER:
-                self.start_conversation(bot, query, item_id)
+                self.start_conversation(bot, query, item_id, chat_data)
             if button_operate == ButtonItem.OPERATE_REPLY:
                 self.reply_message(bot, query, item_id)
 
-    def start_conversation(self, bot, query, room_id):
+    def start_conversation(self, bot, query, room_id, chat_data):
         """
         Here use ButtonItem.OPERATE_ENTER as the key of chat_data
         :param bot:
@@ -103,9 +103,13 @@ class Recordz(object):
         :param chat_data:
         :return:
         """
-        self.store.set(ButtonItem.OPERATE_ENTER, room_id)
-        text = "进入房间: {}".format(room_id)
-        bot.answerCallbackQuery(query.id, text=text, show_alert=False)
+        if chat_data.get("mode") == "center_m":
+            self.store.set(ButtonItem.OPERATE_ENTER, room_id)
+            text = "进入房间: {}".format(room_id)
+            bot.answerCallbackQuery(query.id, text=text, show_alert=False)
+        else:
+            text = "需要进入回复模式"
+            bot.answerCallbackQuery(query.id, text=text, show_alert=False)
 
     def end_conversation(self, bot, query):
         if self.store.is_exist(ButtonItem.OPERATE_ENTER):

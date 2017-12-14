@@ -93,8 +93,8 @@ class Monitor(object):
     def qq_music_selector_callback(self, bot, update):
         self.tencent.response_single_music(bot, update)
 
-    def record_selector_callback(self, bot, update):
-        self.record.response_chat_enter(bot, update)
+    def record_selector_callback(self, bot, update, chat_data):
+        self.record.response_chat_enter(bot, update, chat_data)
 
     def handler_response(self, dispatcher):
         """ 模式入口"""
@@ -140,6 +140,7 @@ class Monitor(object):
 
         """记录命令入口"""
         dispatcher.add_handler(
-            CallbackQueryHandler(self.record_selector_callback, pattern=r"{\"p\":\"" + self.record.m_name),
+            CallbackQueryHandler(self.record_selector_callback, pattern=r"{\"p\":\"" + self.record.m_name,
+                                 pass_chat_data=True),
             group=3
         )
