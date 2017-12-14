@@ -42,6 +42,11 @@ def selector_cancel(bot, query):
 
 
 class DataStore(object):
+    """
+    The data will be stored in common, not single chatroom or user, so we can not use "chat_data" or "user_data".
+    That is the Significance of this object. And it likes a database in fact.
+    """
+
     def __new__(cls):
         if not hasattr(cls, 'instance'):
             cls.instance = super(DataStore, cls).__new__(cls)

@@ -18,4 +18,4 @@ handlers:
     backupCount: 3
 root:
   level: DEBUG
-  handlers: [console]
+  handlers: [logfile]

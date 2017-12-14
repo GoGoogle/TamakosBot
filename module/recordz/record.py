@@ -38,7 +38,7 @@ class Recordz(object):
         if bot_msg.bot_content.picture.sticker:
             bot.send_sticker(chat_id=application.ADMINS[0], sticker=bot_msg.bot_content.picture.sticker)
         if bot_msg.bot_content.photo:
-            bot.send_photo(chat_id=self.store.get(ButtonItem.OPERATE_ENTER),
+            bot.send_photo(chat_id=application.ADMINS[0],
                            photo=bot_msg.bot_content.photo)
 
     def record_reply(self, bot, update):
@@ -105,26 +105,26 @@ class Recordz(object):
         """
         self.store.set(ButtonItem.OPERATE_ENTER, room_id)
         text = "进入房间: {}".format(room_id)
-        bot.send_message(chat_id=application.ADMINS[0], text=text)
+        bot.answerCallbackQuery(query.id, text=text, show_alert=False)
 
-    def end_conversation(self, bot, update):
+    def end_conversation(self, bot, query):
         if self.store.is_exist(ButtonItem.OPERATE_ENTER):
             self.logger.debug("退出房间: %s", self.store.get(ButtonItem.OPERATE_ENTER))
             text = "退出房间: {}".format(self.store.get(ButtonItem.OPERATE_ENTER))
-            bot.send_message(chat_id=application.ADMINS[0], text=text)
+            bot.answerCallbackQuery(query.id, text=text, show_alert=False)
             self.store.del_data(ButtonItem.OPERATE_ENTER)
         else:
             text = "已退出全部房间"
-            bot.send_message(chat_id=application.ADMINS[0], text=text)
+            bot.answerCallbackQuery(query.id, text=text, show_alert=False)
         self.store.clear_data()
 
     def reply_message(self, bot, query, msg_id):
         self.store.set(ButtonItem.OPERATE_REPLY, msg_id)
         text = "回复消息: {}".format(msg_id)
-        bot.send_message(chat_id=application.ADMINS[0], text=text)
+        bot.answerCallbackQuery(query.id, text=text, show_alert=False)
 
-    def end_message(self, bot, update):
+    def end_message(self, bot, query):
         self.logger.debug("结束回复: %s", self.store.get(ButtonItem.OPERATE_REPLY))
         text = "结束回复: {}".format(self.store.get(ButtonItem.OPERATE_REPLY))
-        bot.send_message(chat_id=application.ADMINS[0], text=text)
+        bot.answerCallbackQuery(query.id, text=text, show_alert=False)
         self.store.del_data(ButtonItem.OPERATE_REPLY)

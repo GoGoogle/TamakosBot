@@ -38,15 +38,15 @@ class Bot(object):
         updater = Updater(token=application.BOT_TOKEN)
         self.distribute(updater.dispatcher)
 
-        updater.start_polling(timeout=20)
-        updater.idle()
-        # updater.start_webhook(listen=WEBHOOK_LOCAL['listen'], port=WEBHOOK_LOCAL['port'],
-        #                       url_path=WEBHOOK_LOCAL['url_path'])
-        # updater.bot.set_webhook(url=WEBHOOK_REMOTE['url'], timeout=WEBHOOK_REMOTE['timeout'])
+        # updater.start_polling(timeout=20)
+        # updater.idle()
+        updater.start_webhook(listen=WEBHOOK_LOCAL['listen'], port=WEBHOOK_LOCAL['port'],
+                              url_path=WEBHOOK_LOCAL['url_path'])
+        updater.bot.set_webhook(url=WEBHOOK_REMOTE['url'], timeout=WEBHOOK_REMOTE['timeout'])
 
 
 if __name__ == '__main__':
-    os.environ['HTTP_PROXY'] = "http://127.0.0.1:4242"
-    os.environ['HTTPS_PROXY'] = "http://127.0.0.1:4242"
-    os.environ['NO_PROXY'] = "m1.music.126.net,10.*.*.*,192.168.*.*,*.local,localhost,127.0.0.1"
+    # os.environ['HTTP_PROXY'] = "http://127.0.0.1:4242"
+    # os.environ['HTTPS_PROXY'] = "http://127.0.0.1:4242"
+    # os.environ['NO_PROXY'] = "m1.music.126.net,10.*.*.*,192.168.*.*,*.local,localhost,127.0.0.1"
     Bot().start_bot()
