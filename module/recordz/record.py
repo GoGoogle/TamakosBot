@@ -32,6 +32,9 @@ class Recordz(object):
                              reply_markup=panel["markup"])
             if bot_msg.bot_content.picture.sticker:
                 bot.send_sticker(chat_id=application.ADMINS[0], sticker=bot_msg.bot_content.picture.sticker)
+            if bot_msg.bot_content.photo:
+                bot.send_photo(chat_id=self.store.get(ButtonItem.OPERATE_ENTER),
+                               photo=bot_msg.bot_content.photo)
 
     def record_reply(self, bot, update):
         try:
