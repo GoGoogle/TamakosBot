@@ -4,7 +4,7 @@ import telegram
 from telegram import TelegramError
 
 from entity.bot_telegram import ButtonItem
-from interface.main import MainZ
+from interface.song.main import MainZ
 from module.kugouz import kugou_util, kugou_crawler
 from util import song_util
 

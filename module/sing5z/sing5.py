@@ -5,7 +5,7 @@ from telegram import TelegramError, InlineKeyboardMarkup, InlineKeyboardButton
 
 from config import application
 from entity.bot_telegram import ButtonItem
-from interface.main import MainZ
+from interface.song.main import MainZ
 from module.sing5z import sing5_util, sing5_crawler
 from util import song_util
 

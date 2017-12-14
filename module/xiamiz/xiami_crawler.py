@@ -5,7 +5,7 @@ import requests
 from requests import RequestException
 
 from entity.bot_music import Song, Album, Artist, SongList
-from interface.crawler import CrawlerZ
+from interface.song.crawler import CrawlerZ
 from util.encrypt_util import userAgentList
 from util.excep_util import (
     SongNotAvailable, GetRequestIllegal, exception_handle)

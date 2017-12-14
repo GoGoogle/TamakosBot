@@ -5,7 +5,7 @@ from telegram import TelegramError
 
 from config import application
 from entity.bot_telegram import ButtonItem
-from interface.main import MainZ
+from interface.song.main import MainZ
 from module.neteasz import netease_crawler, netease_util
 from util import song_util
 

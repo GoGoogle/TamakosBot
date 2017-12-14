@@ -4,7 +4,7 @@ from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 
 from config import application
 from entity.bot_telegram import SongListSelector, ButtonItem, SongFile
-from interface.util import UtilZ
+from interface.song.util import UtilZ
 
 
 class Util(UtilZ):

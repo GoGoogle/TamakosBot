@@ -9,7 +9,7 @@ from requests import RequestException
 
 from config.application import COOKIE_PATH
 from entity.bot_music import Song, Album, Artist, Playlist, User, SongList
-from interface.crawler import CrawlerZ
+from interface.song.crawler import CrawlerZ
 from util.encrypt_util import encrypted_request, userAgentList
 from util.excep_util import (
     SongNotAvailable, GetRequestIllegal, PostRequestIllegal, exception_handle)
