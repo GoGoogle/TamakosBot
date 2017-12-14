@@ -1,4 +1,4 @@
-# GeziBot（格子君）
+# TamakosBot
 
 > python 模块
 
