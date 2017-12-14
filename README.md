@@ -1,4 +1,4 @@
-# TamakosBot
+# TamakosBot (玉子)
 
 > python 模块
 
