@@ -338,7 +338,7 @@ class Crawler(CrawlerZ):
             raise SongNotAvailable(
                 'Song {} is not available due to copyright issue.'.format(song_id))
         else:
-            self.logger.info('Song url is :{}'.format(song_url))
+            self.logger.debug('Song url is :{}'.format(song_url))
             return song_url
 
     # def get_song_lyric(self, song_id):

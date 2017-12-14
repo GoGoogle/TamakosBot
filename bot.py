@@ -34,7 +34,7 @@ class Bot(object):
         dispatcher.add_error_handler(self.error_handler)
 
     def start_bot(self):
-        self.logger.info('bot start..')
+        self.logger.debug('bot start..')
         updater = Updater(token=application.BOT_TOKEN)
         self.distribute(updater.dispatcher)
 

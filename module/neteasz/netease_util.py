@@ -18,7 +18,7 @@ class Util(UtilZ):
         :param songlist: 歌曲列表🎵
         :return: 歌曲列表选择器
         """
-        self.logger.info('get_songlist_selector: keyword={0}, pagecode={1}'.format(songlist.keyword, curpage))
+        self.logger.debug('get_songlist_selector: keyword={0}, pagecode={1}'.format(songlist.keyword, curpage))
         total_page = (songlist.track_count + 4) // 5
         title = '☁️ ️🎵 关键字「{0}」p: {1}/{2}'.format(songlist.keyword, curpage, total_page)
         return SongListSelector(title, curpage, total_page, songlist)
@@ -85,7 +85,7 @@ class Util(UtilZ):
         return {'text': songlist_selector.title, 'reply_markup': InlineKeyboardMarkup(button_list)}
 
     def get_playlist_selector(self, curpage, playlist):
-        self.logger.info('get_playlist_selector: keyword={0}, pagecode={1}'.format(playlist.playlist_name, curpage))
+        self.logger.debug('get_playlist_selector: keyword={0}, pagecode={1}'.format(playlist.playlist_name, curpage))
 
         total_page = (playlist.track_count + 4) // 5
         title = '☁️ 🎵歌单 「{0}」\n创建者 {1} ({2} 首歌)'.format(

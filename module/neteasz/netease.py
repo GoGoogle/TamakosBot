@@ -28,12 +28,12 @@ class Netease(MainZ):
         if config.get("username") and config.get("password"):
             bot_result = self.crawler.login(config['username'], config['password'])
             if bot_result.get_status() == 200:
-                self.logger.info(bot_result.get_msg())
+                self.logger.debug(bot_result.get_msg())
             elif bot_result.get_status() == 400:
                 self.logger.error(bot_result.get_msg())
 
     def search_music(self, bot, update, kw):
-        self.logger.info('get_music: %s', kw)
+        self.logger.debug('get_music: %s', kw)
         edited_msg = bot.send_message(chat_id=update.message.chat.id,
                                       text="🙄")
         update.message.message_id = edited_msg.message_id
@@ -46,7 +46,7 @@ class Netease(MainZ):
         如果为发送，则获取 music_id 并生成 NeteaseMusic。然后，加载-获取歌曲url，发送音乐文件，删除上一条信息
         :return:
         """
-        self.logger.info('%s response_single_music: data=%s', self.m_name, update.callback_query.data)
+        self.logger.debug('%s response_single_music: data=%s', self.m_name, update.callback_query.data)
         query = update.callback_query
 
         button_item = ButtonItem.parse_json(query.data)
@@ -121,7 +121,7 @@ class Netease(MainZ):
                 self.deliver_music(bot, query, item_id, delete=False)
 
     def download_backend(self, bot, query, songfile, edited_msg):
-        self.logger.info('download_backend..')
+        self.logger.debug('download_backend..')
         try:
             handle = song_util.ProgressHandle(bot, query, edited_msg.message_id)
             self.crawler.write_file(songfile, handle=handle)
@@ -155,7 +155,7 @@ class Netease(MainZ):
                                       timeout=self.timeout,
                                       disable_notification=True)
 
-            self.logger.info("文件: 「%s」 发送成功.", songfile.song.song_name)
+            self.logger.debug("文件: 「%s」 发送成功.", songfile.song.song_name)
         except TelegramError as err:
             if send_msg:
                 send_msg.delete()

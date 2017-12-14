@@ -19,7 +19,7 @@ class Adminz(object):
     def manage_bot(self, bot, update, payload):
         command = payload[0]
         params = payload[1:]
-        self.logger.info("command %s, params %s", command, params)
+        self.logger.debug("command %s, params %s", command, params)
         try:
             self.command_analyzing(bot, update, command, params)
         except BadRequest and ChatMigrated:

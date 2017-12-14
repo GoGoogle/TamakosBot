@@ -5,7 +5,7 @@ import time
 from io import BytesIO
 
 from telegram import TelegramError, ParseMode
-
+from util.telegram_util import BotResult
 from module.animez import anime_crawler
 
 
@@ -49,6 +49,7 @@ class Anime(object):
             return bot_result
         except (IOError, ValueError) as e:
             self.logger.error(e)
+            return BotResult(500, e)
         finally:
             if download_file and not download_file.closed:
                 download_file.close()

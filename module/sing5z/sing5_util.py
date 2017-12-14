@@ -12,7 +12,7 @@ class Util(UtilZ):
         super().__init__()
 
     def get_toplist_selector(self, curpage, toplist):
-        self.logger.info('get_toplist_selector: keyword={0}, pagecode={1}'.format(toplist.top_name, curpage))
+        self.logger.debug('get_toplist_selector: keyword={0}, pagecode={1}'.format(toplist.top_name, curpage))
 
         total_page = (toplist.track_count + 4) // 5
         title = '🍏 榜单 「{0}」p: {1}/{2}'.format(

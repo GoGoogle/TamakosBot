@@ -34,7 +34,7 @@ class Sing5z(MainZ):
         如果为下载，则获取 music_id 并生成 NeteaseMusic。然后，加载-获取歌曲url，发送音乐文件，删除上一条信息
         :return:
         """
-        self.logger.info('{0} response_single_music: data={1}'.format(self.m_name, update.callback_query.data))
+        self.logger.debug('{0} response_single_music: data={1}'.format(self.m_name, update.callback_query.data))
         query = update.callback_query
 
         button_item = ButtonItem.parse_json(query.data)
@@ -121,7 +121,7 @@ class Sing5z(MainZ):
                 self.response_toplist(bot, query, item_id)
 
     def download_backend(self, bot, query, songfile, edited_msg):
-        self.logger.info('download_backend..')
+        self.logger.debug('download_backend..')
         try:
             handle = song_util.ProgressHandle(bot, query, edited_msg.message_id)
             self.crawler.write_file(songfile, handle=handle)
@@ -155,7 +155,7 @@ class Sing5z(MainZ):
                                       timeout=self.timeout,
                                       disable_notification=True)
 
-            self.logger.info("文件: 「{}」 发送成功.".format(songfile.song.song_name))
+            self.logger.debug("文件: 「{}」 发送成功.".format(songfile.song.song_name))
         except TelegramError as err:
             if send_msg:
                 send_msg.delete()

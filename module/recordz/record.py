@@ -71,7 +71,7 @@ class Recordz(object):
                 self.end_message(bot, update)
 
     def response_chat_enter(self, bot, update):
-        self.logger.info('response_chat_enter !')
+        self.logger.debug('response_chat_enter !')
         query = update.callback_query
 
         button_item = ButtonItem.parse_json(query.data)
@@ -102,7 +102,7 @@ class Recordz(object):
 
     def end_conversation(self, bot, update):
         if self.store.is_exist(ButtonItem.OPERATE_ENTER):
-            self.logger.info("退出房间: %s", self.store.get(ButtonItem.OPERATE_ENTER))
+            self.logger.debug("退出房间: %s", self.store.get(ButtonItem.OPERATE_ENTER))
             text = "退出房间: {}".format(self.store.get(ButtonItem.OPERATE_ENTER))
             bot.send_message(chat_id=application.ADMINS[0], text=text)
             self.store.del_data(ButtonItem.OPERATE_ENTER)
@@ -117,7 +117,7 @@ class Recordz(object):
         bot.send_message(chat_id=application.ADMINS[0], text=text)
 
     def end_message(self, bot, update):
-        self.logger.info("结束回复: %s", self.store.get(ButtonItem.OPERATE_REPLY))
+        self.logger.debug("结束回复: %s", self.store.get(ButtonItem.OPERATE_REPLY))
         text = "结束回复: {}".format(self.store.get(ButtonItem.OPERATE_REPLY))
         bot.send_message(chat_id=application.ADMINS[0], text=text)
         self.store.del_data(ButtonItem.OPERATE_REPLY)

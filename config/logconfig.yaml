@@ -16,11 +16,6 @@ handlers:
     filename: LOG
     maxBytes: 10485760
     backupCount: 3
-#loggers:
-#  module:
-#    level: INFO
-#    handlers: [console, logfile]
-#    propagate: 0
 root:
-  level: INFO
+  level: DEBUG
   handlers: [logfile]

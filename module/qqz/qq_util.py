@@ -18,7 +18,7 @@ class Util(UtilZ):
                 :param songlist: 歌曲列表🎵
                 :return: 歌曲列表选择器
                 """
-        self.logger.info('get_songlist_selector: keyword=%s, pagecode=%s', songlist.keyword, curpage)
+        self.logger.debug('get_songlist_selector: keyword=%s, pagecode=%s', songlist.keyword, curpage)
         total_page = (songlist.track_count + 4) // 5
         title = '🐧 关键字「{0}」p: {1}/{2}'.format(songlist.keyword, curpage, total_page)
         return SongListSelector(title, curpage, total_page, songlist)
@@ -85,7 +85,7 @@ class Util(UtilZ):
         return {'text': songlist_selector.title, 'reply_markup': InlineKeyboardMarkup(button_list)}
 
     def get_songfile(self, song):
-        self.logger.info('get_songfile..')
+        self.logger.debug('get_songfile..')
 
         start = song.song_url.rindex('.')
         end = song.song_url.rindex('?')
@@ -93,7 +93,7 @@ class Util(UtilZ):
 
         file_name = r'{0} - {1}{2}'.format(
             song.song_name, ' & '.join(v.artist_name for v in song.artists), extension)
-        self.logger.info('song_name=%s url_extension=%s', song.song_name, extension)
+        self.logger.debug('song_name=%s url_extension=%s', song.song_name, extension)
         file_name = file_name.replace("/", ":")
         file_path = os.path.join(application.TMP_Folder, file_name)
         file_url = song.song_url

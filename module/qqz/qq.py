@@ -24,7 +24,7 @@ class Qqz(MainZ):
         self.utilz = qq_util.Util()
 
     def search_music(self, bot, update, kw):
-        self.logger.info('get_music: %s', kw)
+        self.logger.debug('get_music: %s', kw)
         edited_msg = bot.send_message(chat_id=update.message.chat.id,
                                       text="🙄")
         update.message.message_id = edited_msg.message_id
@@ -44,7 +44,7 @@ class Qqz(MainZ):
             query.message.edit_text(text=panel['text'], reply_markup=panel['reply_markup'])
 
     def response_single_music(self, bot, update):
-        self.logger.info('%s response_single_music: data=%s', self.m_name, update.callback_query.data)
+        self.logger.debug('%s response_single_music: data=%s', self.m_name, update.callback_query.data)
         query = update.callback_query
 
         button_item = ButtonItem.parse_json(query.data)
@@ -80,7 +80,7 @@ class Qqz(MainZ):
             self.download_backend(bot, query, songfile, edited_msg)
 
     def download_backend(self, bot, query, songfile, edited_msg):
-        self.logger.info('download_backend..')
+        self.logger.debug('download_backend..')
         try:
             handle = song_util.ProgressHandle(bot, query, edited_msg.message_id)
             self.crawler.write_file(songfile, handle=handle)
@@ -114,7 +114,7 @@ class Qqz(MainZ):
                                       timeout=self.timeout,
                                       disable_notification=True)
 
-            self.logger.info("文件: 「%s」 发送成功.", songfile.song.song_name)
+            self.logger.debug("文件: 「%s」 发送成功.", songfile.song.song_name)
         except TelegramError as err:
             if send_msg:
                 send_msg.delete()
