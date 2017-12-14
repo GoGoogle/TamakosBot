@@ -105,16 +105,16 @@ class Recordz(object):
         """
         if chat_data.get("mode") == "center_m":
             self.store.set(ButtonItem.OPERATE_ENTER, room_id)
-            text = "进入房间: {}".format(room_id)
+            text = "已进入房间: {}".format(room_id)
             bot.answerCallbackQuery(query.id, text=text, show_alert=False)
         else:
-            text = "需要进入回复模式"
+            text = "当前不是回复模式，无法执行此操作"
             bot.answerCallbackQuery(query.id, text=text, show_alert=False)
 
     def end_conversation(self, bot, query):
         if self.store.is_exist(ButtonItem.OPERATE_ENTER):
             self.logger.debug("退出房间: %s", self.store.get(ButtonItem.OPERATE_ENTER))
-            text = "退出房间: {}".format(self.store.get(ButtonItem.OPERATE_ENTER))
+            text = "已退出房间: {}".format(self.store.get(ButtonItem.OPERATE_ENTER))
             bot.answerCallbackQuery(query.id, text=text, show_alert=False)
             self.store.del_data(ButtonItem.OPERATE_ENTER)
         else:
