@@ -114,12 +114,17 @@ class BotMessage(object):
 
     @staticmethod
     def get_botmsg(msg):
+        """
+        Here use the msg['photo'][-1]，because Object of type 'PhotoSize' is not JSON serializable
+        :param msg:
+        :return:
+        """
         msg_id = msg['message_id']
         bot_chat = BotChat(msg['chat']['id'], msg['chat']['title'], msg['chat']['type'], msg['date'])
         bot_user = BotUser(msg['from_user']['id'], msg['from_user']['first_name'], msg['from_user']['last_name'],
                            msg['from_user']['username'], msg['from_user']['is_bot'])
         bot_content = BotContent(msg['text'], Picture(msg['sticker'], msg['thumb']),
-                                 msg['photo'][0] if msg['photo'] else None,
+                                 msg['photo'][-1] if msg['photo'] else None,
                                  msg['audio'],
                                  msg['video'],
                                  msg['document'])

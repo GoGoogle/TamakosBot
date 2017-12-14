@@ -28,7 +28,7 @@ class Monitor(object):
         self.anime = anime.Anime()
         self.record = record.Recordz()
 
-    def mode_toggle(self, bot, update, user_data):
+    def mode_toggle(self, bot, update, chat_data):
         """
         mode
         :param bot:
@@ -36,11 +36,11 @@ class Monitor(object):
         :param user_data:
         :return:
         """
-        self.mode.toggle_mode(bot, update, user_data)
+        self.mode.toggle_mode(bot, update, chat_data)
 
-    def mode_analyze(self, bot, update, user_data):
-        if user_data.get(self.mode.m_name):
-            mode_value = user_data[self.mode.m_name]
+    def mode_analyze(self, bot, update, chat_data):
+        if chat_data.get(self.mode.m_name):
+            mode_value = chat_data[self.mode.m_name]
             if update.message.text and update.message.text not in emoji.UNICODE_EMOJI:
                 if mode_value == self.netease.m_name:
                     if re.match(r'.*https?://music.163.com/?#?/?m?/playlist((/)|(\?id=))(\d*).*', update.message.text):
@@ -63,8 +63,11 @@ class Monitor(object):
                 if mode_value == anime.Anime.m_name:
                     self.anime.search_anime(bot, update)
             if mode_value == self.record.m_name:
+                self.record.record_msg(bot, update)
+            if mode_value == self.mode.center_module_name:
                 self.record.record_reply(bot, update)
-        self.record.record_msg(bot, update)
+            if mode_value == self.mode.common_module_name:
+                pass
 
     @run_async
     def netease_music_selector_callback(self, bot, update):
@@ -96,9 +99,9 @@ class Monitor(object):
     def handler_response(self, dispatcher):
         """ 模式入口"""
         dispatcher.add_handler(
-            CallbackQueryHandler(self.mode_toggle, pattern=r"{\"p\":\"" + self.mode.m_name, pass_user_data=True))
+            CallbackQueryHandler(self.mode_toggle, pattern=r"{\"p\":\"" + self.mode.m_name, pass_chat_data=True))
         dispatcher.add_handler(
-            MessageHandler(~ Filters.command, self.mode_analyze, pass_user_data=True)
+            MessageHandler(~ Filters.command, self.mode_analyze, pass_chat_data=True)
         )
 
         """网易命令入口"""

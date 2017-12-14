@@ -24,51 +24,55 @@ class Recordz(object):
         return self.m_name
 
     def record_msg(self, bot, update):
+        """
+        判断聊天室是否为"东方情报部门" 聊天室
+        :param bot:
+        :param update:
+        :return:
+        """
         bot_msg = BotMessage.get_botmsg(update['message'])
-        if bot_msg.bot_chat.chat_id != application.ADMINS[0]:
-            self.logger.debug('msg send success!')
-            panel = self.util.produce_record_panel(bot_msg, self.m_name, self.store)
-            bot.send_message(chat_id=application.ADMINS[0], text=panel["text"],
-                             reply_markup=panel["markup"])
-            if bot_msg.bot_content.picture.sticker:
-                bot.send_sticker(chat_id=application.ADMINS[0], sticker=bot_msg.bot_content.picture.sticker)
-            if bot_msg.bot_content.photo:
-                bot.send_photo(chat_id=self.store.get(ButtonItem.OPERATE_ENTER),
-                               photo=bot_msg.bot_content.photo)
+        self.logger.debug('msg send success!')
+        panel = self.util.produce_record_panel(bot_msg, self.m_name, self.store)
+        bot.send_message(chat_id=application.ADMINS[0], text=panel["text"],
+                         reply_markup=panel["markup"])
+        if bot_msg.bot_content.picture.sticker:
+            bot.send_sticker(chat_id=application.ADMINS[0], sticker=bot_msg.bot_content.picture.sticker)
+        if bot_msg.bot_content.photo:
+            bot.send_photo(chat_id=self.store.get(ButtonItem.OPERATE_ENTER),
+                           photo=bot_msg.bot_content.photo)
 
     def record_reply(self, bot, update):
         try:
             bot_msg = BotMessage.get_botmsg(update['message'])
-            if bot_msg.bot_chat.chat_id == application.ADMINS[0]:
-                if self.store.is_exist(ButtonItem.OPERATE_REPLY):
-                    reply_to_msg_id = self.store.get(ButtonItem.OPERATE_REPLY)
-                else:
-                    reply_to_msg_id = None
-                if self.store.is_exist(ButtonItem.OPERATE_ENTER):
-                    if bot_msg.bot_content.text:
-                        bot.send_message(chat_id=self.store.get(ButtonItem.OPERATE_ENTER),
-                                         text=bot_msg.bot_content.text,
-                                         reply_to_message_id=reply_to_msg_id)
-                    if bot_msg.bot_content.picture.sticker:
-                        bot.send_sticker(chat_id=self.store.get(ButtonItem.OPERATE_ENTER),
-                                         sticker=bot_msg.bot_content.picture.sticker,
-                                         reply_to_message_id=reply_to_msg_id)
-                    if bot_msg.bot_content.photo:
-                        bot.send_photo(chat_id=self.store.get(ButtonItem.OPERATE_ENTER),
-                                       photo=bot_msg.bot_content.photo,
-                                       reply_to_message_id=reply_to_msg_id)
-                    if bot_msg.bot_content.audio:
-                        bot.send_audio(chat_id=self.store.get(ButtonItem.OPERATE_ENTER),
-                                       audio=bot_msg.bot_content.audio,
-                                       reply_to_message_id=reply_to_msg_id)
-                    if bot_msg.bot_content.video:
-                        bot.send_video(chat_id=self.store.get(ButtonItem.OPERATE_ENTER),
-                                       video=bot_msg.bot_content.video,
-                                       reply_to_message_id=reply_to_msg_id)
-                    if bot_msg.bot_content.document:
-                        bot.send_document(chat_id=self.store.get(ButtonItem.OPERATE_ENTER),
-                                          document=bot_msg.bot_content.document,
-                                          reply_to_message_id=reply_to_msg_id)
+            if self.store.is_exist(ButtonItem.OPERATE_REPLY):
+                reply_to_msg_id = self.store.get(ButtonItem.OPERATE_REPLY)
+            else:
+                reply_to_msg_id = None
+            if self.store.is_exist(ButtonItem.OPERATE_ENTER):
+                if bot_msg.bot_content.text:
+                    bot.send_message(chat_id=self.store.get(ButtonItem.OPERATE_ENTER),
+                                     text=bot_msg.bot_content.text,
+                                     reply_to_message_id=reply_to_msg_id)
+                if bot_msg.bot_content.picture.sticker:
+                    bot.send_sticker(chat_id=self.store.get(ButtonItem.OPERATE_ENTER),
+                                     sticker=bot_msg.bot_content.picture.sticker,
+                                     reply_to_message_id=reply_to_msg_id)
+                if bot_msg.bot_content.photo:
+                    bot.send_photo(chat_id=self.store.get(ButtonItem.OPERATE_ENTER),
+                                   photo=bot_msg.bot_content.photo,
+                                   reply_to_message_id=reply_to_msg_id)
+                if bot_msg.bot_content.audio:
+                    bot.send_audio(chat_id=self.store.get(ButtonItem.OPERATE_ENTER),
+                                   audio=bot_msg.bot_content.audio,
+                                   reply_to_message_id=reply_to_msg_id)
+                if bot_msg.bot_content.video:
+                    bot.send_video(chat_id=self.store.get(ButtonItem.OPERATE_ENTER),
+                                   video=bot_msg.bot_content.video,
+                                   reply_to_message_id=reply_to_msg_id)
+                if bot_msg.bot_content.document:
+                    bot.send_document(chat_id=self.store.get(ButtonItem.OPERATE_ENTER),
+                                      document=bot_msg.bot_content.document,
+                                      reply_to_message_id=reply_to_msg_id)
         finally:
             if self.store.is_exist(ButtonItem.OPERATE_REPLY):
                 self.end_message(bot, update)
