@@ -148,7 +148,6 @@ class ButtonItem(object):
 
     OPERATE_ENTER = '+'
     OPERATE_EXIT = '-'
-    OPERATE_REPLY = '@'
 
     def __init__(self, pattern, button_type, button_operate, item_id="", page=""):
         """

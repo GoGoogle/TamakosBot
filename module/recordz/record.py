@@ -8,6 +8,7 @@ from util import telegram_util
 
 class Recordz(object):
     m_name = "recordz"
+    store = telegram_util.DataStore()
 
     def __new__(cls):
         if not hasattr(cls, 'instance'):
@@ -17,7 +18,6 @@ class Recordz(object):
     def __init__(self):
         self.logger = logging.getLogger(__name__)
         self.util = record_util.Utilz()
-        self.store = telegram_util.DataStore()
 
     @staticmethod
     def get_module_name(self):
@@ -42,40 +42,26 @@ class Recordz(object):
                            photo=bot_msg.bot_content.photo)
 
     def record_reply(self, bot, update):
-        try:
-            bot_msg = BotMessage.get_botmsg(update['message'])
-            if self.store.is_exist(ButtonItem.OPERATE_REPLY):
-                reply_to_msg_id = self.store.get(ButtonItem.OPERATE_REPLY)
-            else:
-                reply_to_msg_id = None
-            if self.store.is_exist(ButtonItem.OPERATE_ENTER):
-                if bot_msg.bot_content.text:
-                    bot.send_message(chat_id=self.store.get(ButtonItem.OPERATE_ENTER),
-                                     text=bot_msg.bot_content.text,
-                                     reply_to_message_id=reply_to_msg_id)
-                if bot_msg.bot_content.picture.sticker:
-                    bot.send_sticker(chat_id=self.store.get(ButtonItem.OPERATE_ENTER),
-                                     sticker=bot_msg.bot_content.picture.sticker,
-                                     reply_to_message_id=reply_to_msg_id)
-                if bot_msg.bot_content.photo:
-                    bot.send_photo(chat_id=self.store.get(ButtonItem.OPERATE_ENTER),
-                                   photo=bot_msg.bot_content.photo,
-                                   reply_to_message_id=reply_to_msg_id)
-                if bot_msg.bot_content.audio:
-                    bot.send_audio(chat_id=self.store.get(ButtonItem.OPERATE_ENTER),
-                                   audio=bot_msg.bot_content.audio,
-                                   reply_to_message_id=reply_to_msg_id)
-                if bot_msg.bot_content.video:
-                    bot.send_video(chat_id=self.store.get(ButtonItem.OPERATE_ENTER),
-                                   video=bot_msg.bot_content.video,
-                                   reply_to_message_id=reply_to_msg_id)
-                if bot_msg.bot_content.document:
-                    bot.send_document(chat_id=self.store.get(ButtonItem.OPERATE_ENTER),
-                                      document=bot_msg.bot_content.document,
-                                      reply_to_message_id=reply_to_msg_id)
-        finally:
-            if self.store.is_exist(ButtonItem.OPERATE_REPLY):
-                self.end_message(bot, update)
+        bot_msg = BotMessage.get_botmsg(update['message'])
+        if self.store.is_exist(ButtonItem.OPERATE_ENTER):
+            if bot_msg.bot_content.text:
+                bot.send_message(chat_id=self.store.get(ButtonItem.OPERATE_ENTER),
+                                 text=bot_msg.bot_content.text)
+            if bot_msg.bot_content.picture.sticker:
+                bot.send_sticker(chat_id=self.store.get(ButtonItem.OPERATE_ENTER),
+                                 sticker=bot_msg.bot_content.picture.sticker)
+            if bot_msg.bot_content.photo:
+                bot.send_photo(chat_id=self.store.get(ButtonItem.OPERATE_ENTER),
+                               photo=bot_msg.bot_content.photo)
+            if bot_msg.bot_content.audio:
+                bot.send_audio(chat_id=self.store.get(ButtonItem.OPERATE_ENTER),
+                               audio=bot_msg.bot_content.audio)
+            if bot_msg.bot_content.video:
+                bot.send_video(chat_id=self.store.get(ButtonItem.OPERATE_ENTER),
+                               video=bot_msg.bot_content.video)
+            if bot_msg.bot_content.document:
+                bot.send_document(chat_id=self.store.get(ButtonItem.OPERATE_ENTER),
+                                  document=bot_msg.bot_content.document)
 
     def response_chat_enter(self, bot, update, chat_data):
         self.logger.debug('response_chat_enter !')
@@ -91,8 +77,6 @@ class Recordz(object):
                 self.end_conversation(bot, query)
             if button_operate == ButtonItem.OPERATE_ENTER:
                 self.start_conversation(bot, query, item_id, chat_data)
-            if button_operate == ButtonItem.OPERATE_REPLY:
-                self.reply_message(bot, query, item_id)
 
     def start_conversation(self, bot, query, room_id, chat_data):
         """
@@ -105,7 +89,7 @@ class Recordz(object):
         """
         if chat_data.get("mode") == "center_m":
             self.store.set(ButtonItem.OPERATE_ENTER, room_id)
-            text = "已进入房间: {}".format(room_id)
+            text = "正在回复: {}".format(room_id)
             bot.answerCallbackQuery(query.id, text=text, show_alert=False)
         else:
             text = "当前不是回复模式，无法执行此操作"
@@ -121,14 +105,3 @@ class Recordz(object):
             text = "已退出全部房间"
             bot.answerCallbackQuery(query.id, text=text, show_alert=False)
         self.store.clear_data()
-
-    def reply_message(self, bot, query, msg_id):
-        self.store.set(ButtonItem.OPERATE_REPLY, msg_id)
-        text = "回复消息: {}".format(msg_id)
-        bot.answerCallbackQuery(query.id, text=text, show_alert=False)
-
-    def end_message(self, bot, query):
-        self.logger.debug("结束回复: %s", self.store.get(ButtonItem.OPERATE_REPLY))
-        text = "结束回复: {}".format(self.store.get(ButtonItem.OPERATE_REPLY))
-        bot.answerCallbackQuery(query.id, text=text, show_alert=False)
-        self.store.del_data(ButtonItem.OPERATE_REPLY)

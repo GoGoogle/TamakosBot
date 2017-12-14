@@ -1,5 +1,6 @@
 import logging
 
+from config import application
 from config.application import ADMINS
 from entity.bot_telegram import ButtonItem
 from module.animez import anime
@@ -29,6 +30,7 @@ class Modez(object):
         self.common_module_name = "common_m"
         self.center_module_name = "center_m"
         self.record_module_name = record.Recordz.m_name
+        self.record_store = record.Recordz.store
 
     def show_mode_board(self, bot, update, user_data):
         last_module = {"title": "正常模式", "name": self.common_module_name}
@@ -55,18 +57,33 @@ class Modez(object):
                             last_module = {"title": "⦿ 记录模式", "name": self.record_module_name}
                         if item_id == self.record_module_name:
                             last_module = {"title": "正常模式", "name": self.common_module_name}
+                            self.exit_chatroom(bot, query)
                     else:
                         if item_id == self.common_module_name:
                             last_module = {"title": "⦿ 回复模式", "name": self.center_module_name}
                         if item_id == self.center_module_name:
                             last_module = {"title": "正常模式", "name": self.common_module_name}
+                            self.exit_chatroom(bot, query)
                     user_data[self.m_name] = last_module["name"]
                     panel = self.util.produce_mode_board(last_module, self.m_name)
                     query.message.edit_text(text=panel['text'], reply_markup=panel['markup'])
                 else:
-                    last_module = {"title": "正常模式", "name": self.common_module_name}
-                    panel = self.util.produce_mode_board(last_module, self.m_name)
-                    query.message.edit_text(text=panel['text'], reply_markup=panel['markup'])
+                    if user_data.get(self.m_name) and user_data.get(self.m_name) in [self.record_module_name,
+                                                                                     self.center_module_name]:
+                        last_module = {"title": "正常模式", "name": self.common_module_name}
+                        self.exit_chatroom(bot, query)
+                        panel = self.util.produce_mode_board(last_module, self.m_name)
+                        query.message.edit_text(text=panel['text'], reply_markup=panel['markup'])
 
                     user_data[self.m_name] = item_id
                     bot.answerCallbackQuery(query.id, text="模式已切换", show_alert=False)
+
+    def exit_chatroom(self, bot, query):
+        self.record_store.clear_data()
+        text = "已结束记录"
+        bot.answer_callback_query(query.id, text=text, show_alert=False)
+
+        chat_id = query.effective_chat.id
+        if chat_id != ADMINS[0]:
+            text = "对方已经手动结束记录"
+            bot.send_message(chat_id=application.ADMINS[0], text=text)
