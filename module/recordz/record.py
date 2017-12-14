@@ -92,10 +92,14 @@ class Recordz(object):
             text = "正在回复: {}".format(room_id)
             bot.answerCallbackQuery(query.id, text=text, show_alert=False)
         else:
-            text = "当前不是回复模式，无法执行此操作"
+            text = "请先开启回复模式"
             bot.answerCallbackQuery(query.id, text=text, show_alert=False)
 
     def end_conversation(self, bot, query):
-        self.store.clear_data()
-        text = "已中断对话"
-        bot.answer_callback_query(query.id, text=text, show_alert=False)
+        if self.store.get(ButtonItem.OPERATE_ENTER):
+            self.store.clear_data()
+            text = "已中断当前对话"
+            bot.answer_callback_query(query.id, text=text, show_alert=False)
+        else:
+            text = "没有对话在进行中"
+            bot.answerCallbackQuery(query.id, text=text, show_alert=False)

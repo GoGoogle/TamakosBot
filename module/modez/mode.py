@@ -81,7 +81,7 @@ class Modez(object):
                         user_data[self.m_name] = item_id
                         bot.answerCallbackQuery(query.id, text="模式已切换", show_alert=False)
                 except TelegramError as e:
-                    self.logger.debug("This happen when it has different sessions")
+                    self.logger.debug("This often happen when it has different sessions")
 
     def exit_chatroom(self, bot, update):
         query = update.callback_query
@@ -93,5 +93,5 @@ class Modez(object):
 
             chat_id = update.effective_chat.id
             if chat_id != ADMINS[0]:
-                text = "对方已经手动中断对话"
+                text = "对方已经手动中断当前对话"
                 bot.send_message(chat_id=application.ADMINS[0], text=text)
