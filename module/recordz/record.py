@@ -96,12 +96,6 @@ class Recordz(object):
             bot.answerCallbackQuery(query.id, text=text, show_alert=False)
 
     def end_conversation(self, bot, query):
-        if self.store.is_exist(ButtonItem.OPERATE_ENTER):
-            self.logger.debug("退出房间: %s", self.store.get(ButtonItem.OPERATE_ENTER))
-            text = "已退出房间: {}".format(self.store.get(ButtonItem.OPERATE_ENTER))
-            bot.answerCallbackQuery(query.id, text=text, show_alert=False)
-            self.store.del_data(ButtonItem.OPERATE_ENTER)
-        else:
-            text = "已退出全部房间"
-            bot.answerCallbackQuery(query.id, text=text, show_alert=False)
         self.store.clear_data()
+        text = "已中断对话"
+        bot.answer_callback_query(query.id, text=text, show_alert=False)

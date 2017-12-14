@@ -1,5 +1,7 @@
 import logging
 
+from telegram import TelegramError
+
 from config import application
 from config.application import ADMINS
 from entity.bot_telegram import ButtonItem
@@ -48,35 +50,38 @@ class Modez(object):
             if button_operate == ButtonItem.OPERATE_CANCEL:
                 telegram_util.selector_cancel(bot, query)
             if button_operate == ButtonItem.OPERATE_SEND:
-                if item_id in [self.common_module_name, self.record_module_name, self.center_module_name]:
-                    last_module = None
-                    chat_id = update.effective_chat.id
-                    # Judge weather use_id  in Admins Chat
-                    if chat_id != ADMINS[0]:
-                        if item_id == self.common_module_name:
-                            last_module = {"title": "⦿ 记录模式", "name": self.record_module_name}
-                        if item_id == self.record_module_name:
-                            last_module = {"title": "ⓒ 正常模式", "name": self.common_module_name}
-                            self.exit_chatroom(bot, update)
-                    else:
-                        if item_id == self.common_module_name:
-                            last_module = {"title": "⦿ 回复模式", "name": self.center_module_name}
-                        if item_id == self.center_module_name:
-                            last_module = {"title": "ⓒ 正常模式", "name": self.common_module_name}
-                            self.exit_chatroom(bot, update)
-                    user_data[self.m_name] = last_module["name"]
-                    panel = self.util.produce_mode_board(last_module, self.m_name)
-                    query.message.edit_text(text=panel['text'], reply_markup=panel['markup'])
-                else:
-                    if user_data.get(self.m_name) and user_data.get(self.m_name) in [self.record_module_name,
-                                                                                     self.center_module_name]:
-                        last_module = {"title": "ⓒ 正常模式", "name": self.common_module_name}
-                        self.exit_chatroom(bot, update)
+                try:
+                    if item_id in [self.common_module_name, self.record_module_name, self.center_module_name]:
+                        last_module = None
+                        chat_id = update.effective_chat.id
+                        # Judge weather use_id  in Admins Chat
+                        if chat_id != ADMINS[0]:
+                            if item_id == self.common_module_name:
+                                last_module = {"title": "⦿ 记录模式", "name": self.record_module_name}
+                            if item_id == self.record_module_name:
+                                last_module = {"title": "ⓒ 正常模式", "name": self.common_module_name}
+                                self.exit_chatroom(bot, update)
+                        else:
+                            if item_id == self.common_module_name:
+                                last_module = {"title": "⦿ 回复模式", "name": self.center_module_name}
+                            if item_id == self.center_module_name:
+                                last_module = {"title": "ⓒ 正常模式", "name": self.common_module_name}
+                                self.exit_chatroom(bot, update)
+                        user_data[self.m_name] = last_module["name"]
                         panel = self.util.produce_mode_board(last_module, self.m_name)
                         query.message.edit_text(text=panel['text'], reply_markup=panel['markup'])
+                    else:
+                        if user_data.get(self.m_name) and user_data.get(self.m_name) in [self.record_module_name,
+                                                                                         self.center_module_name]:
+                            last_module = {"title": "ⓒ 正常模式", "name": self.common_module_name}
+                            self.exit_chatroom(bot, update)
+                            panel = self.util.produce_mode_board(last_module, self.m_name)
+                            query.message.edit_text(text=panel['text'], reply_markup=panel['markup'])
 
-                    user_data[self.m_name] = item_id
-                    bot.answerCallbackQuery(query.id, text="模式已切换", show_alert=False)
+                        user_data[self.m_name] = item_id
+                        bot.answerCallbackQuery(query.id, text="模式已切换", show_alert=False)
+                except TelegramError as e:
+                    self.logger.debug("This happen when it has different sessions")
 
     def exit_chatroom(self, bot, update):
         query = update.callback_query
