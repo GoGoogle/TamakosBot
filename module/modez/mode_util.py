@@ -24,7 +24,7 @@ class Util(object):
     def produce_mode_board(self, cur_module_name, last_module, module_name):
         self.logger.debug("produce_mode_board")
         module_obj = {
-            self.common_module_name: "正常模式",
+            self.common_module_name: "普通模式",
             self.center_module_name: "回复模式",
             self.record_module_name: "记录模式",
             self.kugou_module_name: "酷狗音乐",
