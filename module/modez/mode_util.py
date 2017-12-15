@@ -32,7 +32,7 @@ class Util(object):
             self.netease_module_name: "网易音乐",
             self.anime_module_name: "动画索引"
         }
-        msg_mode = "模式选择   「{0}」".format(module_obj.get(cur_module_name))
+        msg_mode = "模块选择   •   {0}".format(module_obj.get(cur_module_name))
 
         button_list = [
             [
