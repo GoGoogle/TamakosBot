@@ -2,6 +2,8 @@ import json
 import taglib
 import uuid
 
+from util.telegram_util import is_contain_zh
+
 
 class SongListSelector(object):
     def __init__(self,
@@ -184,7 +186,7 @@ class ButtonItem(object):
         return button_item
 
     def dump_simple_json(self):
-        if isinstance(self.i, str) and u'\u4e00' <= self.i <= u'\u9fa5' and len(self.i.encode('utf-8')) > 22:
+        if isinstance(self.i, str) and is_contain_zh(self.i) and len(self.i.encode('utf-8')) > 22:
             self.i = self.i[:7]
         if self.t == ButtonItem.TYPE_SONGLIST:
             return json.dumps({'p': self.p, 'x': self.i}, separators=(',', ':'), ensure_ascii=False)

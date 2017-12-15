@@ -88,7 +88,7 @@ class Util(UtilZ):
         self.logger.debug('get_playlist_selector: keyword={0}, pagecode={1}'.format(playlist.playlist_name, curpage))
 
         total_page = (playlist.track_count + 4) // 5
-        title = '☁️ 🎵歌单 「{0}」\n创建者 {1} ({2} 首歌)'.format(
+        title = '☁️ 歌单 「{0}」\n🎸 创建者   🎈{1}   ({2})'.format(
             playlist.playlist_name, playlist.creator.user_name, playlist.track_count)
 
         # 分页处理

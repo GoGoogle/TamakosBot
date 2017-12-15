@@ -101,5 +101,5 @@ class Recordz(object):
             text = "已中断当前对话"
             bot.answer_callback_query(query.id, text=text, show_alert=False)
         else:
-            text = "没有对话在进行中"
+            text = "请先开启一个对话"
             bot.answerCallbackQuery(query.id, text=text, show_alert=False)

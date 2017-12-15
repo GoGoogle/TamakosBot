@@ -13,6 +13,7 @@ from module.recordz import record
 from module.sing5z import sing5
 from module.translatez import translate
 from module.xiamiz import xiami
+from util.telegram_util import is_contain_emoji
 
 
 class Monitor(object):
@@ -41,7 +42,7 @@ class Monitor(object):
     def mode_analyze(self, bot, update, chat_data):
         if chat_data.get(self.mode.m_name):
             mode_value = chat_data[self.mode.m_name]
-            if update.message.text and update.message.text not in emoji.UNICODE_EMOJI:
+            if update.message.text and not is_contain_emoji(update.message.text):
                 if mode_value == self.netease.m_name:
                     if re.match(r'.*https?://music.163.com/?#?/?m?/playlist((/)|(\?id=))(\d*).*', update.message.text):
                         playlist_id = re.search(r'https?://music.163.com/?#?/?m?/playlist((/)|(\?id=))(\d*)',

@@ -1,5 +1,6 @@
 from functools import wraps
 
+import emoji
 from telegram import Update
 
 from config.application import ADMINS
@@ -20,25 +21,6 @@ class BotResult:
 
     def get_body(self):
         return self.body
-
-
-def restricted(func):
-    @wraps(func)
-    def wrapped(*args, **kwargs):
-        update = list(filter(lambda x: isinstance(x, Update), args))[0]
-        user_id = update.effective_user.id
-        if user_id not in ADMINS:
-            raise NotAuthorized("Unauthorized access denied for {}".format(user_id))
-        return func(*args, **kwargs)
-
-    return wrapped
-
-
-def selector_cancel(bot, query):
-    bot.answerCallbackQuery(query.id,
-                            text="加载中",
-                            show_alert=False)
-    query.message.delete()
 
 
 class DataStore(object):
@@ -69,3 +51,32 @@ class DataStore(object):
 
     def is_exist(self, key):
         return True if key in self.data else False
+
+
+def restricted(func):
+    @wraps(func)
+    def wrapped(*args, **kwargs):
+        update = list(filter(lambda x: isinstance(x, Update), args))[0]
+        user_id = update.effective_user.id
+        if user_id not in ADMINS:
+            raise NotAuthorized("Unauthorized access denied for {}".format(user_id))
+        return func(*args, **kwargs)
+
+    return wrapped
+
+
+def selector_cancel(bot, query):
+    bot.answerCallbackQuery(query.id,
+                            text="加载中",
+                            show_alert=False)
+    query.message.delete()
+
+
+def is_contain_zh(content):
+    for x in content:
+        return u'\u4e00' <= x <= u'\u9fa5'
+
+
+def is_contain_emoji(content):
+    for x in content:
+        return x in emoji.UNICODE_EMOJI
