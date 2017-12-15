@@ -42,7 +42,7 @@ class Util(object):
                                              self.kugou_module_name).dump_json()
                 ),
                 InlineKeyboardButton(
-                    text=module_name[self.qq_module_name],
+                    text=module_obj[self.qq_module_name],
                     callback_data=ButtonItem(module_name, ButtonItem.TYPE_MODE, ButtonItem.OPERATE_SEND,
                                              self.qq_module_name).dump_json()
                 )
