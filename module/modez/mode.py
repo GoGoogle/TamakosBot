@@ -71,7 +71,7 @@ class Modez(object):
                         panel = self.util.produce_mode_board(last_module["name"], last_module, self.m_name)
                         query.message.edit_text(text=panel['text'], reply_markup=panel['markup'])
                     else:
-                        if user_data.get(self.m_name) and user_data.get(self.m_name) != item_id:
+                        if user_data.get(self.m_name) != item_id:
                             if user_data.get(self.m_name) in [self.record_module_name, self.center_module_name]:
                                 self.exit_chatroom(bot, update)
                             last_module = {"title": "ⓒ 正常模式", "name": self.common_module_name}
