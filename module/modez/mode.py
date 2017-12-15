@@ -37,7 +37,7 @@ class Modez(object):
     def show_mode_board(self, bot, update, user_data):
         last_module = {"title": "ⓒ 正常模式", "name": self.common_module_name}
         user_data[self.m_name] = last_module["name"]
-        panel = self.util.produce_mode_board(last_module, self.m_name)
+        panel = self.util.produce_mode_board(last_module["name"], last_module, self.m_name)
         bot.send_message(chat_id=update.message.chat.id, text=panel["text"], reply_markup=panel["markup"])
 
     def toggle_mode(self, bot, update, user_data):
@@ -68,14 +68,14 @@ class Modez(object):
                                 last_module = {"title": "ⓒ 正常模式", "name": self.common_module_name}
                                 self.exit_chatroom(bot, update)
                         user_data[self.m_name] = last_module["name"]
-                        panel = self.util.produce_mode_board(last_module, self.m_name)
+                        panel = self.util.produce_mode_board(last_module["name"], last_module, self.m_name)
                         query.message.edit_text(text=panel['text'], reply_markup=panel['markup'])
                     else:
                         if user_data.get(self.m_name) and user_data.get(self.m_name) in [self.record_module_name,
                                                                                          self.center_module_name]:
                             last_module = {"title": "ⓒ 正常模式", "name": self.common_module_name}
                             self.exit_chatroom(bot, update)
-                            panel = self.util.produce_mode_board(last_module, self.m_name)
+                            panel = self.util.produce_mode_board(self.m_name, last_module, self.m_name)
                             query.message.edit_text(text=panel['text'], reply_markup=panel['markup'])
 
                         user_data[self.m_name] = item_id

@@ -18,35 +18,43 @@ class Util(object):
         self.qq_module_name = qq.Qqz.m_name
         self.anime_module_name = anime.Anime.m_name
         self.common_module_name = "common_m"
-        self.super_module_name = "super_m"
+        self.center_module_name = "center_m"
         self.record_module_name = record.Recordz.m_name
 
-    def produce_mode_board(self, last_module, module_name):
+    def produce_mode_board(self, cur_module_name, last_module, module_name):
         self.logger.debug("produce_mode_board")
-
-        msg_mode = "模式选择"
+        module_obj = {
+            self.common_module_name: "正常模式",
+            self.center_module_name: "回复模式",
+            self.record_module_name: "记录模式",
+            self.kugou_module_name: "酷狗音乐",
+            self.qq_module_name: "腾讯音乐",
+            self.netease_module_name: "网易音乐",
+            self.anime_module_name: "动画索引"
+        }
+        msg_mode = "模式选择   「{0}」".format(module_obj.get(cur_module_name))
 
         button_list = [
             [
                 InlineKeyboardButton(
-                    text='酷狗音乐',
+                    text=module_obj[self.kugou_module_name],
                     callback_data=ButtonItem(module_name, ButtonItem.TYPE_MODE, ButtonItem.OPERATE_SEND,
                                              self.kugou_module_name).dump_json()
                 ),
                 InlineKeyboardButton(
-                    text='腾讯音乐',
+                    text=module_name[self.qq_module_name],
                     callback_data=ButtonItem(module_name, ButtonItem.TYPE_MODE, ButtonItem.OPERATE_SEND,
                                              self.qq_module_name).dump_json()
                 )
             ],
             [
                 InlineKeyboardButton(
-                    text='网易音乐',
+                    text=module_obj[self.netease_module_name],
                     callback_data=ButtonItem(module_name, ButtonItem.TYPE_MODE, ButtonItem.OPERATE_SEND,
                                              self.netease_module_name).dump_json()
                 ),
                 InlineKeyboardButton(
-                    text='动画索引',
+                    text=module_obj[self.anime_module_name],
                     callback_data=ButtonItem(module_name, ButtonItem.TYPE_MODE, ButtonItem.OPERATE_SEND,
                                              self.anime_module_name).dump_json()
                 )
