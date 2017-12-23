@@ -60,7 +60,7 @@ class Qqz(MainZ):
             if button_operate == ButtonItem.OPERATE_PAGE_UP:
                 self.songlist_turning(bot, query, item_id, page - 1)
             if button_operate == ButtonItem.OPERATE_SEND:
-                self.deliver_music(bot, query, item_id, delete=True)
+                self.deliver_music(bot, query, item_id)
 
     def deliver_music(self, bot, query, song_id, delete=False):
         if delete:

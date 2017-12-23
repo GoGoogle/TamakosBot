@@ -111,7 +111,7 @@ class Netease(MainZ):
             if button_operate == ButtonItem.OPERATE_PAGE_UP:
                 self.songlist_turning(bot, query, item_id, page - 1)
             if button_operate == ButtonItem.OPERATE_SEND:
-                self.deliver_music(bot, query, item_id, delete=True)
+                self.deliver_music(bot, query, item_id, delete=False)
         if button_type == ButtonItem.TYPE_PLAYLIST:
             if button_operate == ButtonItem.OPERATE_PAGE_DOWN:
                 self.playlist_turning(bot, query, item_id, page + 1)
