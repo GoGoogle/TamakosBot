@@ -35,7 +35,7 @@ class Modez(object):
         self.record_store = record.Recordz.store
 
     def show_mode_board(self, bot, update, user_data):
-        last_module = {"title": "ⓒ 普通模式", "name": self.common_module_name}
+        last_module = {"title": "ⓒ 正常模式", "name": self.common_module_name}
         user_data[self.m_name] = last_module["name"]
         panel = self.util.produce_mode_board(last_module["name"], last_module, self.m_name)
         bot.send_message(chat_id=update.message.chat.id, text=panel["text"], reply_markup=panel["markup"])
@@ -59,13 +59,13 @@ class Modez(object):
                             if item_id == self.common_module_name:
                                 last_module = {"title": "⦿ 记录模式", "name": self.record_module_name}
                             if item_id == self.record_module_name:
-                                last_module = {"title": "ⓒ 普通模式", "name": self.common_module_name}
+                                last_module = {"title": "ⓒ 正常模式", "name": self.common_module_name}
                                 self.exit_chatroom(bot, update)
                         else:
                             if item_id == self.common_module_name:
                                 last_module = {"title": "⦿ 回复模式", "name": self.center_module_name}
                             if item_id == self.center_module_name:
-                                last_module = {"title": "ⓒ 普通模式", "name": self.common_module_name}
+                                last_module = {"title": "ⓒ 正常模式", "name": self.common_module_name}
                                 self.exit_chatroom(bot, update)
                         user_data[self.m_name] = last_module["name"]
                         panel = self.util.produce_mode_board(last_module["name"], last_module, self.m_name)
@@ -74,7 +74,7 @@ class Modez(object):
                         if user_data.get(self.m_name) != item_id:
                             if user_data.get(self.m_name) in [self.record_module_name, self.center_module_name]:
                                 self.exit_chatroom(bot, update)
-                            last_module = {"title": "ⓒ 普通模式", "name": self.common_module_name}
+                            last_module = {"title": "ⓒ 正常模式", "name": self.common_module_name}
                             panel = self.util.produce_mode_board(item_id, last_module, self.m_name)
                             query.message.edit_text(text=panel['text'], reply_markup=panel['markup'])
                         user_data[self.m_name] = item_id
