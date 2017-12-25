@@ -23,10 +23,19 @@ class Startup(object):
         """
         self.mode.show_mode_board(bot, update, user_data)
 
+    def help_info(self, bot, update):
+        self.logger.debug("send help info")
+        text = "主要模块介绍：\n\n1~3 音乐模块：可以通过关键词下载音乐。\n" \
+               "网易音乐模块还可以通过发送歌单链接，导入歌单里的曲目。\n\n" \
+               "4 动画索引模块：可以通过发送一张动漫图片，识别查询动漫的名字和快照。\n\n" \
+               "5 记录模式切换：正常情况下是普通模式，当切换到记录模式时，你可以和机器人对话。"
+        bot.send_message(chat_id=update.message.chat.id, text=text)
+
     @restricted
     def manage_bot(self, bot, update, args):
         self.manage.manage_bot(bot, update, args)
 
     def handler_startup(self, dispatcher):
-        dispatcher.add_handler(CommandHandler(['start', 'mode', 'help'], self.start_command, pass_user_data=True))
+        dispatcher.add_handler(CommandHandler(['start', 'mode'], self.start_command, pass_user_data=True))
+        dispatcher.add_handler(CommandHandler('help', self.help_info))
         dispatcher.add_handler(CommandHandler('super', self.manage_bot, pass_args=True))
