@@ -25,10 +25,10 @@ class Startup(object):
 
     def help_info(self, bot, update):
         self.logger.debug("send help info")
-        text = "主要模块介绍：\n\n1~3 音乐模块：可以通过发送关键词下载音乐。\n" \
-               "网易音乐模块还可以通过发送歌单链接，导入歌单里的曲目。\n\n" \
-               "4 动画索引模块：可以通过发送一张动漫图片，识别查询动漫的名字和快照。\n\n" \
-               "5 记录模式切换：一般情况下是正常模式，当切换到记录模式时，您可以和机器人对话。"
+        text = "主要按钮介绍：\n\n1~3 音乐按钮：可以通过发送关键词搜索并下载音乐。\n" \
+               "网易按钮还可以通过发送歌单链接，导入歌单里的曲目。\n\n" \
+               "4 动画：可以通过发送一张动漫图片，识别查询动漫的名字和快照。\n\n" \
+               "5 对话：当按钮由普通切换到对话时，您可以和机器人对话。"
         bot.send_message(chat_id=update.message.chat.id, text=text)
 
     @restricted

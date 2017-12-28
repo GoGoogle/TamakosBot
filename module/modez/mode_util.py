@@ -24,13 +24,13 @@ class Util(object):
     def produce_mode_board(self, cur_module_name, last_module, module_name):
         self.logger.debug("produce_mode_board")
         module_obj = {
-            self.common_module_name: "正常模式",
-            self.center_module_name: "回复模式",
-            self.record_module_name: "记录模式",
-            self.kugou_module_name: "酷狗音乐",
-            self.qq_module_name: "腾讯音乐",
-            self.netease_module_name: "网易音乐",
-            self.anime_module_name: "动画索引"
+            self.common_module_name: "普通",
+            self.center_module_name: "回复",
+            self.record_module_name: "对话",
+            self.kugou_module_name: "酷狗",
+            self.qq_module_name: "腾讯",
+            self.netease_module_name: "网易",
+            self.anime_module_name: "动画"
         }
         msg_mode = "🍭 {0}".format(module_obj.get(cur_module_name))
 
@@ -45,9 +45,7 @@ class Util(object):
                     text=module_obj[self.qq_module_name],
                     callback_data=ButtonItem(module_name, ButtonItem.TYPE_MODE, ButtonItem.OPERATE_SEND,
                                              self.qq_module_name).dump_json()
-                )
-            ],
-            [
+                ),
                 InlineKeyboardButton(
                     text=module_obj[self.netease_module_name],
                     callback_data=ButtonItem(module_name, ButtonItem.TYPE_MODE, ButtonItem.OPERATE_SEND,
@@ -60,6 +58,7 @@ class Util(object):
                 )
             ]
         ]
+
         if last_module:
             button_list.append([InlineKeyboardButton(
                 text=last_module["title"],
