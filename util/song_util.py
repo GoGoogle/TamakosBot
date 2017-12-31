@@ -1,4 +1,3 @@
-import taglib
 import time
 
 from config import application
@@ -12,16 +11,6 @@ def selector_cancel(bot, query):
     query.message.delete()
 
 
-def write_id3tags(file_path, song_title, song_artist_list, song_album=None, track_num='01/10'):
-    song = taglib.File(file_path)
-    if song:
-        song.tags["ARTIST"] = song_artist_list
-        song.tags["ALBUM"] = [song_album]
-        song.tags["TITLE"] = [song_title]
-        song.tags["TRACKNUMBER"] = [track_num]
-        song.save()
-
-
 def progress_download(session, songfile, handle):
     resp = session.get(songfile.file_url, stream=True, timeout=application.FILE_TRANSFER_TIMEOUT)
     start = time.time()
@@ -32,16 +21,19 @@ def progress_download(session, songfile, handle):
         songfile.file_stream.write(chunk)
         network_speed = dl / (time.time() - start)
         if network_speed > 1024 * 1024:
-            network_speed_status = '{:.2f} m/s'.format(network_speed / (1024 * 1024))
+            network_speed_status = '{:.2f} mb/s'.format(network_speed / (1024 * 1024))
         else:
-            network_speed_status = '{:.2f} kb/s'.format(network_speed / 1024)
-        if dl > 1024 * 1024:
-            dl_status = '{:.2f} MB'.format(dl / (1024 * 1024))
-        else:
-            dl_status = '{:.0f} KB'.format(dl / 1024)
-        progress = '{0} / {1:.2f} MB ({2:.0f}%) - {3}'.format(dl_status, length / (1024 * 1024),
-                                                              dl / length * 100,
-                                                              network_speed_status)
+            network_speed_status = '{:.1f} kb/s'.format(network_speed / 1024)
+        # if dl > 1024 * 1024:
+        #     dl_status = '{:.2f} MB'.format(dl / (1024 * 1024))
+        # else:
+        #     dl_status = '{:.0f} KB'.format(dl / 1024)
+
+        # progress = '{0} / {1:.2f} MB ({2:.0f}%) - {3}'.format(dl_status, length / (1024 * 1024),
+        #                                                       dl / length * 100,
+        #                                                       network_speed_status)
+
+        progress = 'D {0:.2f} MB / {1:.0%} - {2}'.format(length / (1024 * 1024), dl / length, network_speed_status)
 
         if handle:
             handle.update(progress)
