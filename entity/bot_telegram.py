@@ -1,5 +1,4 @@
 import json
-import logging
 import taglib
 import uuid
 
@@ -59,7 +58,6 @@ class TopListSelector(object):
 
 class SongFile(object):
     def __init__(self, file_name, file_path, file_url, file_stream, song=None):
-        self.logger = logging.getLogger(__name__)
         self.file_name = file_name
         self.file_path = file_path
         self.file_url = file_url
