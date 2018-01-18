@@ -15,6 +15,7 @@ WEBHOOK_LOCAL = {
 }
 
 BOT_TOKEN = "321305199:AAFKD4JcwYZuqH6yTyH5kII6hWKUeo0xH_I"
+BOT_TOKEN_DEBUG = "530204810:AAGSDsy_vkDaaatc0Rnj86ach_rQaDgdPvM"
 
 WEBHOOK_REMOTE = {
     'url': 'https://telegram.lemo.site/bottoken',
