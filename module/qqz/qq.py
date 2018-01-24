@@ -73,7 +73,7 @@ class Qqz(MainZ):
         elif bot_result.get_status() == 200:
             song = bot_result.get_body()
             edited_msg = bot.send_message(chat_id=query.message.chat.id,
-                                          text="找到歌曲: [{0}]({1})".format(song.song_name, song.song_url),
+                                          text="[{0}]({1}) 🍈".format(song.song_name, song.song_url),
                                           parse_mode=telegram.ParseMode.MARKDOWN)
 
             songfile = self.utilz.get_songfile(song)
