@@ -1,5 +1,6 @@
 import logging
 
+from telegram import ParseMode
 from telegram.ext import CommandHandler
 
 from module.managez import manage
@@ -25,11 +26,17 @@ class Startup(object):
 
     def help_info(self, bot, update):
         self.logger.debug("send help info")
-        text = "主要按钮介绍：\n\n1~3 音乐按钮：可以通过发送关键词搜索并下载音乐。\n" \
-               "网易按钮还可以通过发送歌单链接，导入歌单里的曲目。\n\n" \
-               "4 动画：可以通过发送一张动漫图片，识别查询动漫的名字和快照。\n\n" \
-               "5 对话：当按钮由普通切换到对话时，您可以和机器人对话。"
-        bot.send_message(chat_id=update.message.chat.id, text=text)
+        text = "`以下按 MODE 顺序说明\n" \
+               "::发送关键词搜索并下载音乐" \
+               "::同上。发送歌单链接，以便导入歌单" \
+               "::发送一张动漫截图，获取动漫信息" \
+               "::暂时无法使用\n`"
+        # text = "`以下按 MODE 顺序说明\n" \
+        #        "::发送关键词搜索并下载音乐\n" \
+        #        "::同上。发送歌单链接，以便导入歌单\n" \
+        #        "::发送一张动漫截图，获取动漫信息\n" \
+        #        "::暂时无法使用\n`"
+        bot.send_message(chat_id=update.message.chat.id, text=text, parse_mode=ParseMode.MARKDOWN)
 
     @restricted
     def manage_bot(self, bot, update, args):
