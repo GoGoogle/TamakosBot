@@ -35,7 +35,7 @@ class Netease(MainZ):
     def search_music(self, bot, update, kw):
         self.logger.debug('get_music: %s', kw)
         edited_msg = bot.send_message(chat_id=update.message.chat.id,
-                                      text="🙄")
+                                      text="🍈")
         update.message.message_id = edited_msg.message_id
         self.songlist_turning(bot, update, kw, 1)
 
@@ -55,7 +55,7 @@ class Netease(MainZ):
     def response_playlist(self, bot, update, playlist_id):
         try:
             edited_msg = bot.send_message(chat_id=update.message.chat.id,
-                                          text="🙄")
+                                          text="🍈")
             update.message.message_id = edited_msg.message_id
             self.playlist_turning(bot, update, playlist_id, 1)
         except IndexError:
@@ -64,10 +64,10 @@ class Netease(MainZ):
     def songlist_turning(self, bot, query, kw, page):
         bot_result = self.crawler.search_song(kw, page)
         if bot_result.get_status() == 400:
-            text = "🤔缺少歌曲名称"
+            text = "🍈 400"
             bot.send_message(chat_id=query.message.chat.id, text=text)
         elif bot_result.get_status() == 404:
-            text = "🤔此歌曲找不到"
+            text = "🍈 404"
             bot.send_message(chat_id=query.message.chat.id, text=text)
         elif bot_result.get_status() == 200:
             selector = self.utilz.get_songlist_selector(page, bot_result.get_body())
@@ -77,7 +77,7 @@ class Netease(MainZ):
     def playlist_turning(self, bot, query, playlist_id, page):
         bot_result = self.crawler.get_playlist(playlist_id, page)
         if bot_result.get_status() == 400:
-            text = "🤔此歌单找不到"
+            text = "🍈 404"
             bot.send_message(chat_id=query.message.chat.id, text=text)
         elif bot_result.get_status() == 200:
             selector = self.utilz.get_playlist_selector(page, bot_result.get_body())
@@ -90,12 +90,12 @@ class Netease(MainZ):
 
         bot_result = self.crawler.get_song_detail(song_id)
         if bot_result.get_status() == 400:
-            text = "😶没有版权©"
+            text = "🍈 No Copyright©"
             bot.send_message(chat_id=query.message.chat.id, text=text)
         elif bot_result.get_status() == 200:
             song = bot_result.get_body()
             edited_msg = bot.send_message(chat_id=query.message.chat.id,
-                                          text="找到歌曲: [{0}]({1})".format(song.song_name, song.song_url),
+                                          text="[{0}]({1}) 🍈".format(song.song_name, song.song_url),
                                           parse_mode=telegram.ParseMode.MARKDOWN)
 
             songfile = self.utilz.get_songfile(song)
@@ -111,7 +111,7 @@ class Netease(MainZ):
             if button_operate == ButtonItem.OPERATE_PAGE_UP:
                 self.songlist_turning(bot, query, item_id, page - 1)
             if button_operate == ButtonItem.OPERATE_SEND:
-                self.deliver_music(bot, query, item_id, delete=False)
+                self.deliver_music(bot, query, item_id, delete=True)
         if button_type == ButtonItem.TYPE_PLAYLIST:
             if button_operate == ButtonItem.OPERATE_PAGE_DOWN:
                 self.playlist_turning(bot, query, item_id, page + 1)
@@ -141,7 +141,7 @@ class Netease(MainZ):
         bot.edit_message_text(
             chat_id=query.message.chat.id,
             message_id=edited_msg.message_id,
-            text='☁️ 「{0}」 等待发送'.format(songfile.song.song_name),
+            text='🍈 🍈 🍈'.format(songfile.song.song_name),
             parse_mode=telegram.ParseMode.MARKDOWN,
             disable_web_page_preview=True
         )

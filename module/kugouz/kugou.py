@@ -28,7 +28,7 @@ class Kugou(MainZ):
     def search_music(self, bot, update, kw):
         self.logger.debug('get_music: %s', kw)
         edited_msg = bot.send_message(chat_id=update.message.chat.id,
-                                      text="🙄")
+                                      text="🍈")
         update.message.message_id = edited_msg.message_id
         self.songlist_turning(bot, update, kw, 1)
 
@@ -49,29 +49,29 @@ class Kugou(MainZ):
         self.logger.debug('songlist_turning: kw=%s page=%s', kw, page)
         bot_result = self.crawler.search_song(kw, page)
         if bot_result.get_status() == 400:
-            text = "🤔缺少歌曲名称"
+            text = "🍈 400"
             bot.send_message(chat_id=query.message.chat.id, text=text)
         elif bot_result.get_status() == 404:
-            text = "🤔此歌曲找不到"
+            text = "🍈 404"
             bot.send_message(chat_id=query.message.chat.id, text=text)
         elif bot_result.get_status() == 200:
             selector = self.utilz.get_songlist_selector(page, bot_result.get_body())
             panel = self.utilz.produce_songlist_panel(self.m_name, selector)
             query.message.edit_text(text=panel['text'], reply_markup=panel['reply_markup'])
 
-    def deliver_music(self, bot, query, song_id, delete=False):
+    def deliver_music(self, bot, query, song_id, delete=True):
         self.logger.debug('deliver_music: song_id=%s', song_id)
         if delete:
             song_util.selector_cancel(bot, query)
 
         bot_result = self.crawler.get_song_detail(song_id)
         if bot_result.get_status() == 400:
-            text = "😶没有版权©"
+            text = "🍈 No Copyright©"
             bot.send_message(chat_id=query.message.chat.id, text=text)
         elif bot_result.get_status() == 200:
             song = bot_result.get_body()
             edited_msg = bot.send_message(chat_id=query.message.chat.id,
-                                          text="找到歌曲: [{0}]({1})".format(song.song_name, song.song_url),
+                                          text="[{0}]({1}) 🍈".format(song.song_name, song.song_url),
                                           parse_mode=telegram.ParseMode.MARKDOWN)
 
             songfile = self.utilz.get_songfile(song)
@@ -88,7 +88,7 @@ class Kugou(MainZ):
             if button_operate == ButtonItem.OPERATE_PAGE_UP:
                 self.songlist_turning(bot, query, item_id, page - 1)
             if button_operate == ButtonItem.OPERATE_SEND:
-                self.deliver_music(bot, query, item_id, delete=False)
+                self.deliver_music(bot, query, item_id, delete=True)
 
     def download_backend(self, bot, query, songfile, edited_msg):
         self.logger.debug('download_backend..')
@@ -112,7 +112,7 @@ class Kugou(MainZ):
         bot.edit_message_text(
             chat_id=query.message.chat.id,
             message_id=edited_msg.message_id,
-            text='🐶 「{0}」 等待发送'.format(songfile.song.song_name),
+            text='🍈 🍈 🍈'.format(songfile.song.song_name),
             parse_mode=telegram.ParseMode.MARKDOWN,
             disable_web_page_preview=True
         )

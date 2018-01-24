@@ -33,8 +33,8 @@ def progress_download(session, songfile, handle):
         #                                                       dl / length * 100,
         #                                                       network_speed_status)
 
-        progress = 'D {0:.2f} MB / {1:.0%} - {2}'.format(length / (1024 * 1024), dl / length, network_speed_status)
-
+        # progress = 'D {0:.2f} MB / {1:.0%} - {2}'.format(length / (1024 * 1024), dl / length, network_speed_status)
+        progress = '🍈 🍈 {:.0%}'.format(dl / length)
         if handle:
             handle.update(progress)
 

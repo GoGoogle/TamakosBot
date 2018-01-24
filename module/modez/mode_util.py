@@ -32,7 +32,7 @@ class Util(object):
             self.netease_module_name: "网易",
             self.anime_module_name: "动画"
         }
-        msg_mode = "🍭 {0}".format(module_obj.get(cur_module_name))
+        msg_mode = "🍭 {0} MODE".format(module_obj.get(cur_module_name))
 
         button_list = [
             [
@@ -45,7 +45,9 @@ class Util(object):
                     text=module_obj[self.qq_module_name],
                     callback_data=ButtonItem(module_name, ButtonItem.TYPE_MODE, ButtonItem.OPERATE_SEND,
                                              self.qq_module_name).dump_json()
-                ),
+                )
+            ],
+            [
                 InlineKeyboardButton(
                     text=module_obj[self.netease_module_name],
                     callback_data=ButtonItem(module_name, ButtonItem.TYPE_MODE, ButtonItem.OPERATE_SEND,
