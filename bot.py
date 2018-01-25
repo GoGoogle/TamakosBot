@@ -21,7 +21,7 @@ class Bot(object):
         self.local_path = cfg.get('webhook', 'local_path')
         self.local_port = cfg.get('webhook', 'local_port')
         self.remote_url = cfg.get('webhook', 'remote_url')
-        self.remote_timeout = cfg.get('webhook', 'remote_timeout')
+        self.remote_timeout = int(cfg.get('webhook', 'remote_timeout'))
 
         self.tmp_path = cfg.get('file', 'tmp_path')
         self.cookie_path = cfg.get('file', 'cookie_path')
