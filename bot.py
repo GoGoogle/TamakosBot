@@ -19,7 +19,7 @@ class Bot(object):
         self.bot_token = cfg.get('base', 'bot_token')
         self.local_host = cfg.get('webhook', 'local_host')
         self.local_path = cfg.get('webhook', 'local_path')
-        self.local_port = cfg.get('webhook', 'local_port')
+        self.local_port = int(cfg.get('webhook', 'local_port'))
         self.remote_url = cfg.get('webhook', 'remote_url')
         self.remote_timeout = int(cfg.get('webhook', 'remote_timeout'))
 
