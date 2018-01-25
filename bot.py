@@ -10,7 +10,7 @@ from util import telegram_util
 
 class Bot(object):
     def __init__(self):
-        fileConfig('logging.ini')
+        fileConfig('config/logging.ini')
         self.logger = logging.getLogger("__name__")
         self.commands = boot.Startup()
         self.monitors = monitor.Monitor()
