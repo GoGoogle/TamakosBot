@@ -1,6 +1,6 @@
 import logging
 
-from configparser import ConfigParser
+from util import telegram_util
 
 from entity.bot_telegram import BotMessage, ButtonItem
 from module.recordz import record_util
@@ -20,8 +20,7 @@ class Recordz(object):
         self.logger = logging.getLogger(__name__)
         self.util = record_util.Utilz()
 
-        cfg = ConfigParser()
-        cfg.read('custom.ini')
+        cfg = telegram_util.get_config()
         self.admin_room = cfg.get('base', 'admin_room')
 
     @staticmethod

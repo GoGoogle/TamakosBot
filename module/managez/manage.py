@@ -4,7 +4,7 @@ import os
 import telegram
 from telegram.error import BadRequest, ChatMigrated, TelegramError, Unauthorized
 
-from configparser import ConfigParser
+from util import telegram_util
 
 
 class Adminz(object):
@@ -45,7 +45,7 @@ class Adminz(object):
                 update.message.reply_text("退出失败！")
         if command == "log":
             cfg = ConfigParser()
-            cfg.read('custom.ini')
+            cfg.read('config/custom.ini')
             log_file = cfg.get('other', 'log_file')
 
             log_path = os.path.join(os.getcwd(), log_file)

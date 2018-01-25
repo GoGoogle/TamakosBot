@@ -1,5 +1,5 @@
 import logging
-from configparser import ConfigParser
+from util import telegram_util
 
 from telegram import TelegramError
 
@@ -33,8 +33,7 @@ class Modez(object):
         self.record_module_name = record.Recordz.m_name
         self.record_store = record.Recordz.store
 
-        cfg = ConfigParser()
-        cfg.read('custom.ini')
+        cfg = telegram_util.get_config()
         self.admin_room = cfg.get('base', 'admin_room')
 
     def show_mode_board(self, bot, update, user_data):

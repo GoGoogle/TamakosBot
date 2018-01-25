@@ -6,7 +6,7 @@ from random import choice
 
 import requests
 from requests import RequestException
-from configparser import ConfigParser
+from util import telegram_util
 
 from entity.bot_music import Song, Album, Artist, Playlist, User, SongList
 from interface.song.crawler import CrawlerZ
@@ -37,8 +37,7 @@ class Crawler(CrawlerZ):
         self.session.headers.update(NETEASE_HEADERS)
         # self.download_session = requests.Session()
         self.login_session = requests.Session()
-        cfg = ConfigParser()
-        cfg.read('custom.ini')
+        cfg = telegram_util.get_config()
         self.session.cookies = cookiejar.LWPCookieJar(cfg.get('file', 'cookie_path'))
 
 

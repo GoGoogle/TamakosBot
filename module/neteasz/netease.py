@@ -1,5 +1,5 @@
 import os
-from configparser import ConfigParser
+from util import telegram_util
 
 import telegram
 from telegram import TelegramError
@@ -23,8 +23,7 @@ class Netease(MainZ):
         self.crawler = netease_crawler.Crawler(timeout=self.timeout)
         self.utilz = netease_util.Util()
 
-        cfg = ConfigParser()
-        cfg.read('custom.ini')
+        cfg = telegram_util.get_config()
         self.username = cfg.get('api', 'netease_username')
         self.password = cfg.get('api', 'netease_password')
 

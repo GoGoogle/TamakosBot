@@ -1,4 +1,4 @@
-from configparser import ConfigParser
+from util import telegram_util
 
 
 def selector_cancel(bot, query):
@@ -13,11 +13,10 @@ def progress_download(session, songfile, handle):
     length = int(resp.headers.get('content-length'))
     dl = 0
 
-    cfg = ConfigParser()
-    cfg.read('custom.ini')
+    cfg = telegram_util.get_config()
     chunk_size = cfg.get('file', 'chunk_size')
 
-    for chunk in resp.iter_content(chunk_size):
+    for chunk in resp.iter_content(int(chunk_size)):
         dl += len(chunk)
         songfile.file_stream.write(chunk)
         progress = '🍈 🍈 {:.0%}'.format(dl / length)

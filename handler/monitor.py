@@ -1,7 +1,6 @@
 import logging
 import re
 
-import emoji
 from telegram.ext import CallbackQueryHandler, run_async, MessageHandler, Filters
 
 from module.animez import anime
@@ -11,7 +10,6 @@ from module.neteasz import netease
 from module.qqz import qq
 from module.recordz import record
 from module.sing5z import sing5
-from module.translatez import translate
 from module.xiamiz import xiami
 from util.telegram_util import is_contain_emoji
 
@@ -25,7 +23,6 @@ class Monitor(object):
         self.xiami = xiami.Xiami()
         self.tencent = qq.Qqz()
         self.sing5 = sing5.Sing5z()
-        self.translate = translate.Translate()
         self.anime = anime.Anime()
         self.record = record.Recordz()
 
@@ -50,8 +47,6 @@ class Monitor(object):
                         self.netease.response_playlist(bot, update, playlist_id)
                     else:
                         self.netease.search_music(bot, update, update.message.text)
-                if mode_value[:-1] == self.translate.m_name:
-                    self.translate.translate_it(bot, update, update.message.text, int(mode_value[-1:]))
                 if mode_value == self.xiami.m_name:
                     self.xiami.search_music(bot, update, update.message.text)
                 if mode_value == self.kugou.m_name:

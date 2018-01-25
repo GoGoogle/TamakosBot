@@ -1,14 +1,12 @@
 import logging
-from configparser import ConfigParser
+from util import telegram_util
 
 
 class UtilZ(object):
     def __init__(self):
         self.logger = logging.getLogger(__name__)
 
-        cfg = ConfigParser()
-        cfg.read('custom.ini')
-        self.tmp_folder = cfg.get('file', 'temporary_directory')
+        self.tmp_folder = telegram_util.get_config().get('file', 'tmp_path')
 
     def get_songlist_selector(self, curpage, songlist):
         pass

@@ -1,8 +1,9 @@
+from configparser import ConfigParser
 from functools import wraps
 
 import emoji
 from telegram import Update
-from configparser import ConfigParser
+
 from util.excep_util import NotAuthorized
 
 
@@ -52,14 +53,19 @@ class DataStore(object):
         return True if key in self.data else False
 
 
+def get_config():
+    cfg = ConfigParser()
+    cfg.read('config/custom.ini')
+    return cfg
+
+
 def restricted(func):
     @wraps(func)
     def wrapped(*args, **kwargs):
         update = list(filter(lambda x: isinstance(x, Update), args))[0]
         user_id = update.effective_user.id
 
-        cfg = ConfigParser()
-        cfg.read('custom.ini')
+        cfg = get_config()
         admin_group = [cfg.get('base', 'admin_room'), cfg.get('base', 'admin')]
 
         if user_id not in admin_group:
