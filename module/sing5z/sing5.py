@@ -3,7 +3,6 @@ import os
 import telegram
 from telegram import TelegramError, InlineKeyboardMarkup, InlineKeyboardButton
 
-from config import application
 from entity.bot_telegram import ButtonItem
 from interface.song.main import MainZ
 from module.sing5z import sing5_util, sing5_crawler
@@ -20,7 +19,7 @@ class Sing5z(MainZ):
         return cls.instance
 
     def __init__(self):
-        super().__init__(timeout=application.FILE_TRANSFER_TIMEOUT)
+        super().__init__(timeout=500)
         self.crawler = sing5_crawler.Crawler(timeout=self.timeout)
         self.utilz = sing5_util.Util()
 

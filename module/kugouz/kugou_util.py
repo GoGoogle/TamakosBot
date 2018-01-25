@@ -2,9 +2,8 @@ import os
 
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 
-from config import application
 from entity.bot_telegram import SongListSelector, ButtonItem, SongFile
-from interface.song.util import UtilZ
+from interface.song.utilz import UtilZ
 
 
 class Util(UtilZ):
@@ -90,7 +89,7 @@ class Util(UtilZ):
         file_name = r'{0} - {1}{2}'.format(
             song.song_name, ' & '.join(v.artist_name for v in song.artists), os.path.splitext(song.song_url)[1])
         file_name = file_name.replace("/", ":")
-        file_path = os.path.join(application.TMP_Folder, file_name)
+        file_path = os.path.join(self.tmp_folder, file_name)
         file_url = song.song_url
         file_stream = open(file_path, 'wb+')
         song = song

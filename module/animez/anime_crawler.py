@@ -3,7 +3,7 @@ import logging
 import requests
 from requests import RequestException
 
-from config import application
+from configparser import ConfigParser
 from entity.bot_anime import AnimeFile
 from util.excep_util import exception_handle, PostRequestIllegal
 from util.telegram_util import BotResult
@@ -20,6 +20,10 @@ class Crawler(object):
         self.timeout = timeout
         self.proxies = {'http': proxy, 'https': proxy}
         self.session = requests.session()
+
+        cfg = ConfigParser()
+        cfg.read('custom.ini')
+        self.anime_token = cfg.get('api', 'anime_token')
 
     @exception_handle
     def post_request(self, url, params, custom_session=None):
@@ -38,7 +42,7 @@ class Crawler(object):
 
     def get_anime_detail(self, file_content):
         try:
-            url = "https://whatanime.ga/api/search?token={}".format(application.ANIME_TOKEN["token"])
+            url = "https://whatanime.ga/api/search?token={}".format(self.anime_token)
             data = {
                 "image": file_content
             }

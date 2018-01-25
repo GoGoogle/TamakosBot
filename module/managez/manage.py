@@ -4,7 +4,7 @@ import os
 import telegram
 from telegram.error import BadRequest, ChatMigrated, TelegramError, Unauthorized
 
-from config import application
+from configparser import ConfigParser
 
 
 class Adminz(object):
@@ -44,7 +44,11 @@ class Adminz(object):
             else:
                 update.message.reply_text("退出失败！")
         if command == "log":
-            log_path = os.path.join(os.getcwd(), application.LOG_FILE)
+            cfg = ConfigParser()
+            cfg.read('custom.ini')
+            log_file = cfg.get('other', 'log_file')
+
+            log_path = os.path.join(os.getcwd(), log_file)
             bot.send_document(chat_id=update.message.chat.id,
                               document=open(log_path, 'rb'))
         if command == "help":

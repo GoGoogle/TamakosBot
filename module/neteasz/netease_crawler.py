@@ -6,8 +6,8 @@ from random import choice
 
 import requests
 from requests import RequestException
+from configparser import ConfigParser
 
-from config.application import COOKIE_PATH
 from entity.bot_music import Song, Album, Artist, Playlist, User, SongList
 from interface.song.crawler import CrawlerZ
 from util.encrypt_util import encrypted_request, userAgentList
@@ -35,9 +35,12 @@ class Crawler(CrawlerZ):
         super().__init__(timeout, proxy)
         self.session = requests.Session()
         self.session.headers.update(NETEASE_HEADERS)
-        self.session.cookies = cookiejar.LWPCookieJar(COOKIE_PATH)
-        self.login_session = requests.Session()
         # self.download_session = requests.Session()
+        self.login_session = requests.Session()
+        cfg = ConfigParser()
+        cfg.read('custom.ini')
+        self.session.cookies = cookiejar.LWPCookieJar(cfg.get('file', 'cookie_path'))
+
 
     @staticmethod
     def dump_single_song(song):

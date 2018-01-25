@@ -3,7 +3,6 @@ import os
 import telegram
 from telegram import TelegramError
 
-from config import application
 from entity.bot_telegram import ButtonItem
 from interface.song.main import MainZ
 from module.xiamiz import xiami_crawler, xiami_util
@@ -19,7 +18,7 @@ class Xiami(MainZ):
         return cls.instance
 
     def __init__(self):
-        super().__init__(timeout=application.FILE_TRANSFER_TIMEOUT)
+        super().__init__(timeout=500)
         self.crawler = xiami_crawler.Crawler(timeout=self.timeout)
         self.utilz = xiami_util.Util()
 

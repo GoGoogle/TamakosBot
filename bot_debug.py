@@ -1,41 +1,49 @@
 import logging
-import logging.config
 import os
+from logging.config import dictConfig
 
-import yaml
 from telegram.ext import Updater
 
-from config import application
 from handler import boot, monitor
 
 
 class Bot(object):
-    def __init__(self, log_config="config/logconfig_debug.yaml"):
+    def __init__(self):
+        self.setup_logger()
+        self.logger = logging.getLogger("__name__")
         self.commands = boot.Startup()
         self.monitors = monitor.Monitor()
-        self.setup_build(log_config)
-        self.logger = logging.getLogger("__name__")
 
     @staticmethod
-    def setup_build(path):
-        with open(path, "r") as f:
-            config = yaml.load(f)
-            logging.config.dictConfig(config)
-        if not os.path.exists(application.TMP_Folder):
-            os.mkdir(application.TMP_Folder)
+    def setup_logger():
+        dictConfig(dict(
+            version=1,
+            formatters={
+                'f': {'format':
+                          '%(asctime)s %(name)-12s %(levelname)-8s %(message)s'}
+            },
+            handlers={
+                'h': {'class': 'logging.StreamHandler',
+                      'formatter': 'f',
+                      'level': logging.DEBUG}
+            },
+            root={
+                'handlers': ['h'],
+                'level': logging.DEBUG,
+            },
+        ))
 
     def error_handler(self, bot, update, err):
         self.logger.warning('Update "%s" caused error "%s"', update, err)
 
-    def distribute(self, dispatcher):
-        boot.Startup().handler_startup(dispatcher)
-        monitor.Monitor().handler_response(dispatcher)
-        dispatcher.add_error_handler(self.error_handler)
-
     def start_bot(self):
         self.logger.debug('bot start..')
-        updater = Updater(token=application.BOT_TOKEN_DEBUG)
-        self.distribute(updater.dispatcher)
+        updater = Updater(token="530204810:AAGSDsy_vkDaaatc0Rnj86ach_rQaDgdPvM")
+
+        updater.dispatcher.add_error_handler(self.error_handler)
+
+        boot.Startup().handler_startup(updater.dispatcher)
+        monitor.Monitor().handler_response(updater.dispatcher)
 
         updater.start_polling(timeout=20)
         updater.idle()

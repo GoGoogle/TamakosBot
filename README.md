@@ -5,7 +5,6 @@
 ```
 python-telegram-bot
 requests 或 requests[socks]
-pyyaml
 pytaglib
 pycryptodome
 emoji

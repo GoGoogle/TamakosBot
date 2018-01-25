@@ -1,46 +1,42 @@
 import logging
-import logging.config
-import os
+from configparser import ConfigParser
+from logging.config import fileConfig
 
-import yaml
 from telegram.ext import Updater
 
-from config import application
-from config.application import WEBHOOK_LOCAL, WEBHOOK_REMOTE
 from handler import boot, monitor
 
 
 class Bot(object):
-    def __init__(self, log_config="config/logconfig.yaml"):
+    def __init__(self):
+        fileConfig('logging.ini')
+        self.logger = logging.getLogger("__name__")
         self.commands = boot.Startup()
         self.monitors = monitor.Monitor()
-        self.setup_build(log_config)
-        self.logger = logging.getLogger("__name__")
 
-    @staticmethod
-    def setup_build(path):
-        with open(path, "r") as f:
-            config = yaml.load(f)
-            logging.config.dictConfig(config)
-        if not os.path.exists(application.TMP_Folder):
-            os.mkdir(application.TMP_Folder)
-
-    def error_handler(self, bot, update, err):
-        self.logger.warning('Update "%s" caused error "%s"', update, err)
-
-    def distribute(self, dispatcher):
-        boot.Startup().handler_startup(dispatcher)
-        monitor.Monitor().handler_response(dispatcher)
-        dispatcher.add_error_handler(self.error_handler)
+        cfg = ConfigParser()
+        cfg.read('custom.ini')
+        self.bot_token = cfg.get('base', 'bot_token')
+        self.local_host = cfg.get('webhook', 'local_host')
+        self.local_path = cfg.get('webhook', 'local_path')
+        self.local_port = cfg.get('webhook', 'local_port')
+        self.remote_url = cfg.get('webhook', 'remote_url')
+        self.remote_timeout = cfg.get('webhook', 'remote_timeout')
 
     def start_bot(self):
         self.logger.debug('bot start..')
-        updater = Updater(token=application.BOT_TOKEN)
-        self.distribute(updater.dispatcher)
+        updater = Updater(token=self.bot_token)
+        boot.Startup().handler_startup(updater.dispatcher)
+        monitor.Monitor().handler_response(updater.dispatcher)
 
-        updater.start_webhook(listen=WEBHOOK_LOCAL['listen'], port=WEBHOOK_LOCAL['port'],
-                              url_path=WEBHOOK_LOCAL['url_path'])
-        updater.bot.set_webhook(url=WEBHOOK_REMOTE['url'], timeout=WEBHOOK_REMOTE['timeout'])
+        updater.dispatcher.add_error_handler(self.error_handler)
+
+        updater.start_webhook(listen=self.local_host, port=self.local_port,
+                              url_path=self.local_path)
+        updater.bot.set_webhook(url=self.remote_url, timeout=self.remote_timeout)
+
+    def error_handler(self, bot, update, err):
+        self.logger.warning('Update "%s" caused error "%s"', update, err)
 
 
 if __name__ == '__main__':

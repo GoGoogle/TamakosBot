@@ -1,9 +1,14 @@
 import logging
+from configparser import ConfigParser
 
 
 class UtilZ(object):
     def __init__(self):
         self.logger = logging.getLogger(__name__)
+
+        cfg = ConfigParser()
+        cfg.read('custom.ini')
+        self.tmp_folder = cfg.get('file', 'temporary_directory')
 
     def get_songlist_selector(self, curpage, songlist):
         pass

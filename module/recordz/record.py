@@ -1,6 +1,7 @@
 import logging
 
-from config import application
+from configparser import ConfigParser
+
 from entity.bot_telegram import BotMessage, ButtonItem
 from module.recordz import record_util
 from util import telegram_util
@@ -19,6 +20,10 @@ class Recordz(object):
         self.logger = logging.getLogger(__name__)
         self.util = record_util.Utilz()
 
+        cfg = ConfigParser()
+        cfg.read('custom.ini')
+        self.admin_room = cfg.get('base', 'admin_room')
+
     @staticmethod
     def get_module_name(self):
         return self.m_name
@@ -33,12 +38,12 @@ class Recordz(object):
         bot_msg = BotMessage.get_botmsg(update['message'])
         self.logger.debug('msg send success!')
         panel = self.util.produce_record_panel(bot_msg, self.m_name, self.store)
-        bot.send_message(chat_id=application.ADMINS[0], text=panel["text"],
+        bot.send_message(chat_id=self.admin_room, text=panel["text"],
                          reply_markup=panel["markup"])
         if bot_msg.bot_content.picture.sticker:
-            bot.send_sticker(chat_id=application.ADMINS[0], sticker=bot_msg.bot_content.picture.sticker)
+            bot.send_sticker(chat_id=self.admin_room, sticker=bot_msg.bot_content.picture.sticker)
         if bot_msg.bot_content.photo:
-            bot.send_photo(chat_id=application.ADMINS[0],
+            bot.send_photo(chat_id=self.admin_room,
                            photo=bot_msg.bot_content.photo)
 
     def record_reply(self, bot, update):

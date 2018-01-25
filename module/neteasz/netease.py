@@ -1,9 +1,9 @@
 import os
+from configparser import ConfigParser
 
 import telegram
 from telegram import TelegramError
 
-from config import application
 from entity.bot_telegram import ButtonItem
 from interface.song.main import MainZ
 from module.neteasz import netease_crawler, netease_util
@@ -19,14 +19,18 @@ class Netease(MainZ):
         return cls.instance
 
     def __init__(self):
-        super().__init__(application.FILE_TRANSFER_TIMEOUT)
+        super().__init__(500)
         self.crawler = netease_crawler.Crawler(timeout=self.timeout)
         self.utilz = netease_util.Util()
-        self.init_login(application.NETEASE_LOGIN_PAYLOAD)
+
+        cfg = ConfigParser()
+        cfg.read('custom.ini')
+        self.username = cfg.get('api', 'netease_username')
+        self.password = cfg.get('api', 'netease_password')
 
     def init_login(self, config):
-        if config.get("username") and config.get("password"):
-            bot_result = self.crawler.login(config['username'], config['password'])
+        if self.username and self.password:
+            bot_result = self.crawler.login(self.username, self.password)
             if bot_result.get_status() == 200:
                 self.logger.debug(bot_result.get_msg())
             elif bot_result.get_status() == 400:

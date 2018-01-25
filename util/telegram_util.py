@@ -2,8 +2,7 @@ from functools import wraps
 
 import emoji
 from telegram import Update
-
-from config.application import ADMINS
+from configparser import ConfigParser
 from util.excep_util import NotAuthorized
 
 
@@ -58,7 +57,12 @@ def restricted(func):
     def wrapped(*args, **kwargs):
         update = list(filter(lambda x: isinstance(x, Update), args))[0]
         user_id = update.effective_user.id
-        if user_id not in ADMINS:
+
+        cfg = ConfigParser()
+        cfg.read('custom.ini')
+        admin_group = [cfg.get('base', 'admin_room'), cfg.get('base', 'admin')]
+
+        if user_id not in admin_group:
             raise NotAuthorized("Unauthorized access denied for {}".format(user_id))
         return func(*args, **kwargs)
 

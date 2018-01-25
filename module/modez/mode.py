@@ -1,9 +1,8 @@
 import logging
+from configparser import ConfigParser
 
 from telegram import TelegramError
 
-from config import application
-from config.application import ADMINS
 from entity.bot_telegram import ButtonItem
 from module.animez import anime
 from module.kugouz import kugou
@@ -34,6 +33,10 @@ class Modez(object):
         self.record_module_name = record.Recordz.m_name
         self.record_store = record.Recordz.store
 
+        cfg = ConfigParser()
+        cfg.read('custom.ini')
+        self.admin_room = cfg.get('base', 'admin_room')
+
     def show_mode_board(self, bot, update, user_data):
         last_module = {"title": "ⓒ 普通", "name": self.common_module_name}
         user_data[self.m_name] = last_module["name"]
@@ -55,7 +58,7 @@ class Modez(object):
                         last_module = None
                         chat_id = update.effective_chat.id
                         # Judge weather use_id  in Admins Chat
-                        if chat_id != ADMINS[0]:
+                        if chat_id != self.admin_room:
                             if item_id == self.common_module_name:
                                 last_module = {"title": "⦿ 对话", "name": self.record_module_name}
                             if item_id == self.record_module_name:
@@ -91,6 +94,6 @@ class Modez(object):
             bot.answer_callback_query(query.id, text=text, show_alert=False)
 
             chat_id = update.effective_chat.id
-            if chat_id != ADMINS[0]:
+            if chat_id != self.admin_room:
                 text = "对方已经手动中断当前对话"
-                bot.send_message(chat_id=application.ADMINS[0], text=text)
+                bot.send_message(chat_id=self.admin_room, text=text)
