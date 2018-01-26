@@ -6,11 +6,10 @@ from requests import RequestException
 
 from entity.bot_music import Song, Album, Artist, SongList
 from interface.song.crawler import CrawlerZ
-from util.encrypt_util import userAgentList
-from util.excep_util import (
+from others.bot_song import progress_download, userAgentList
+from others.bot_telegram import BotResult
+from others.bot_telegram import (
     SongNotAvailable, GetRequestIllegal, exception_handle)
-from util.song_util import progress_download
-from util.telegram_util import BotResult
 
 XIAMI_HEADERS = {
     'Accept': '*/*',

@@ -6,15 +6,15 @@ from random import choice
 
 import requests
 from requests import RequestException
-from util import telegram_util
+from others import bot_telegram
 
 from entity.bot_music import Song, Album, Artist, Playlist, User, SongList
 from interface.song.crawler import CrawlerZ
-from util.encrypt_util import encrypted_request, userAgentList
-from util.excep_util import (
+from others.bot_song import encrypted_request, userAgentList
+from others.bot_telegram import (
     SongNotAvailable, GetRequestIllegal, PostRequestIllegal, exception_handle)
-from util.song_util import progress_download
-from util.telegram_util import BotResult
+from others.bot_song import progress_download
+from others.bot_telegram import BotResult
 
 NETEASE_HEADERS = {
     'Accept': '*/*',
@@ -37,7 +37,7 @@ class Crawler(CrawlerZ):
         self.session.headers.update(NETEASE_HEADERS)
         # self.download_session = requests.Session()
         self.login_session = requests.Session()
-        cfg = telegram_util.get_config()
+        cfg = bot_telegram.get_config()
         self.session.cookies = cookiejar.LWPCookieJar(cfg.get('file', 'cookie_path'))
 
 

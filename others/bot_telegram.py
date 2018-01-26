@@ -4,7 +4,10 @@ from functools import wraps
 import emoji
 from telegram import Update
 
-from util.excep_util import NotAuthorized
+import logging
+
+from requests.exceptions import ConnectionError as ConnectionException, RequestException, Timeout, ProxyError
+from telegram import TelegramError
 
 
 class BotResult:
@@ -25,7 +28,7 @@ class BotResult:
 
 class DataStore(object):
     """
-    The data will be stored in common, not single chatroom or user, so we can not use "chat_data" or "user_data".
+    The data will be stored in others, not single chatroom or user, so we can not use "chat_data" or "user_data".
     That is the Significance of this object. And it likes a database in fact.
     """
 
@@ -90,3 +93,52 @@ def is_contain_zh(content):
 def is_contain_emoji(content):
     for x in content:
         return x in emoji.UNICODE_EMOJI
+
+
+logger = logging.getLogger(__name__)
+
+
+class SearchNotFound(RequestException):
+    """Search api return None."""
+
+
+class SongNotAvailable(RequestException):
+    """Some songs are not available, for example Taylor Swift's songs."""
+
+
+class GetRequestIllegal(RequestException):
+    """Status code is not 200."""
+
+
+class PostRequestIllegal(RequestException):
+    """Status code is not 200."""
+
+
+class NotAuthorized(TelegramError):
+    """Status code is not 200."""
+
+
+def exception_handle(method):
+    """Handle exceptions raised by requests library."""
+
+    def wrapper(*args, **kwargs):
+        try:
+            result = method(*args, **kwargs)
+            return result
+        except ProxyError:
+            logger.exception('ProxyError when try to get %s.', args)
+            raise ProxyError('A proxy error occurred.')
+        except ConnectionException:
+            logger.exception('ConnectionError when try to get %s.', args)
+            raise ConnectionException('DNS failure, refused connection, etc.')
+        except Timeout:
+            logger.exception('Timeout when try to get %s', args)
+            raise Timeout('The request timed out.')
+        except GetRequestIllegal:
+            logger.exception('RequestException when try to get %s.', args)
+            raise GetRequestIllegal('Please check out your network.')
+        except RequestException:
+            logger.exception('RequestException when try to get %s.', args)
+            raise RequestException('Please check out your network.')
+
+    return wrapper

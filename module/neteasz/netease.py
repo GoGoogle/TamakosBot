@@ -1,5 +1,5 @@
 import os
-from util import telegram_util
+from others import bot_telegram
 
 import telegram
 from telegram import TelegramError
@@ -7,7 +7,7 @@ from telegram import TelegramError
 from entity.bot_telegram import ButtonItem
 from interface.song.main import MainZ
 from module.neteasz import netease_crawler, netease_util
-from util import song_util
+from others import bot_song
 
 
 class Netease(MainZ):
@@ -23,7 +23,7 @@ class Netease(MainZ):
         self.crawler = netease_crawler.Crawler(timeout=self.timeout)
         self.utilz = netease_util.Util()
 
-        cfg = telegram_util.get_config()
+        cfg = bot_telegram.get_config()
         self.username = cfg.get('api', 'netease_username')
         self.password = cfg.get('api', 'netease_password')
 
@@ -89,7 +89,7 @@ class Netease(MainZ):
 
     def deliver_music(self, bot, query, song_id, delete=False):
         if delete:
-            song_util.selector_cancel(bot, query)
+            bot_song.selector_cancel(bot, query)
 
         bot_result = self.crawler.get_song_detail(song_id)
         if bot_result.get_status() == 400:
@@ -107,7 +107,7 @@ class Netease(MainZ):
     def handle_callback(self, bot, query, button_item):
         button_type, button_operate, item_id, page = button_item.t, button_item.o, button_item.i, button_item.g
         if button_operate == ButtonItem.OPERATE_CANCEL:
-            song_util.selector_cancel(bot, query)
+            bot_song.selector_cancel(bot, query)
         if button_type == ButtonItem.TYPE_SONGLIST:
             if button_operate == ButtonItem.OPERATE_PAGE_DOWN:
                 self.songlist_turning(bot, query, item_id, page + 1)
@@ -126,7 +126,7 @@ class Netease(MainZ):
     def download_backend(self, bot, query, songfile, edited_msg):
         self.logger.debug('download_backend..')
         try:
-            handle = song_util.ProgressHandle(bot, query, edited_msg.message_id)
+            handle = bot_song.ProgressHandle(bot, query, edited_msg.message_id)
             self.crawler.write_file(songfile, handle=handle)
             songfile.set_id3tags(songfile.song.song_name, list(v.artist_name for v in songfile.song.artists),
                                  song_album=songfile.song.album.album_name)

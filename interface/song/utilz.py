@@ -1,12 +1,12 @@
 import logging
-from util import telegram_util
+from others import bot_telegram
 
 
 class UtilZ(object):
     def __init__(self):
         self.logger = logging.getLogger(__name__)
 
-        self.tmp_folder = telegram_util.get_config().get('file', 'tmp_path')
+        self.tmp_folder = bot_telegram.get_config().get('file', 'tmp_path')
 
     def get_songlist_selector(self, curpage, songlist):
         pass
