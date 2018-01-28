@@ -5,7 +5,7 @@ import time
 from io import BytesIO
 
 from telegram import TelegramError, ParseMode
-from utils.telegram import BotResult
+from utils.tele import BotResult
 from module.animez import anime_crawler
 
 

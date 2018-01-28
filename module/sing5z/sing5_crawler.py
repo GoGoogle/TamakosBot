@@ -4,9 +4,9 @@ import requests
 
 from entity.bot_music import Artist, Song, Toplist, Album
 from interface.song.crawler import CrawlerZ
-from utils.telegram import GetRequestIllegal, exception_handle, SongNotAvailable
-from utils.music import progress_download
-from utils.telegram import BotResult
+from utils.tele import GetRequestIllegal, exception_handle, SongNotAvailable
+from utils.musi import progress_download
+from utils.tele import BotResult
 
 
 class Crawler(CrawlerZ):

@@ -1,13 +1,12 @@
 import os
-from utils import telegram
 
-import telegram
 from telegram import TelegramError
 
 from entity.bot_telegram import ButtonItem
 from interface.song.main import MainZ
 from module.neteasz import netease_crawler, netease_util
-from utils import music
+from utils import musi
+from utils import tele
 
 
 class Netease(MainZ):
@@ -23,7 +22,7 @@ class Netease(MainZ):
         self.crawler = netease_crawler.Crawler(timeout=self.timeout)
         self.utilz = netease_util.Util()
 
-        cfg = telegram.get_config()
+        cfg = tele.get_config()
         self.username = cfg.get('api', 'netease_username')
         self.password = cfg.get('api', 'netease_password')
 
@@ -99,7 +98,7 @@ class Netease(MainZ):
             song = bot_result.get_body()
             edited_msg = bot.send_message(chat_id=query.message.chat.id,
                                           text="[{0}]({1}) 🍈".format(song.song_name, song.song_url),
-                                          parse_mode=telegram.ParseMode.MARKDOWN)
+                                          parse_mode=tele.ParseMode.MARKDOWN)
 
             songfile = self.utilz.get_songfile(song)
             self.download_backend(bot, query, songfile, edited_msg)
@@ -107,7 +106,7 @@ class Netease(MainZ):
     def handle_callback(self, bot, query, button_item):
         button_type, button_operate, item_id, page = button_item.t, button_item.o, button_item.i, button_item.g
         if button_operate == ButtonItem.OPERATE_CANCEL:
-            music.selector_cancel(bot, query)
+            musi.selector_cancel(bot, query)
         if button_type == ButtonItem.TYPE_SONGLIST:
             if button_operate == ButtonItem.OPERATE_PAGE_DOWN:
                 self.songlist_turning(bot, query, item_id, page + 1)
@@ -126,7 +125,7 @@ class Netease(MainZ):
     def download_backend(self, bot, query, songfile, edited_msg):
         self.logger.debug('download_backend..')
         try:
-            handle = music.ProgressHandle(bot, query, edited_msg.message_id)
+            handle = musi.ProgressHandle(bot, query, edited_msg.message_id)
             self.crawler.write_file(songfile, handle=handle)
             songfile.set_id3tags(songfile.song.song_name, list(v.artist_name for v in songfile.song.artists),
                                  song_album=songfile.song.album.album_name)
@@ -140,12 +139,12 @@ class Netease(MainZ):
                 edited_msg.delete()
 
     def send_file(self, bot, query, songfile, edited_msg):
-        bot.send_chat_action(query.message.chat.id, action=telegram.ChatAction.UPLOAD_AUDIO)
+        bot.send_chat_action(query.message.chat.id, action=tele.ChatAction.UPLOAD_AUDIO)
         bot.edit_message_text(
             chat_id=query.message.chat.id,
             message_id=edited_msg.message_id,
             text='🍈 🍈 🍈'.format(songfile.song.song_name),
-            parse_mode=telegram.ParseMode.MARKDOWN,
+            parse_mode=tele.ParseMode.MARKDOWN,
             disable_web_page_preview=True
         )
 

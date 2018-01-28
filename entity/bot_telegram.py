@@ -2,7 +2,7 @@ import json
 import taglib
 import uuid
 
-from utils.telegram import is_contain_zh
+from utils.tele import is_contain_zh
 
 
 class SongListSelector(object):

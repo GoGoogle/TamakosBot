@@ -5,7 +5,7 @@ from logging.config import dictConfig
 from telegram.ext import Updater
 
 from handler import boot, monitor
-from utils import telegram
+from utils import tele
 
 
 class Bot(object):
@@ -15,7 +15,7 @@ class Bot(object):
         self.commands = boot.Startup()
         self.monitors = monitor.Monitor()
 
-        cfg = telegram.get_config()
+        cfg = tele.get_config()
         self.tmp_path = cfg.get('file', 'tmp_path')
         self.cookie_path = cfg.get('file', 'cookie_path')
 

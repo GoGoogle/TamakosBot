@@ -4,7 +4,7 @@ import hashlib
 import json
 import os
 from Crypto.Cipher import AES
-from utils import telegram
+from utils import tele
 
 userAgentList = [
     'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36',
@@ -81,7 +81,7 @@ def progress_download(session, songfile, handle):
     length = int(resp.headers.get('content-length'))
     dl = 0
 
-    cfg = telegram.get_config()
+    cfg = tele.get_config()
     chunk_size = cfg.get('file', 'chunk_size')
 
     for chunk in resp.iter_content(int(chunk_size)):

@@ -5,7 +5,7 @@ from telegram.ext import CommandHandler
 
 from module.managez import manage
 from module.modez import mode
-from utils.telegram import restricted
+from utils.tele import restricted
 
 
 class Startup(object):

@@ -11,7 +11,7 @@ from module.qqz import qq
 from module.recordz import record
 from module.sing5z import sing5
 from module.xiamiz import xiami
-from utils.telegram import is_contain_emoji
+from utils.tele import is_contain_emoji
 
 
 class Monitor(object):
