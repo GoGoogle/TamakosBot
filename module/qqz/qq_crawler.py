@@ -8,10 +8,10 @@ from requests import RequestException
 
 from entity.bot_music import Song, Album, Artist, SongList
 from interface.song.crawler import CrawlerZ
-from utils.song import userAgentList
+from utils.music import userAgentList
 from utils.telegram import (
     SongNotAvailable, GetRequestIllegal, exception_handle)
-from utils.song import progress_download
+from utils.music import progress_download
 from utils.telegram import BotResult
 
 QQ_HEADERS = {

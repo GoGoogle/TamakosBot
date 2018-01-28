@@ -10,10 +10,10 @@ from utils import telegram
 
 from entity.bot_music import Song, Album, Artist, Playlist, User, SongList
 from interface.song.crawler import CrawlerZ
-from utils.song import encrypted_request, userAgentList
+from utils.music import encrypted_request, userAgentList
 from utils.telegram import (
     SongNotAvailable, GetRequestIllegal, PostRequestIllegal, exception_handle)
-from utils.song import progress_download
+from utils.music import progress_download
 from utils.telegram import BotResult
 
 NETEASE_HEADERS = {

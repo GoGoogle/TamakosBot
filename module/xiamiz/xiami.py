@@ -6,7 +6,7 @@ from telegram import TelegramError
 from entity.bot_telegram import ButtonItem
 from interface.song.main import MainZ
 from module.xiamiz import xiami_crawler, xiami_util
-from utils import song
+from utils import music
 
 
 class Xiami(MainZ):
@@ -52,7 +52,7 @@ class Xiami(MainZ):
     def handle_callback(self, bot, query, button_item):
         button_type, button_operate, item_id, page = button_item.t, button_item.o, button_item.i, button_item.g
         if button_operate == ButtonItem.OPERATE_CANCEL:
-            song.selector_cancel(bot, query)
+            music.selector_cancel(bot, query)
         if button_type == ButtonItem.TYPE_SONGLIST:
             if button_operate == ButtonItem.OPERATE_PAGE_DOWN:
                 self.songlist_turning(bot, query, item_id, page + 1)
@@ -81,7 +81,7 @@ class Xiami(MainZ):
     def download_backend(self, bot, query, songfile, edited_msg):
         self.logger.debug('download_backend..')
         try:
-            handle = song.ProgressHandle(bot, query, edited_msg.message_id)
+            handle = music.ProgressHandle(bot, query, edited_msg.message_id)
             self.crawler.write_file(songfile, handle=handle)
             songfile.set_id3tags(songfile.song.song_name, list(v.artist_name for v in songfile.song.artists),
                                  song_album=songfile.song.album.album_name)
