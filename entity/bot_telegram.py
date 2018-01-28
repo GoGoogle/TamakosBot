@@ -17,7 +17,7 @@ class SongListSelector(object):
         self.total_page = total_page
         self.songlist = songlist
 
-    def to_json(self):
+    def convert_to_json(self):
         return json.dumps(self, default=lambda o: o.__dict__, ensure_ascii=False,
                           sort_keys=True, indent=4)
 
@@ -34,7 +34,7 @@ class PlayListSelector(object):
         self.total_page = total_page
         self.playlist = playlist
 
-    def to_json(self):
+    def convert_to_json(self):
         return json.dumps(self, default=lambda o: o.__dict__, ensure_ascii=False,
                           sort_keys=True, indent=4)
 
@@ -51,7 +51,7 @@ class TopListSelector(object):
         self.total_page = total_page
         self.toplist = toplist
 
-    def to_json(self):
+    def convert_to_json(self):
         return json.dumps(self, default=lambda o: o.__dict__, ensure_ascii=False,
                           sort_keys=True, indent=4)
 

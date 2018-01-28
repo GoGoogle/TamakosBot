@@ -15,7 +15,7 @@ class Song(object):
         self.song_lyric = u'' if song_lyric is None else song_lyric
         self.song_url = '' if song_url is None else song_url
 
-    def to_json(self):
+    def convert_to_json(self):
         return json.dumps(self, default=lambda o: o.__dict__, ensure_ascii=False,
                           sort_keys=True, indent=4)
 
@@ -61,7 +61,7 @@ class SongList(object):
         self.track_count = track_count
         self.songs = songs
 
-    def to_json(self):
+    def convert_to_json(self):
         return json.dumps(self, default=lambda o: o.__dict__, ensure_ascii=False,
                           sort_keys=True, indent=4)
 
@@ -79,7 +79,7 @@ class Playlist(object):
     def add_song(self, song):
         self.songs.append(song)
 
-    def to_json(self):
+    def convert_to_json(self):
         return json.dumps(self, default=lambda o: o.__dict__, ensure_ascii=False,
                           sort_keys=True, indent=4)
 
@@ -92,7 +92,7 @@ class Toplist(object):
         self.track_count = track_count
         self.songs = [] if songs is None else songs
 
-    def to_json(self):
+    def convert_to_json(self):
         return json.dumps(self, default=lambda o: o.__dict__, ensure_ascii=False,
                           sort_keys=True, indent=4)
 

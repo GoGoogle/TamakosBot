@@ -12,6 +12,6 @@ class AnimeFile(object):
         self.similarity = similarity
         self.tokenthumb = tokenthumb
 
-    def to_json(self):
+    def convert_to_json(self):
         return json.dumps(self, default=lambda o: o.__dict__, ensure_ascii=False,
                           sort_keys=True, indent=4)
