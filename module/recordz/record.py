@@ -1,15 +1,15 @@
 import logging
 
-from others import bot_telegram
+from utils import telegram
 
 from entity.bot_telegram import BotMessage, ButtonItem
 from module.recordz import record_util
-from others import bot_telegram
+from utils import telegram
 
 
 class Recordz(object):
     m_name = "recordz"
-    store = bot_telegram.DataStore()
+    store = telegram.DataStore()
 
     def __new__(cls):
         if not hasattr(cls, 'instance'):
@@ -20,7 +20,7 @@ class Recordz(object):
         self.logger = logging.getLogger(__name__)
         self.util = record_util.Utilz()
 
-        cfg = bot_telegram.get_config()
+        cfg = telegram.get_config()
         self.admin_room = cfg.get('base', 'admin_room')
 
     @staticmethod

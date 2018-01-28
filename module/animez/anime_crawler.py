@@ -4,8 +4,8 @@ import requests
 from requests import RequestException
 
 from entity.bot_anime import AnimeFile
-from others import bot_telegram
-from others.bot_telegram import exception_handle, PostRequestIllegal, BotResult
+from utils import telegram
+from utils.telegram import exception_handle, PostRequestIllegal, BotResult
 
 ANIME_HEADER = {
     "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
@@ -20,7 +20,7 @@ class Crawler(object):
         self.proxies = {'http': proxy, 'https': proxy}
         self.session = requests.session()
 
-        cfg = bot_telegram.get_config()
+        cfg = telegram.get_config()
         self.anime_token = cfg.get('api', 'anime_token')
 
     @exception_handle

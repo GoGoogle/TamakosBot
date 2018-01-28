@@ -5,7 +5,7 @@ from logging.config import fileConfig
 from telegram.ext import Updater
 
 from handler import boot, monitor
-from others import bot_telegram
+from utils import telegram
 
 
 class Bot(object):
@@ -15,7 +15,7 @@ class Bot(object):
         self.commands = boot.Startup()
         self.monitors = monitor.Monitor()
 
-        cfg = bot_telegram.get_config()
+        cfg = telegram.get_config()
         self.bot_token = cfg.get('base', 'bot_token')
         self.local_host = cfg.get('webhook', 'local_host')
         self.local_path = cfg.get('webhook', 'local_path')

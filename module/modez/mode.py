@@ -1,5 +1,5 @@
 import logging
-from others import bot_telegram
+from utils import telegram
 
 from telegram import TelegramError
 
@@ -10,7 +10,7 @@ from module.modez import mode_util
 from module.neteasz import netease
 from module.qqz import qq
 from module.recordz import record
-from others import bot_telegram
+from utils import telegram
 
 
 class Modez(object):
@@ -33,7 +33,7 @@ class Modez(object):
         self.record_module_name = record.Recordz.m_name
         self.record_store = record.Recordz.store
 
-        cfg = bot_telegram.get_config()
+        cfg = telegram.get_config()
         self.admin_room = cfg.get('base', 'admin_room')
 
     def show_mode_board(self, bot, update, user_data):
@@ -50,7 +50,7 @@ class Modez(object):
         button_type, button_operate, item_id = button_item.t, button_item.o, button_item.i
         if button_type == ButtonItem.TYPE_MODE:
             if button_operate == ButtonItem.OPERATE_CANCEL:
-                bot_telegram.selector_cancel(bot, query)
+                telegram.selector_cancel(bot, query)
             if button_operate == ButtonItem.OPERATE_SEND:
                 try:
                     if item_id in [self.common_module_name, self.record_module_name, self.center_module_name]:

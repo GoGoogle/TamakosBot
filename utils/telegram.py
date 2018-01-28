@@ -28,7 +28,7 @@ class BotResult:
 
 class DataStore(object):
     """
-    The data will be stored in others, not single chatroom or user, so we can not use "chat_data" or "user_data".
+    The data will be stored in utils, not single chatroom or user, so we can not use "chat_data" or "user_data".
     That is the Significance of this object. And it likes a database in fact.
     """
 

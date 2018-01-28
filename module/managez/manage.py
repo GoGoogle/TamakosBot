@@ -4,7 +4,7 @@ import os
 import telegram
 from telegram.error import BadRequest, ChatMigrated, TelegramError, Unauthorized
 
-from others import bot_telegram
+from utils import telegram
 
 
 class Adminz(object):
