@@ -6,7 +6,7 @@ class PersonInf(object):
     def __init__(self):
         self.db = DB().new_conn().botdb
 
-    def init_person_inf(self, person_inf):
+    def add_person_inf(self, person_inf):
         self.db.col.insert(person_inf.convert_to_dict())
 
     def get_person_inf(self, person_id):
