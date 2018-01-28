@@ -1,5 +1,5 @@
 from entity.bot_person import PersonIfo
-from utils.dbse import DB
+from utils.mongo import DB
 
 
 class PersonInf(object):
