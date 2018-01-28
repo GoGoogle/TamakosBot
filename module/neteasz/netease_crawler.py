@@ -9,11 +9,11 @@ from requests import RequestException
 from utils import tele
 
 from entity.bot_music import Song, Album, Artist, Playlist, User, SongList
-from interface.song.crawler import CrawlerZ
-from utils.musi import encrypted_request, userAgentList
+from interface.musics.crawler import CrawlerZ
+from utils.music import encrypted_request, userAgentList
 from utils.tele import (
     SongNotAvailable, GetRequestIllegal, PostRequestIllegal, exception_handle)
-from utils.musi import progress_download
+from utils.music import progress_download
 from utils.tele import BotResult
 
 NETEASE_HEADERS = {
@@ -122,11 +122,11 @@ class Crawler(CrawlerZ):
         return result
 
     def search_song(self, song_name, page=1):
-        """Search song by song name.
+        """Search musics by musics name.
 
-        :params song_name: song name.
+        :params song_name: musics name.
         :params quiet: automatically select the best one.
-        :params limit: song count returned by weapi.
+        :params limit: musics count returned by weapi.
         :return: a Song object.
         """
         try:
@@ -284,7 +284,7 @@ class Crawler(CrawlerZ):
     #     result = self.get_request(url)
     #
     #     songs = result['album']['songs']
-    #     songs = [Song(song['id'], song['name']) for song in songs]
+    #     songs = [Song(musics['id'], musics['name']) for musics in songs]
     #     return songs
     #
     # def get_artists_hot_songs(self, artist_id):
@@ -298,11 +298,11 @@ class Crawler(CrawlerZ):
     #     result = self.get_request(url)
     #
     #     hot_songs = result['hotSongs']
-    #     songs = [Song(song['id'], song['name']) for song in hot_songs]
+    #     songs = [Song(musics['id'], musics['name']) for musics in hot_songs]
     #     return songs
 
     def get_song_detail(self, song_id):
-        url = 'http://music.163.com/weapi/v3/song/detail?csrf_token='
+        url = 'http://music.163.com/weapi/v3/musics/detail?csrf_token='
         params = {'c': [json.dumps({'id': song_id})], 'ids': [song_id]}
         try:
             result = self.post_request(url, params)
@@ -317,23 +317,23 @@ class Crawler(CrawlerZ):
 
     @exception_handle
     def get_song_url(self, song_id, bit_rate=999000):
-        """Get a song's download address.
+        """Get a musics's download address.
 
-        :params song_id: song id<int>.
+        :params song_id: musics id<int>.
         :params bit_rate: {'MD 128k': 128000, 'HD 320k': 320000}
-        :return: a song's download address.
+        :return: a musics's download address.
         """
         # 登录成功，使用 login_session，登录失败使用原来的 session
         if self.login_session.cookies.items():
             custom_session = self.login_session
         else:
             custom_session = self.session
-        url = 'http://music.163.com/weapi/song/enhance/player/url?csrf_token='
+        url = 'http://music.163.com/weapi/musics/enhance/player/url?csrf_token='
         csrf = ''
         params = {'ids': [song_id], 'br': bit_rate, 'csrf_token': csrf}
         result = self.post_request(url, params, custom_session=custom_session)
         song_url = result['data'][0]['url']  # download address
-        if song_url is None:  # Taylor Swift's song is not available
+        if song_url is None:  # Taylor Swift's musics is not available
             self.logger.warning(
                 'Song %s is not available due to copyright issue. => %s',
                 song_id, result)
@@ -344,11 +344,11 @@ class Crawler(CrawlerZ):
             return song_url
 
     # def get_song_lyric(self, song_id):
-    #     """Get a song's lyric.
+    #     """Get a musics's lyric.
     #
     #     warning: use old api.
-    #     :params song_id: song id.
-    #     :return: a song's lyric.
+    #     :params song_id: musics id.
+    #     :return: a musics's lyric.
     #     """
     #
     #     url = 'http://music.163.com/api/song/lyric?os=osx&id={}&lv=-1&kv=-1&tv=-1'.format(  # NOQA

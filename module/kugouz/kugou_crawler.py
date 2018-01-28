@@ -4,11 +4,11 @@ import requests
 from requests import RequestException
 
 from entity.bot_music import Song, Album, Artist, SongList
-from interface.song.crawler import CrawlerZ
-from utils.musi import md5_encrypt, userAgentList
+from interface.musics.crawler import CrawlerZ
+from utils.music import md5_encrypt, userAgentList
 from utils.tele import (
     SongNotAvailable, GetRequestIllegal, exception_handle)
-from utils.musi import progress_download
+from utils.music import progress_download
 from utils.tele import BotResult
 
 KUGOU_HEADERS = {
@@ -91,7 +91,7 @@ class Crawler(CrawlerZ):
         pass
 
     def search_song(self, song_name, page=1):
-        url = "http://mobilecdn.kugou.com/api/v3/search/song"
+        url = "http://mobilecdn.kugou.com/api/v3/search/musics"
         payload = {
             'keyword': song_name,
             'page': page,

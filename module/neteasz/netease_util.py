@@ -3,7 +3,7 @@ import os
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 
 from entity.bot_telegram import SongListSelector, PlayListSelector, SongFile, ButtonItem
-from interface.song.utilz import UtilZ
+from interface.musics.utilz import UtilZ
 
 
 class Util(UtilZ):

@@ -3,9 +3,9 @@ import os
 from telegram import TelegramError
 
 from entity.bot_telegram import ButtonItem
-from interface.song.main import MainZ
+from interface.musics.main import MainZ
 from module.neteasz import netease_crawler, netease_util
-from utils import musi
+from utils import music
 from utils import tele
 
 
@@ -106,7 +106,7 @@ class Netease(MainZ):
     def handle_callback(self, bot, query, button_item):
         button_type, button_operate, item_id, page = button_item.t, button_item.o, button_item.i, button_item.g
         if button_operate == ButtonItem.OPERATE_CANCEL:
-            musi.selector_cancel(bot, query)
+            music.selector_cancel(bot, query)
         if button_type == ButtonItem.TYPE_SONGLIST:
             if button_operate == ButtonItem.OPERATE_PAGE_DOWN:
                 self.songlist_turning(bot, query, item_id, page + 1)
@@ -125,7 +125,7 @@ class Netease(MainZ):
     def download_backend(self, bot, query, songfile, edited_msg):
         self.logger.debug('download_backend..')
         try:
-            handle = musi.ProgressHandle(bot, query, edited_msg.message_id)
+            handle = music.ProgressHandle(bot, query, edited_msg.message_id)
             self.crawler.write_file(songfile, handle=handle)
             songfile.set_id3tags(songfile.song.song_name, list(v.artist_name for v in songfile.song.artists),
                                  song_album=songfile.song.album.album_name)

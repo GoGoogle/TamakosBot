@@ -7,11 +7,11 @@ import requests
 from requests import RequestException
 
 from entity.bot_music import Song, Album, Artist, SongList
-from interface.song.crawler import CrawlerZ
-from utils.musi import userAgentList
+from interface.musics.crawler import CrawlerZ
+from utils.music import userAgentList
 from utils.tele import (
     SongNotAvailable, GetRequestIllegal, exception_handle)
-from utils.musi import progress_download
+from utils.music import progress_download
 from utils.tele import BotResult
 
 QQ_HEADERS = {
@@ -114,11 +114,11 @@ class Crawler(CrawlerZ):
         if result['code'] != 0:
             self.logger.warning('Song %s search failed! url=%s result=%s', song_name, url, result)
             return BotResult(400, 'Song {} search failed.'.format(song_name))
-        if result['data']['song']['totalnum'] <= 0:
+        if result['data']['musics']['totalnum'] <= 0:
             self.logger.warning('Song %s not existed!', song_name)
             return BotResult(404, 'Song {} not existed.'.format(song_name))
         else:
-            keyword, song_count, songs = song_name, result['data']['song']['totalnum'], result['data']['song']['list']
+            keyword, song_count, songs = song_name, result['data']['musics']['totalnum'], result['data']['musics']['list']
             songlist = SongList(keyword, song_count, Crawler.dump_songs(songs))
             return BotResult(200, body=songlist)
 

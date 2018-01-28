@@ -3,9 +3,9 @@ import os
 import requests
 
 from entity.bot_music import Artist, Song, Toplist, Album
-from interface.song.crawler import CrawlerZ
+from interface.musics.crawler import CrawlerZ
 from utils.tele import GetRequestIllegal, exception_handle, SongNotAvailable
-from utils.musi import progress_download
+from utils.music import progress_download
 from utils.tele import BotResult
 
 
@@ -89,11 +89,11 @@ class Crawler(CrawlerZ):
             'songid': song_id,
             'songtype': search_type
         }
-        result = self.get_request('http://mobileapi.5sing.kugou.com/song/getSongUrl', params=payload)
+        result = self.get_request('http://mobileapi.5sing.kugou.com/musics/getSongUrl', params=payload)
         return result
 
     def get_song_detail(self, song_id, search_type='yc'):
-        url = 'http://mobileapi.5sing.kugou.com/song/newget'
+        url = 'http://mobileapi.5sing.kugou.com/musics/newget'
         payload = {
             'songid': song_id,
             'songtype': search_type
