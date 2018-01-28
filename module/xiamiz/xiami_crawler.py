@@ -113,14 +113,14 @@ class Crawler(CrawlerZ):
     def get_song_detail(self, song_id):
         url = 'http://api.xiami.com/web'
         payload = {
-            'r': 'musics/detail',
+            'r': 'song/detail',
             'id': song_id,
             'v': '2.0',
             'app_key': 1
         }
         try:
             result = self.get_request(url, payload)
-            song = result['data']['musics']
+            song = result['data']['song']
             single_song = Crawler.dump_single_song(song, mode=1)
             # 获取 song_url
             url = self.get_song_url(song_id)
@@ -131,7 +131,7 @@ class Crawler(CrawlerZ):
             return BotResult(400, 'Return {0} when try to get {1} => {2}'.format(e, url, payload))
 
     def get_song_url(self, song_id):
-        url = "http://www.xiami.com/musics/gethqsong"
+        url = "http://www.xiami.com/song/gethqsong"
         payload = {
             'sid': song_id
         }

@@ -91,7 +91,7 @@ class Crawler(CrawlerZ):
         pass
 
     def search_song(self, song_name, page=1):
-        url = "http://mobilecdn.kugou.com/api/v3/search/musics"
+        url = "http://mobilecdn.kugou.com/api/v3/search/song"
         payload = {
             'keyword': song_name,
             'page': page,

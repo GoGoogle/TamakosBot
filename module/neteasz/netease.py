@@ -1,5 +1,6 @@
 import os
 
+import telegram
 from telegram import TelegramError
 
 from entity.bot_telegram import ButtonItem
@@ -88,7 +89,7 @@ class Netease(MainZ):
 
     def deliver_music(self, bot, query, song_id, delete=False):
         if delete:
-            song.selector_cancel(bot, query)
+            music.selector_cancel(bot, query)
 
         bot_result = self.crawler.get_song_detail(song_id)
         if bot_result.get_status() == 400:
@@ -98,7 +99,7 @@ class Netease(MainZ):
             song = bot_result.get_body()
             edited_msg = bot.send_message(chat_id=query.message.chat.id,
                                           text="[{0}]({1}) 🍈".format(song.song_name, song.song_url),
-                                          parse_mode=tele.ParseMode.MARKDOWN)
+                                          parse_mode=telegram.ParseMode.MARKDOWN)
 
             songfile = self.utilz.get_songfile(song)
             self.download_backend(bot, query, songfile, edited_msg)
@@ -139,12 +140,12 @@ class Netease(MainZ):
                 edited_msg.delete()
 
     def send_file(self, bot, query, songfile, edited_msg):
-        bot.send_chat_action(query.message.chat.id, action=tele.ChatAction.UPLOAD_AUDIO)
+        bot.send_chat_action(query.message.chat.id, action=telegram.ChatAction.UPLOAD_AUDIO)
         bot.edit_message_text(
             chat_id=query.message.chat.id,
             message_id=edited_msg.message_id,
             text='🍈 🍈 🍈'.format(songfile.song.song_name),
-            parse_mode=tele.ParseMode.MARKDOWN,
+            parse_mode=telegram.ParseMode.MARKDOWN,
             disable_web_page_preview=True
         )
 

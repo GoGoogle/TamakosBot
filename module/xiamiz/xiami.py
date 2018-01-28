@@ -63,7 +63,7 @@ class Xiami(MainZ):
 
     def deliver_music(self, bot, query, song_id, delete=False):
         if delete:
-            song.selector_cancel(bot, query)
+            music.selector_cancel(bot, query)
 
         bot_result = self.crawler.get_song_detail(song_id)
         if bot_result.get_status() == 400:

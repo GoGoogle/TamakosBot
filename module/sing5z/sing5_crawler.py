@@ -89,11 +89,11 @@ class Crawler(CrawlerZ):
             'songid': song_id,
             'songtype': search_type
         }
-        result = self.get_request('http://mobileapi.5sing.kugou.com/musics/getSongUrl', params=payload)
+        result = self.get_request('http://mobileapi.5sing.kugou.com/song/getSongUrl', params=payload)
         return result
 
     def get_song_detail(self, song_id, search_type='yc'):
-        url = 'http://mobileapi.5sing.kugou.com/musics/newget'
+        url = 'http://mobileapi.5sing.kugou.com/song/newget'
         payload = {
             'songid': song_id,
             'songtype': search_type

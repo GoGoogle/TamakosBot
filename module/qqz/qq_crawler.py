@@ -111,14 +111,15 @@ class Crawler(CrawlerZ):
             'format': 'json'
         }
         result = self.get_request(url, payload)
+        print(result)
         if result['code'] != 0:
             self.logger.warning('Song %s search failed! url=%s result=%s', song_name, url, result)
             return BotResult(400, 'Song {} search failed.'.format(song_name))
-        if result['data']['musics']['totalnum'] <= 0:
+        if result['data']['song']['totalnum'] <= 0:
             self.logger.warning('Song %s not existed!', song_name)
             return BotResult(404, 'Song {} not existed.'.format(song_name))
         else:
-            keyword, song_count, songs = song_name, result['data']['musics']['totalnum'], result['data']['musics']['list']
+            keyword, song_count, songs = song_name, result['data']['song']['totalnum'], result['data']['song']['list']
             songlist = SongList(keyword, song_count, Crawler.dump_songs(songs))
             return BotResult(200, body=songlist)
 

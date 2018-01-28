@@ -80,7 +80,7 @@ class Sing5z(MainZ):
 
     def deliver_music(self, bot, query, song_id, search_type='yc', delete=False):
         if delete:
-            song.selector_cancel(bot, query)
+            music.selector_cancel(bot, query)
 
         bot_result = self.crawler.get_song_detail(song_id, search_type)
         if bot_result.get_status() == 400:
