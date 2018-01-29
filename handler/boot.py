@@ -3,15 +3,12 @@ import logging
 from telegram import ParseMode
 from telegram.ext import CommandHandler
 
-from module.managez import manage
 from module.modez import mode
-from utils.tele import restricted
 
 
 class Startup(object):
     def __init__(self):
         self.logger = logging.getLogger(__name__)
-        self.manage = manage.Adminz()
         self.mode = mode.Modez()
 
     def start_command(self, bot, update, user_data):
@@ -38,11 +35,6 @@ class Startup(object):
         #        "::暂时无法使用\n`"
         bot.send_message(chat_id=update.message.chat.id, text=text, parse_mode=ParseMode.MARKDOWN)
 
-    @restricted
-    def manage_bot(self, bot, update, args):
-        self.manage.manage_bot(bot, update, args)
-
     def handler_startup(self, dispatcher):
         dispatcher.add_handler(CommandHandler(['start', 'mode'], self.start_command, pass_user_data=True))
         dispatcher.add_handler(CommandHandler('help', self.help_info))
-        dispatcher.add_handler(CommandHandler('super', self.manage_bot, pass_args=True))
