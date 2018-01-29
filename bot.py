@@ -2,6 +2,8 @@ import logging
 import os
 from logging.config import fileConfig
 
+from telegram.error import (TelegramError, Unauthorized, BadRequest,
+                            TimedOut, ChatMigrated, NetworkError)
 from telegram.ext import Updater
 
 from handler import boot, monitor
@@ -26,26 +28,44 @@ class Bot(object):
         self.tmp_path = cfg.get('file', 'tmp_path')
         self.cookie_path = cfg.get('file', 'cookie_path')
 
-    def start_bot(self):
-        self.build_directory()
-        updater = Updater(token=self.bot_token)
-        boot.Startup().handler_startup(updater.dispatcher)
-        monitor.Monitor().handler_response(updater.dispatcher)
-
-        updater.dispatcher.add_error_handler(self.error_handler)
-
-        updater.start_webhook(listen=self.local_host, port=self.local_port,
-                              url_path=self.local_path)
-        updater.bot.set_webhook(url=self.remote_url, timeout=self.remote_timeout)
-
     def build_directory(self):
         if not os.path.exists(self.tmp_path):
             os.makedirs(self.tmp_path)
         if not os.path.exists(self.cookie_path):
             os.makedirs(self.cookie_path)
 
-    def error_handler(self, bot, update, err):
-        self.logger.warning('Update "%s" caused error "%s"', update, err)
+    def error_callback(self, bot, update, error):
+        try:
+            raise error
+        except Unauthorized:
+            # remove update.message.chat_id from conversation list
+            self.logger.warning('Update "%s" caused error Unauthorized', update)
+        except BadRequest:
+            # handle malformed requests - read more below!
+            self.logger.warning('Update "%s" caused error BadRequest', update)
+        except TimedOut:
+            # handle slow connection problems
+            self.logger.warning('Update "%s" caused error TimedOut', update)
+        except NetworkError:
+            # handle other connection problems
+            self.logger.warning('Update "%s" caused error NetworkError', update)
+        except ChatMigrated as e:
+            # the chat_id of a group has changed, use e.new_chat_id instead
+            self.logger.warning('Update "%s" caused error "%s"', update, e)
+        except TelegramError as err:
+            self.logger.warning('Update "%s" caused error "%s"', update, err)
+
+    def start_bot(self):
+        self.build_directory()
+        updater = Updater(token=self.bot_token)
+        boot.Startup().handler_startup(updater.dispatcher)
+        monitor.Monitor().handler_response(updater.dispatcher)
+
+        updater.dispatcher.add_error_handler(self.error_callback)
+
+        updater.start_webhook(listen=self.local_host, port=self.local_port,
+                              url_path=self.local_path)
+        updater.bot.set_webhook(url=self.remote_url, timeout=self.remote_timeout)
 
 
 if __name__ == '__main__':

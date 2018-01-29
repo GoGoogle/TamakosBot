@@ -79,9 +79,6 @@ def restricted(func):
 
 
 def selector_cancel(bot, query):
-    bot.answerCallbackQuery(query.id,
-                            text="加载中",
-                            show_alert=False)
     query.message.delete()
 
 
