@@ -1,9 +1,12 @@
 import json
 
 
-class PersonIfo(object):
-    def __init__(self, **entries):
-        self.__dict__.update(entries)
+class Person(object):
+    def __init__(self, person_id, created_date, first_name, username=None):
+        self.person_id = person_id
+        self.created_date = created_date
+        self.first_name = first_name
+        self.username = username
 
     def convert_to_dict(self):
         person_info_dict = {}

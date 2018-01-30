@@ -10,19 +10,14 @@ class Util(object):
     def __init__(self):
         self.logger = logging.getLogger(__name__)
         
-    def make_modelist(self, index=None, mode=None):
+    def make_modelist(self):
         self.logger.debug("make mode list")
         mlist = ModeList.mode_list
-        if index:
-            mlist[index] = mode
         return mlist
 
     def produce_mode_board(self, module_name, sel_mode, sel_modelist):
         self.logger.debug("produce_mode_board")
-        if sel_mode.mode_nick == "ⓒ" or sel_mode.mode_nick == "⦿":
-            msg_text = "分析 🍐🍐"
-        else:
-            msg_text = "{0} 🍐🍐".format(sel_mode.mode_nick)
+        msg_text = "{0} 🍐🍐".format(sel_mode.mode_nick)
 
         button_list = [
             [

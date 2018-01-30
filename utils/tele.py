@@ -1,13 +1,11 @@
+import logging
 from configparser import ConfigParser
 from functools import wraps
 
 import emoji
-from telegram import Update
-
-import logging
-
 from requests.exceptions import ConnectionError as ConnectionException, RequestException, Timeout, ProxyError
 from telegram import TelegramError
+from telegram import Update
 
 
 class BotResult:
@@ -26,34 +24,17 @@ class BotResult:
         return self.body
 
 
-class DataStore(object):
+class MatchGroup(object):
     """
     The data will be stored in utils, not single chatroom or user, so we can not use "chat_data" or "user_data".
     That is the Significance of this object. And it likes a database in fact.
     """
 
-    def __new__(cls):
-        if not hasattr(cls, 'instance'):
-            cls.instance = super(DataStore, cls).__new__(cls)
-        return cls.instance
-
     def __init__(self):
-        self.data = {}
+        pass
 
-    def set(self, key, value):
-        self.data[key] = value
-
-    def get(self, key):
-        return self.data.get(key)
-
-    def del_data(self, key):
-        del self.data[key]
-
-    def clear_data(self):
-        self.data.clear()
-
-    def is_exist(self, key):
-        return True if key in self.data else False
+    def put(self, my_item, your_item):
+        pass
 
 
 def get_config():

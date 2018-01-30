@@ -23,8 +23,8 @@ class Bot(object):
     @staticmethod
     def setup_logger():
         logging.basicConfig(
-            format='%(levelname)-8s; %(name)-15s; %(message)s',
-            level=logging.DEBUG)
+            format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+            level=logging.INFO)
 
     def error_callback(self, bot, update, error):
         try:
