@@ -24,19 +24,6 @@ class BotResult:
         return self.body
 
 
-class MatchGroup(object):
-    """
-    The data will be stored in utils, not single chatroom or user, so we can not use "chat_data" or "user_data".
-    That is the Significance of this object. And it likes a database in fact.
-    """
-
-    def __init__(self):
-        pass
-
-    def put(self, my_item, your_item):
-        pass
-
-
 def get_config():
     cfg = ConfigParser()
     cfg.read('config/custom.ini')

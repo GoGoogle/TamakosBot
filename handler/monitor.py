@@ -22,6 +22,7 @@ class Monitor(object):
         self.anime = anime.Anime()
         self.link = link.Link()
 
+    @run_async
     def mode_toggle(self, bot, update, user_data):
         """
         mode
@@ -32,6 +33,7 @@ class Monitor(object):
         """
         self.mode.toggle_mode(bot, update, user_data)
 
+    @run_async
     def mode_analyze(self, bot, update, user_data):
         if user_data.get(self.mode.m_name):
             mode_value = user_data[self.mode.m_name]
@@ -50,8 +52,8 @@ class Monitor(object):
             if update.message.photo:
                 if mode_value == anime.Anime.m_name:
                     self.anime.search_anime(bot, update)
-            if mode_value == self.link.m_name and user_data.get("partner_id"):
-                self.link.chat_with_partner(bot, update, user_data.get("partner_id"))
+            if mode_value == self.link.m_name:
+                self.link.chat_with_partner(bot, update)
 
     @run_async
     def netease_music_selector_callback(self, bot, update):

@@ -1,6 +1,6 @@
 import json
 import uuid
-
+from queue import Queue
 from utils.tele import is_contain_zh
 
 
@@ -167,3 +167,27 @@ class ButtonItem(object):
         elif obj.get('o'):
             button_item = ButtonItem.parse_json(query_data)
             return button_item
+
+
+class MatchItem(object):
+    def __init__(self, my_created, my_id, my_status, your_created=None, your_id=None, your_status=None):
+        self.my_id = my_id
+        self.my_status = my_status
+        self.my_created = my_created
+        self.your_id = your_id
+        self.your_status = your_status
+        self.your_created = your_created
+
+    def update_my_status(self, my_status):
+        self.my_status = my_status
+
+    def update_your_status(self, your_status):
+        self.your_status = your_status
+
+
+class MatchGroup(object):
+    def __init__(self):
+        self.group_queue = Queue()
+
+    def put(self, key_id, match_item):
+        dict({key_id: match_item})

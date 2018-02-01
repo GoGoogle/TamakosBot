@@ -32,19 +32,16 @@ class Modez(object):
 
         button_item = ButtonItem.parse_json(query.data)
         button_type, button_operate, item_id = button_item.t, button_item.o, button_item.i
-        if button_type == ButtonItem.TYPE_MODE:
-            if button_operate == ButtonItem.OPERATE_SEND:
-                if item_id == self.my_link.m_name:  # unique handle for my link
-                    user_data[self.m_name] = item_id
-                    self.my_link.step_link_pool(bot, update, user_data)
-                elif user_data.get(self.m_name) != item_id:
-                    if user_data.get("partner_id"):
-                        user_data.pop("partner_id")
-                        bot.answerCallbackQuery(query.id, text="bye bye", show_alert=False)
-                    sel_mode = Mode.get_mode(item_id)
-                    sel_modelist = self.util.make_modelist()
-                    panel = self.util.produce_mode_board(self.m_name, sel_mode, sel_modelist)
-                    query.message.edit_text(text=panel["text"], reply_markup=panel["markup"])
+        if button_type == ButtonItem.TYPE_MODE and button_operate == ButtonItem.OPERATE_SEND \
+                and user_data.get(self.m_name) != item_id:
+            if item_id == self.my_link.m_name:  # unique handle for my link
+                user_data[self.m_name] = item_id
+                self.my_link.step_link_pool(bot, update, user_data)
+            else:
+                sel_mode = Mode.get_mode(item_id)
+                sel_modelist = self.util.make_modelist()
+                panel = self.util.produce_mode_board(self.m_name, sel_mode, sel_modelist)
+                query.message.edit_text(text=panel["text"], reply_markup=panel["markup"])
 
-                    user_data[self.m_name] = item_id
-                    bot.answerCallbackQuery(query.id, text="已切换", show_alert=False)
+                user_data[self.m_name] = item_id
+                bot.answerCallbackQuery(query.id, text="已切换", show_alert=False)

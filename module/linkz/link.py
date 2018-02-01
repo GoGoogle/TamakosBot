@@ -7,44 +7,33 @@ from module.linkz import link_util
 
 class Link(object):
     m_name = 'my_link'
+    name = "⦿"
+    y_name = "ⓒ"
 
     def __init__(self):
         self.logger = logging.getLogger(__name__)
         self.utilz = link_util.Util()
-        self.match_group = {}  # 从匹配表中获取，不要从user_data获取。匹配表绑定 userid就可以了。
-        self.handout_queue = Queue(1)
+        self.handout_queue = Queue()
+        self.direct_queue = Queue()
 
     def step_link_pool(self, bot, update, user_data):
-        self.logger.debug("step link pool")
+        self.logger.info("step link pool")
         query = update.callback_query
-        self.handout_person(bot, query, user_data)
 
-    def handout_person(self, bot, query, user_data):
-        my_id = query.from_user["id"]
-        if self.match_group.get(my_id):
-            user_data["partner_id"] = self.match_group.get(my_id)
-            self.match_group.pop(my_id)
-            self.utilz.update_mode_board(query, "⦿")
-            bot.answerCallbackQuery(query.id, text="Hi", show_alert=False)
-        else:
-            if self.handout_queue.empty():
-                self.handout_queue.put(my_id)
-                self.utilz.update_mode_board(query, "~")
-                bot.answerCallbackQuery(query.id, text="Analyze", show_alert=False)
-            else:
-                your_id = self.handout_queue.get()
-                if your_id != my_id:
-                    self.match_group[your_id] = my_id
-                    user_data["partner_id"] = your_id
-                    self.utilz.update_mode_board(query, "⦿")
-                    bot.answerCallbackQuery(query.id, text="Hi", show_alert=False)
-                    self.handout_queue.task_done()
-                else:
-                    self.utilz.update_mode_board(query, "~")
-                    bot.answerCallbackQuery(query.id, text="Analyze", show_alert=False)
+        my_id = query.from_user.id
+        my_message_id = query.message.message_id
 
-    def chat_with_partner(self, bot, update, partner_id):
-        self.logger.debug("chat with partner {}".format(partner_id))
+        self.utilz.update_reply_board(bot, my_id, my_message_id, "~")
+
+        # 初始化；排队
+        self.utilz.line_up(my_id, my_message_id)
+
+        # 从箱子里取票
+        self.utilz.fetch_box(my_id)
+
+    def chat_with_partner(self, bot, update):
+        self.logger.debug("chat_with_partner")
+        partner_id = 2323
         bot_msg = BotMessage.get_botmsg(update['message'])
         if bot_msg.bot_content.text:
             bot.send_message(chat_id=partner_id, text=bot_msg.bot_content.text)
