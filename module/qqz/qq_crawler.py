@@ -111,7 +111,6 @@ class Crawler(CrawlerZ):
             'format': 'json'
         }
         result = self.get_request(url, payload)
-        print(result)
         if result['code'] != 0:
             self.logger.warning('Song %s search failed! url=%s result=%s', song_name, url, result)
             return BotResult(400, 'Song {} search failed.'.format(song_name))

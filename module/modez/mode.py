@@ -19,9 +19,12 @@ class Modez(object):
         self.util = mode_util.Util()
         self.my_link = link.Link()
 
-    def show_mode_board(self, bot, update, userdata):
-        # TODO acquire from database
-        sel_mode = Mode("pear", "吃梨")
+    def show_mode_board(self, bot, update, user_data):
+        cur_mode_id = user_data.get(self.m_name)
+        if cur_mode_id:
+            sel_mode = Mode.get_mode(cur_mode_id)
+        else:
+            sel_mode = Mode("pear", "选择")
         sel_modelist = self.util.make_modelist()
         panel = self.util.produce_mode_board(self.m_name, sel_mode, sel_modelist)
         bot.send_message(chat_id=update.message.chat.id, text=panel["text"], reply_markup=panel["markup"])
@@ -36,9 +39,10 @@ class Modez(object):
                 and user_data.get(self.m_name) != item_id:
             if item_id == self.my_link.m_name:  # unique handle for my link
                 user_data[self.m_name] = item_id
-                self.my_link.step_link_pool(bot, update, user_data)
+                self.my_link.step_link_pool(bot, update)
             else:
-                self.my_link.leave_link_pool(update)  # leave the link pool
+                if user_data.get(self.m_name) == self.my_link.m_name:
+                    self.my_link.leave_link_pool(bot, update)  # leave the link pool
 
                 sel_mode = Mode.get_mode(item_id)
                 sel_modelist = self.util.make_modelist()

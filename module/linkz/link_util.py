@@ -12,7 +12,6 @@ from entity.bot_telegram import ButtonItem
 class Util(object):
 
     UnHandle, Waiting, WaitFor, Response, Linking, Unlink = range(6)  # define status style
-    BOT = None
 
     def __new__(cls, timeout=120, proxy=None):
         if not hasattr(cls, 'instance'):
@@ -28,17 +27,19 @@ class Util(object):
         self.task_queue = Queue()  # 通过队列不断处理新任务
 
     def line_up(self, bot, my_id, my_message_id):
-        Util.BOT = bot
-        self.update_reply_board(bot, my_id, my_message_id, "~")
+        self.update_reply_board(bot, my_id, my_message_id, "~", "在吗")
         self.add_user(my_id, my_message_id)
-        self.task_queue.put(100)
 
-    def fetch_box(self, my_id):
-        _user = self.collection.find_one({"status": Util.Waiting})
-        if _user:
+    def fetch_box(self, my_id, bot):
+        user = self.collection.find_one({"status": Util.Waiting})
+        if user:
             # 更新状态为等待回应
-            u_id = _user.my_id
-            self.update_status(Util.WaitFor, my_id, u_id)
+            u_id = user["my_id"]
+            u_msg_id = user["my_message_id"]
+            # print(u_id, 111)
+            # print(my_id, 222)
+            self.update_status(Util.WaitFor, my_id, u_id, u_msg_id)
+            self.observer_status(bot)  # 自动更新状态
         else:
             # 更新状态为干等
             self.update_status(Util.Waiting, my_id)
@@ -52,48 +53,56 @@ class Util(object):
             "your_message_id": None,
             "updated": None
         }
-        self.collection.insert_one(link_user)
+        self.collection.replace_one({"my_id": my_id}, link_user, upsert=True)
 
-    def update_status(self, style, my_id=None, u_id=None):
+    def update_status(self, style, my_id=None, u_id=None, u_msg_id=None):
         if style == Util.Waiting:
             self.collection.update_one(
                 {"my_id": my_id}, {"$set": {"status": Util.Waiting, "updated": time.time()}})
         if style == Util.WaitFor:
             self.collection.update_one(
-                {"my_id": my_id}, {"$set": {"status": Util.WaitFor, "your_id": u_id}})
+                {"my_id": my_id},
+                {"$set": {
+                         "status": Util.WaitFor, "your_id": u_id, "your_message_id": u_msg_id, "updated": time.time()
+                }})
         if style == Util.Unlink:
-            self.collection.update_one(
-                {"my_id": my_id}, {"$set": {"status": Util.Unlink}})
+            _user = self.collection.find_one({"my_id": my_id})
+            if _user["your_id"]:
+                self.collection.update_one(
+                    {"my_id": my_id}, {"$set": {"status": Util.Unlink}})
+                self.collection.update_one(
+                    {"my_id": _user["your_id"]}, {"$set": {"status": Util.Unlink}})
+            else:
+                self.collection.update_one(
+                    {"my_id": my_id}, {"$set": {"status": Util.UnHandle}})
 
-    def observer_status(self):
+    def observer_status(self, bot=None):
         for waitFor in self.collection.find({"status": Util.WaitFor}):
             self.collection.update_one(
-                {"your_id": waitFor.your_id},
-                {"$set": {"status": Util.Response, "your_id": waitFor.my_id, "your_message_id": waitFor.my_message_id}})
+                {"my_id": waitFor["your_id"]},
+                {"$set": {
+                    "status": Util.Response, "your_id": waitFor["my_id"], "your_message_id": waitFor["my_message_id"]
+                }})
         for response in self.collection.find({"status": Util.Response}):
-            self.collection.update_one({"my_id": response.your_id}, {"$set": {"status": Util.Linking}})
-            self.collection.update_one({"my_id": response.my_id}, {"$set": {"status": Util.Linking}})
+            self.collection.update_one({"my_id": response["your_id"]}, {"$set": {"status": Util.Linking}})
+            self.collection.update_one({"my_id": response["my_id"]}, {"$set": {"status": Util.Linking}})
 
-            self.update_reply_board(Util.BOT, response.my_id, response.my_message_id, "⦿")
-            self.update_reply_board(Util.BOT, response.your_id, response.your_message_id, "⦿")
+            self.update_reply_board(bot, response["my_id"], response["my_message_id"], "⦿", "来了")
+            self.update_reply_board(bot, response["your_id"], response["your_message_id"], "⦿", "哈罗")
         for unlink in self.collection.find({"status": Util.Unlink}):
             self.collection.update_one(
-                {"my_id": unlink.my_id},
+                {"my_id": unlink["my_id"]},
                 {"$set": {"status": Util.UnHandle, "your_id": None, "your_message_id": None, "updated": None}})
-            self.collection.update_one(
-                {"my_id": unlink.your_id},
-                {"$set": {"status": Util.UnHandle, "your_id": None, "your_message_id": None, "updated": None}})
-            self.update_reply_board(Util.BOT, unlink.my_id, unlink.my_message_id, "ⓒ")
-            self.update_reply_board(Util.BOT, unlink.your_id, unlink.your_message_id, "ⓒ")
+            self.update_reply_board(bot, unlink["my_id"], unlink["my_message_id"], "88", "分手")
 
     def get_status(self, user_id):
         user = self.collection.find_one({"my_id": user_id})
         return user
 
-    def update_reply_board(self, bot, chat_id, message_id, new_mode_nick):
+    def update_reply_board(self, bot, chat_id, message_id, new_mode_nick, new_mode_text):
         self.logger.debug("update_reply_board")
         module_name = "mode"
-        msg_text = "分析 🍐🍐"
+        msg_text = "{} 🍐🍐".format(new_mode_text)
         sel_modelist = ModeList.mode_list
         button_list = [[InlineKeyboardButton(
                     text=sel_modelist[0].mode_nick,
@@ -120,6 +129,4 @@ class Util(object):
                                              sel_modelist[4].mode_id).dump_json()
                 )]]
         markup = InlineKeyboardMarkup(button_list)
-        bot.editMessageText(chat_id=chat_id, message_id=message_id, text=msg_text, reply_markup=markup)
-
-
+        bot.edit_message_text(chat_id=chat_id, message_id=message_id, text=msg_text, reply_markup=markup)
