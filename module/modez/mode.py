@@ -38,6 +38,8 @@ class Modez(object):
                 user_data[self.m_name] = item_id
                 self.my_link.step_link_pool(bot, update, user_data)
             else:
+                self.my_link.leave_link_pool(update)  # leave the link pool
+
                 sel_mode = Mode.get_mode(item_id)
                 sel_modelist = self.util.make_modelist()
                 panel = self.util.produce_mode_board(self.m_name, sel_mode, sel_modelist)
