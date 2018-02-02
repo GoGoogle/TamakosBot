@@ -87,7 +87,7 @@ class Util(object):
             self.collection.update_one({"my_id": response["your_id"]}, {"$set": {"status": Util.Linking}})
             self.collection.update_one({"my_id": response["my_id"]}, {"$set": {"status": Util.Linking}})
 
-            self.update_reply_board(bot, response["my_id"], response["my_message_id"], "⦿", "哈咯")
+            self.update_reply_board(bot, response["my_id"], response["my_message_id"], "⦿", "嗯哼")
             self.update_reply_board(bot, response["your_id"], response["your_message_id"], "⦿", "哈罗")
         for unlink in self.collection.find({"status": Util.Unlink}):
             self.collection.update_one(
