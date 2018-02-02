@@ -17,6 +17,8 @@ class Util(object):
 
     def produce_mode_board(self, module_name, sel_mode, sel_modelist):
         self.logger.debug("produce_mode_board")
+        if sel_mode.mode_nick == "ⓒ":
+            sel_mode.mode_nick = "在线"
         msg_text = "{0} 🍐🍐".format(sel_mode.mode_nick)
 
         button_list = [
