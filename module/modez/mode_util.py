@@ -9,16 +9,16 @@ from entity.bot_telegram import ButtonItem
 class Util(object):
     def __init__(self):
         self.logger = logging.getLogger(__name__)
-        
-    def make_modelist(self):
-        self.logger.debug("make mode list")
+
+    @staticmethod
+    def make_modelist():
         mlist = ModeList.mode_list
         return mlist
 
-    def produce_mode_board(self, module_name, sel_mode, sel_modelist):
-        self.logger.debug("produce_mode_board")
+    @staticmethod
+    def produce_mode_board(module_name, sel_mode, sel_modelist):
         if sel_mode.mode_nick == "ⓒ":
-            sel_mode.mode_nick = "在线"
+            sel_mode.mode_nick = "通信"
         msg_text = "{0} 🍐🍐".format(sel_mode.mode_nick)
 
         button_list = [

@@ -14,8 +14,8 @@ class Link(object):
         self.utilz = link_util.Util()
 
     def step_link_pool(self, bot, update):
-        self.logger.info("link start")
         query = update.callback_query
+        self.logger.debug("{} has stepped into link pool".format(query.from_user))
 
         my_id = query.from_user.id
         my_message_id = query.message.message_id
@@ -30,7 +30,6 @@ class Link(object):
         self.utilz.observer_status(bot)  # 自动更新状态
 
     def chat_with_partner(self, bot, update):
-        self.logger.debug("chat_with_partner")
         user = self.utilz.get_status(update.message.from_user.id)
         if user and user["status"] == self.utilz.Linking:
             partner_id = user["your_id"]

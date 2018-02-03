@@ -24,7 +24,7 @@ class Bot(object):
     def setup_logger():
         logging.basicConfig(
             format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-            level=logging.INFO)
+            level=logging.DEBUG)
 
     def error_callback(self, bot, update, error):
         try:

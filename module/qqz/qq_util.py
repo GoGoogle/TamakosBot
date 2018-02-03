@@ -85,8 +85,6 @@ class Util(UtilZ):
         return {'text': songlist_selector.title, 'reply_markup': InlineKeyboardMarkup(button_list)}
 
     def get_songfile(self, song):
-        self.logger.debug('get_songfile..')
-
         start = song.song_url.rindex('.')
         end = song.song_url.rindex('?')
         extension = song.song_url[start: end]

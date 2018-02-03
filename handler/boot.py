@@ -23,17 +23,17 @@ class Startup(object):
 
     def help_info(self, bot, update):
         self.logger.debug("send help info")
-        # text = "`以下按 MODE 顺序说明\n" \
-        #        "::发送关键词搜索并下载音乐" \
-        #        "::同上。发送歌单链接，以便导入歌单" \
-        #        "::发送一张动漫截图，获取动漫信息" \
-        #        "::当ⓒ变成⦿后，就请回复小玉吧\n`"
         text = "`以下按 MODE 顺序说明\n" \
-               "::发送关键词搜索并下载音乐\n" \
-               "::同上\n" \
-               "::同上。发送歌单链接，以便导入歌单\n" \
-               "::发送一张动漫截图，获取动漫信息\n" \
+               "::发送关键词搜索并下载音乐" \
+               "::同上。发送歌单链接，以便导入歌单" \
+               "::发送一张动漫截图，获取动漫信息" \
                "::当~变成⦿后，就请回复小玉吧\n`"
+        # text = "`以下按 MODE 顺序说明\n" \
+        #        "::发送关键词搜索并下载音乐\n" \
+        #        "::同上\n" \
+        #        "::同上。发送歌单链接，以便导入歌单\n" \
+        #        "::发送一张动漫截图，获取动漫信息\n" \
+        #        "::当~变成⦿后，就请回复小玉吧\n`"
         bot.send_message(chat_id=update.message.chat.id, text=text, parse_mode=ParseMode.MARKDOWN)
 
     def handler_startup(self, dispatcher):

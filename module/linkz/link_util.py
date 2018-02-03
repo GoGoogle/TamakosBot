@@ -99,8 +99,8 @@ class Util(object):
         user = self.collection.find_one({"my_id": user_id})
         return user
 
-    def update_reply_board(self, bot, chat_id, message_id, new_mode_nick, new_mode_text):
-        self.logger.debug("update_reply_board")
+    @staticmethod
+    def update_reply_board(bot, chat_id, message_id, new_mode_nick, new_mode_text):
         module_name = "mode"
         msg_text = "{} 🍐🍐".format(new_mode_text)
         sel_modelist = ModeList.mode_list

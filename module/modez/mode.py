@@ -30,7 +30,6 @@ class Modez(object):
         bot.send_message(chat_id=update.message.chat.id, text=panel["text"], reply_markup=panel["markup"])
 
     def toggle_mode(self, bot, update, user_data):
-        self.logger.debug('response_toggle_mode..')
         query = update.callback_query
 
         button_item = ButtonItem.parse_json(query.data)
