@@ -24,14 +24,15 @@ class Netease(MainZ):
         self.utilz = netease_util.Util()
 
         cfg = tele.get_config()
-        self.username = cfg.get('api', 'netease_username')
-        self.password = cfg.get('api', 'netease_password')
+        self.init_login(cfg)
 
     def init_login(self, config):
-        if self.username and self.password:
-            bot_result = self.crawler.login(self.username, self.password)
+        username = config.get('api', 'netease_username')
+        password = config.get('api', 'netease_password')
+        if username and password:
+            bot_result = self.crawler.login(username, password)
             if bot_result.get_status() == 200:
-                self.logger.debug(bot_result.get_msg())
+                self.logger.info(bot_result.get_msg())
             elif bot_result.get_status() == 400:
                 self.logger.error(bot_result.get_msg())
 
