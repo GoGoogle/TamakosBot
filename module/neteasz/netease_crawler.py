@@ -24,7 +24,20 @@ NETEASE_HEADERS = {
     'Content-Type': 'application/x-www-form-urlencoded',
     'Host': 'music.163.com',
     'Referer': 'http://music.163.com',
-    'Cookie': 'os=linux;appver=1.5.2',
+    'Cookie': 'os=linux;appver=1.5.9;',
+    'X-Real-IP': '59.111.160.197',
+    'User-Agent': choice(userAgentList)
+}
+
+LOGIN_NETEASE_HEADERS = {
+    'Accept': '*/*',
+    'Accept-Encoding': 'gzip,deflate,sdch',
+    'Accept-Language': 'zh-CN,zh;q=0.8,gl;q=0.6,zh-TW;q=0.4',
+    'Connection': 'keep-alive',
+    'Content-Type': 'application/x-www-form-urlencoded',
+    'Host': 'music.163.com',
+    'Referer': 'http://music.163.com',
+    'Cookie': 'appver=1.5.9;os=osx; channel=netease;osver=%E7%89%88%E6%9C%AC%2010.13.2%EF%BC%88%E7%89%88%E5%8F%B7%2017C88%EF%BC%89',
     'X-Real-IP': '59.111.160.197',
     'User-Agent': choice(userAgentList)
 }
@@ -35,8 +48,9 @@ class Crawler(CrawlerZ):
         super().__init__(timeout, proxy)
         self.session = requests.Session()
         self.session.headers.update(NETEASE_HEADERS)
-        # self.download_session = requests.Session()
+        self.download_session = requests.Session()
         self.login_session = requests.Session()
+        self.login_session.headers.update(LOGIN_NETEASE_HEADERS)
         cfg = tele.get_config()
         self.session.cookies = cookiejar.LWPCookieJar(cfg.get('file', 'cookie_path'))
 

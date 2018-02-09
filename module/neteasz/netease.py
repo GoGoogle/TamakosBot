@@ -33,8 +33,10 @@ class Netease(MainZ):
             bot_result = self.crawler.login(username, password)
             if bot_result.get_status() == 200:
                 self.logger.info(bot_result.get_msg())
+                print(666666)
             elif bot_result.get_status() == 400:
                 self.logger.error(bot_result.get_msg())
+                print(444444)
 
     def search_music(self, bot, update, kw):
         self.logger.debug('get_music: %s', kw)
