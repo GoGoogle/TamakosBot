@@ -31,7 +31,7 @@ class Startup(object):
         text = "`我是机器人小玉，我来说明使用方法!\n" \
                "::发送关键词搜索并下载音乐\n" \
                "::同上。发送歌单链接，以便导入歌单\n" \
-               "::发送一张动漫截图，获取动漫信息\n"
+               "::发送一张动漫截图，获取动漫信息\n`"
                #  "::如果~变成⦿后，就可以回复我呢(否则需要耐心等待哦)。\n`"
         bot.send_message(chat_id=update.message.chat.id, text=text, parse_mode=ParseMode.MARKDOWN)
 
