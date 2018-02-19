@@ -10,7 +10,7 @@ class Mode(object):
         qq.Qqz.m_name: "腾讯",
         netease.Netease.m_name: "网易",
         anime.Anime.m_name: "动画",
-        "my_link": "ⓒ",
+        #  "my_link": "ⓒ",
     }
 
     def __init__(self, mode_id, mode_nick, group=0):
@@ -29,6 +29,6 @@ class ModeList(object):
         Mode(qq.Qqz.m_name, "腾讯"),
         Mode(netease.Netease.m_name, "网易"),
         Mode(anime.Anime.m_name, "动画"),
-        Mode("my_link", "ⓒ"),
+        #  Mode("my_link", "ⓒ"),
     ]
 
